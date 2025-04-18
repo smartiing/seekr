@@ -18,6 +18,9 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
-    lifecycle
+    checkmate,
+    cli,
+    lifecycle,
+    tibble
 URL: https://github.com/smartiing/seekr, https://smartiing.github.io/seekr/
 BugReports: https://github.com/smartiing/seekr/issues
