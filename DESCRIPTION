@@ -1,0 +1,21 @@
+Package: seekr
+Title: Seek and Extract Matching Lines from Matching Files
+Version: 0.0.0.9000
+Authors@R: 
+    person("Sacha", "Martingay", , "martingay.sacha@hotmail.com", role = c("aut", "cre"))
+Description: Provides a simple interface to recursively list files from a
+    directory, filter them using a regular expression, read their
+    contents, and extract lines that match a user-defined pattern. The
+    package returns a tidy data frame containing the matched lines, their
+    line numbers, file paths, and the corresponding matched substrings.
+    Designed for quick codebase exploration, log inspection, or any use
+    case involving pattern-based file and line filtering.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    lifecycle

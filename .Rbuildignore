@@ -1,0 +1,10 @@
+^seekr\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^init\.R$
+^air\.toml$
+^seekr\.R$
