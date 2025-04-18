@@ -8,6 +8,15 @@
 \description{
 Provides a simple interface to recursively list files from a directory, filter them using a regular expression, read their contents, and extract lines that match a user-defined pattern. The package returns a tidy data frame containing the matched lines, their line numbers, file paths, and the corresponding matched substrings. Designed for quick codebase exploration, log inspection, or any use case involving pattern-based file and line filtering.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/smartiing/seekr}
+  \item \url{https://smartiing.github.io/seekr/}
+  \item Report bugs at \url{https://github.com/smartiing/seekr/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Sacha Martingay \email{martingay.sacha@hotmail.com}
 
