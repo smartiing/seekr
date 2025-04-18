@@ -6,7 +6,7 @@
 \alias{seekr-package}
 \title{seekr: Seek and Extract Matching Lines from Matching Files}
 \description{
-Provides a simple interface to recursively list files from a directory, filter them using a regular expression, read their contents, and extract lines that match a user-defined pattern. The package returns a tidy data frame containing the matched lines, their line numbers, file paths, and the corresponding matched substrings. Designed for quick codebase exploration, log inspection, or any use case involving pattern-based file and line filtering.
+Provides a simple interface to recursively list files from a directory, filter them using a regular expression, read their contents, and extract lines that match a user-defined pattern. The package returns a tibble containing the matched lines, their line numbers, file paths, and the corresponding matched substrings. Designed for quick codebase exploration, log inspection, or any use case involving pattern-based file and line filtering.
 }
 \seealso{
 Useful links:

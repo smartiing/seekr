@@ -16,41 +16,68 @@ knitr::opts_chunk$set(
 # seekr
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN status](https://www.r-pkg.org/badges/version/seekr)](https://CRAN.R-project.org/package=seekr)
+
 <!-- badges: end -->
 
-The goal of seekr is to ...
+**seekr** is an R package designed to help you search for specific patterns within files. It provides functions to:
+
+- List and filter files in a directory based on filename patterns.
+- Read the contents of these files.
+- Extract lines that match a given pattern.
 
 ## Installation
 
-You can install the development version of seekr like so:
+You can install the development version of **seekr** from GitHub with:
 
-``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+```r
+# install.packages("devtools")
+devtools::install_github("smartiing/seekr")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+Here's a basic example of how to use **seekr**:
 
-```{r example}
-library(seekr)
-## basic example code
+```{r}
+# Search for lines containing 'particular words' in csv files within the specified folder
+tmp_mtcars = tempfile("01mtcars", fileext = ".csv")
+tmp_iris = tempfile("02iris", fileext = ".csv")
+
+write.csv(mtcars, tmp_mtcars)
+write.csv(iris, tmp_iris)
+
+found = seekr::seek(
+  pattern = "(?i)toyota|honda|setosa", 
+  path = tempdir(), 
+  file_pattern = "\\.csv$"
+)
+  
+print(found)
+  
+unlink(c(tmp_mtcars, tmp_iris))
+
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+## Functions
 
-```{r cars}
-summary(cars)
-```
+**seekr** provides two main functions:
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
+- `seek()`: Search for a pattern in files within a specified directory.
+- `seek_in()`: Search for a pattern in a given list of files.
 
-You can also embed plots, for example:
+Each function returns a tibble with the following columns:
 
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
+- `file`: Index of the file in the list.
+- `path`: Path to the file.
+- `line`: Line number where the pattern was found.
+- `content`: Content of the matching line.
+- `match`: The first match found in the line.
+- `matches`: All matches found in the line.
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+## License
+
+This package is licensed under the MIT License.
