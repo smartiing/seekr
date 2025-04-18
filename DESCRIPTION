@@ -19,3 +19,5 @@ Suggests:
 Config/testthat/edition: 3
 Imports: 
     lifecycle
+URL: https://github.com/smartiing/seekr
+BugReports: https://github.com/smartiing/seekr/issues
