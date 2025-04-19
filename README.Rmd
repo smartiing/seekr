@@ -23,7 +23,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 
 <!-- badges: end -->
 
-**seekr** is an R package designed to help you search for specific patterns within **text** files.
+**seekr** is an R package designed to help you search for specific patterns within text files.
 
 ## Installation
 
@@ -33,6 +33,24 @@ You can install the development version of **seekr** from GitHub with:
 # install.packages("devtools")
 devtools::install_github("smartiing/seekr")
 ```
+
+
+## Functions
+
+**seekr** provides two main functions:
+
+- `seek()`: Search for a pattern in files within a specified directory.
+- `seek_in()`: Search for a pattern in a given list of files.
+
+Each function returns a tibble with the following columns:
+
+- `file`: Index of the file in the list.
+- `path`: Path to the file.
+- `line`: Line number where the pattern was found.
+- `content`: Content of the matching line.
+- `match`: The first match found in the line.
+- `matches`: All matches found in the line.
+
 
 ## Example
 
@@ -57,21 +75,6 @@ print(found)
 unlink(c(tmp_mtcars, tmp_iris))
 ```
 
-## Functions
-
-**seekr** provides two main functions:
-
-- `seek()`: Search for a pattern in files within a specified directory.
-- `seek_in()`: Search for a pattern in a given list of files.
-
-Each function returns a tibble with the following columns:
-
-- `file`: Index of the file in the list.
-- `path`: Path to the file.
-- `line`: Line number where the pattern was found.
-- `content`: Content of the matching line.
-- `match`: The first match found in the line.
-- `matches`: All matches found in the line.
 
 ## License
 
