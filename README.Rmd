@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN status](https://www.r-pkg.org/badges/version/seekr)](https://CRAN.R-project.org/package=seekr)
-
+[![R-CMD-check](https://github.com/smartiing/seekr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/smartiing/seekr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 **seekr** is an R package designed to help you search for specific patterns within text files.
