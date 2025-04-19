@@ -23,11 +23,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 
 <!-- badges: end -->
 
-**seekr** is an R package designed to help you search for specific patterns within files. It provides functions to:
-
-- List and filter files in a directory based on filename patterns.
-- Read the contents of these files.
-- Extract lines that match a given pattern.
+**seekr** is an R package designed to help you search for specific patterns within **text** files.
 
 ## Installation
 
@@ -42,9 +38,7 @@ devtools::install_github("smartiing/seekr")
 
 Here's a basic example of how to use **seekr**:
 
-```r
-library(seekr)
-
+```{r}
 # Search for lines containing 'particular words' in csv files within the specified folder
 tmp_mtcars = tempfile("01mtcars", fileext = ".csv")
 tmp_iris = tempfile("02iris", fileext = ".csv")
@@ -52,16 +46,15 @@ tmp_iris = tempfile("02iris", fileext = ".csv")
 write.csv(mtcars, tmp_mtcars)
 write.csv(iris, tmp_iris)
 
-found = seek(
+found = seekr::seek(
   pattern = "(?i)toyota|honda|setosa", 
   path = tempdir(), 
-  file_pattern = "\\.csv$"
+  filter = "\\.csv$"
 )
   
 print(found)
   
 unlink(c(tmp_mtcars, tmp_iris))
-
 ```
 
 ## Functions
