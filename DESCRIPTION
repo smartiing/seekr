@@ -1,5 +1,5 @@
 Package: seekr
-Title: Seek and Extract Matching Lines from Matching Files
+Title: Extract Matching Lines from Matching Files
 Version: 0.0.0.9000
 Authors@R: 
     person("Sacha", "Martingay", , "martingay.sacha@hotmail.com", role = c("aut", "cre"))
