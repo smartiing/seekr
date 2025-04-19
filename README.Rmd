@@ -54,8 +54,6 @@ Each function returns a tibble with the following columns:
 
 ## Example
 
-Here's a basic example of how to use **seekr**:
-
 ```{r}
 # Search for lines containing 'particular words' in csv files within the specified folder
 tmp_mtcars = tempfile("01mtcars", fileext = ".csv")
