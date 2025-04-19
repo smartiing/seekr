@@ -4,7 +4,15 @@
 <url><loc>https://smartiing.github.io/seekr/LICENSE.html</loc></url>
 <url><loc>https://smartiing.github.io/seekr/authors.html</loc></url>
 <url><loc>https://smartiing.github.io/seekr/index.html</loc></url>
+<url><loc>https://smartiing.github.io/seekr/reference/add_matches_columns.html</loc></url>
+<url><loc>https://smartiing.github.io/seekr/reference/create_file_df.html</loc></url>
+<url><loc>https://smartiing.github.io/seekr/reference/filter_matching_files.html</loc></url>
+<url><loc>https://smartiing.github.io/seekr/reference/filter_matching_lines.html</loc></url>
 <url><loc>https://smartiing.github.io/seekr/reference/index.html</loc></url>
+<url><loc>https://smartiing.github.io/seekr/reference/list_files.html</loc></url>
+<url><loc>https://smartiing.github.io/seekr/reference/parse_files_to_dfs.html</loc></url>
+<url><loc>https://smartiing.github.io/seekr/reference/readLines_safe.html</loc></url>
+<url><loc>https://smartiing.github.io/seekr/reference/seek.html</loc></url>
 <url><loc>https://smartiing.github.io/seekr/reference/seekr-package.html</loc></url>
 </urlset>
 
