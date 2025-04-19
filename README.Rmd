@@ -53,7 +53,7 @@ write.csv(iris, tmp_iris)
 found = seekr::seek(
   pattern = "(?i)toyota|honda|setosa", 
   path = tempdir(), 
-  file_pattern = "\\.csv$"
+  filter = "\\.csv$"
 )
   
 print(found)

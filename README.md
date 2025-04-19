@@ -33,8 +33,6 @@ devtools::install_github("smartiing/seekr")
 Here’s a basic example of how to use **seekr**:
 
 ``` r
-library(seekr)
-
 # Search for lines containing 'particular words' in csv files within the specified folder
 tmp_mtcars = tempfile("01mtcars", fileext = ".csv")
 tmp_iris = tempfile("02iris", fileext = ".csv")
@@ -42,13 +40,27 @@ tmp_iris = tempfile("02iris", fileext = ".csv")
 write.csv(mtcars, tmp_mtcars)
 write.csv(iris, tmp_iris)
 
-found = seek(
+found = seekr::seek(
   pattern = "(?i)toyota|honda|setosa", 
   path = tempdir(), 
-  file_pattern = "\\.csv$"
+  filter = "\\.csv$"
 )
   
 print(found)
+#> # A tibble: 53 × 6
+#>     file path                       line match  matches   content               
+#>    <int> <chr>                     <int> <chr>  <list>    <chr>                 
+#>  1     1 /01mtcars4fec1c927f38.csv    20 Honda  <chr [1]> "\"Honda Civic\",30.4…
+#>  2     1 /01mtcars4fec1c927f38.csv    21 Toyota <chr [1]> "\"Toyota Corolla\",3…
+#>  3     1 /01mtcars4fec1c927f38.csv    22 Toyota <chr [1]> "\"Toyota Corona\",21…
+#>  4     2 /02iris4fec413534f.csv        2 setosa <chr [1]> "\"1\",5.1,3.5,1.4,0.…
+#>  5     2 /02iris4fec413534f.csv        3 setosa <chr [1]> "\"2\",4.9,3,1.4,0.2,…
+#>  6     2 /02iris4fec413534f.csv        4 setosa <chr [1]> "\"3\",4.7,3.2,1.3,0.…
+#>  7     2 /02iris4fec413534f.csv        5 setosa <chr [1]> "\"4\",4.6,3.1,1.5,0.…
+#>  8     2 /02iris4fec413534f.csv        6 setosa <chr [1]> "\"5\",5,3.6,1.4,0.2,…
+#>  9     2 /02iris4fec413534f.csv        7 setosa <chr [1]> "\"6\",5.4,3.9,1.7,0.…
+#> 10     2 /02iris4fec413534f.csv        8 setosa <chr [1]> "\"7\",4.6,3.4,1.4,0.…
+#> # ℹ 43 more rows
   
 unlink(c(tmp_mtcars, tmp_iris))
 ```
