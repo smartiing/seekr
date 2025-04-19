@@ -59,7 +59,6 @@ found = seekr::seek(
 print(found)
   
 unlink(c(tmp_mtcars, tmp_iris))
-
 ```
 
 ## Functions

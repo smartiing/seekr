@@ -33,13 +33,6 @@ devtools::install_github("smartiing/seekr")
 Here’s a basic example of how to use **seekr**:
 
 ``` r
-# Search for lines containing 'particular words' in csv files within the specified folder
-tmp_mtcars = tempfile("01mtcars", fileext = ".csv")
-tmp_iris = tempfile("02iris", fileext = ".csv")
-
-write.csv(mtcars, tmp_mtcars)
-write.csv(iris, tmp_iris)
-
 found = seekr::seek(
   pattern = "(?i)toyota|honda|setosa", 
   path = tempdir(), 
@@ -61,7 +54,7 @@ print(found)
 #>  9     2 /02iris4fec413534f.csv        7 setosa <chr [1]> "\"6\",5.4,3.9,1.7,0.…
 #> 10     2 /02iris4fec413534f.csv        8 setosa <chr [1]> "\"7\",4.6,3.4,1.4,0.…
 #> # ℹ 43 more rows
-  
+
 unlink(c(tmp_mtcars, tmp_iris))
 ```
 
