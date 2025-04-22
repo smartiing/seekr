@@ -3,92 +3,128 @@
 \name{seek}
 \alias{seek}
 \alias{seek_in}
-\alias{process_files_lines}
-\title{Extract Matching Lines from Matching Files}
+\alias{seek_lines}
+\title{Extract Matching Lines from Files}
 \usage{
 seek(
   pattern,
+  ...,
   path = ".",
   filter = NULL,
-  recursive = FALSE,
-  all.files = FALSE,
-  n = -1L,
-  warn = FALSE,
-  relative_path = TRUE
+  negate = FALSE,
+  recurse = FALSE,
+  all = FALSE,
+  relative_path = TRUE,
+  matches = FALSE
 )
 
-seek_in(pattern, files, n = -1L, warn = FALSE)
+seek_in(files, pattern, ..., matches = FALSE)
 
-process_files_lines(files, pattern, warn, n, relative_path)
+seek_lines(files, pattern, ..., path, relative_path, matches)
 }
 \arguments{
-\item{pattern}{A string. A Perl-compatible regular expression used to filter
-the lines of the files.}
+\item{pattern}{A regular expression pattern used to match lines.}
 
-\item{path}{a character vector of full path names; the default
-    corresponds to the working directory, \code{\link[base]{getwd}()}.  Tilde
-    expansion (see \code{\link[base]{path.expand}}) is performed.  Missing
-    values will be ignored.  Elements with a marked encoding will
-    be converted to the native encoding (and if that fails, considered
-    non-existent).}
+\item{...}{Additional arguments passed to \code{\link[readr:read_lines]{readr::read_lines()}}, such as
+\code{skip}, \code{n_max}, or \code{locale}.}
 
-\item{filter}{Optional. A Perl-compatible regular expression used to filter
-file names before reading them. If \code{NULL}, all files are considered.}
+\item{path}{A character vector of one or more directories where files should be
+discovered (only for \code{seek()}).}
 
-\item{recursive}{logical.  Should the listing recurse into directories?}
+\item{filter}{Optional. A regular expression pattern used to filter file paths
+before reading. If \code{NULL}, all text files are considered.}
 
-\item{all.files}{a logical value.  If \code{FALSE}, only the
-    names of visible files are returned (following Unix-style visibility,
-    that is files whose name does not start with a dot).  If \code{TRUE},
-    all file names will be returned.}
+\item{negate}{If \code{TRUE}, inverts the resulting boolean vector.}
 
-\item{n}{integer.  The (maximal) number of lines to
-    read.  Negative values indicate that one should read up to the end of
-    input on the connection.}
+\item{recurse}{If \code{TRUE} recurse fully, if a positive number the number of levels
+to recurse.}
 
-\item{warn}{logical.  Warn if a text file is missing a final \abbr{EOL} or if
-    there are embedded \abbr{NUL}s in the file.}
+\item{all}{If \code{TRUE} hidden files are also returned.}
 
-\item{relative_path}{Logical. If \code{TRUE}, returned paths are made relative to
-the \code{path} argument. Only applies to \code{seek()}.}
+\item{relative_path}{Logical. If TRUE, file paths are made relative to the
+path argument. If multiple root paths are provided, relative_path is
+automatically ignored and absolute paths are kept to avoid ambiguity.}
 
-\item{files}{A character vector of file paths to be used directly, instead of searching
-a directory. Only used in \code{seek_in()}.}
+\item{matches}{Logical. If \code{TRUE}, all matches per line are also returned in a
+\code{matches} list-column.}
+
+\item{files}{A character vector of files to search (only for \code{seek_in()}).}
 }
 \value{
-A tibble with one row per matching line, containing:
+A tibble with one row per matched line, containing:
 \itemize{
-\item \code{file}: Integer index of the file in the list.
-\item \code{path}: Path to the file.
-\item \code{line}: Line number within the file.
+\item \code{path}: File path (relative or absolute).
+\item \code{line_number}: Line number in the file.
 \item \code{match}: The first matched substring.
-\item \code{matches}: All matched substrings.
-\item \code{content}: Content of the matching line.
+\item \code{matches}: All matched substrings (if \code{matches = TRUE}).
+\item \code{line}: Full content of the matching line.
 }
 }
 \description{
-Searches for lines matching a regular expression pattern in a set of files.
-In \code{seek()}, the files are discovered within a directory (recursively or not),
-and optionally filtered using a path pattern. In \code{seek_in()}, the files
-are provided directly by the user.
+These functions search through one or more text files, extract lines matching
+a regular expression pattern, and return a tibble containing the results.
+\itemize{
+\item \code{seek()}: Discovers files inside one or more directories (recursively or not),
+applies optional file name and text file filtering, and searches lines.
+\item \code{seek_in()}: Searches inside a user-provided character vector of files.
+}
 }
 \details{
-These functions combine file listing (or direct input), filtering, reading,
-and pattern extraction into a single interface. They are especially useful
-for searching through codebases, configuration files, or logs.
+The overall process involves the following steps:
+\itemize{
+\item \strong{File Selection}
+\itemize{
+\item \code{seek()}: Files are discovered using \code{\link[fs:dir_ls]{fs::dir_ls()}}, starting from one or more directories.
+\item \code{seek_in()}: Files are directly supplied by the user (no discovery phase).
+}
+\item \strong{File Filtering}
+\itemize{
+\item Files located inside \verb{.git/} folders are automatically excluded.
+\item Files with known non-text extensions (e.g., \code{.png}, \code{.exe}, \code{.rds}) are excluded.
+\item If a file's extension is unknown, a check is performed to detect embedded null bytes (binary indicator).
+\item Optionally, an additional regex-based path filter (\code{filter}) can be applied.
+}
+\item \strong{Line Reading}
+\itemize{
+\item Files are read line-by-line using \code{\link[readr:read_lines]{readr::read_lines()}}.
+\item Only lines matching the provided regular expression \code{pattern} are retained.
+\item If a file cannot be read, it is skipped gracefully without failing the process.
+}
+\item \strong{Data Frame Construction}
+\itemize{
+\item A tibble is constructed with one row per matched line.
+}
+}
 
-The search is case-sensitive and uses Perl-compatible regular expressions (PCRE).
+These functions are particularly useful for analyzing source code,
+configuration files, logs, and other structured text data.
 }
 \examples{
 \dontrun{
-# Find all function definitions in R files under current directory
-seek("[^\\\\s]+(?= = function\\\\()", filter = "\\\\.R$", recursive = TRUE)
+# Search all function definitions in R files, recursively
+seek("[^\\\\s]+(?= (=|<-) function\\\\()", filter = "\\\\.R$", recurse = TRUE)
 
-# Find all package loaded using `library() in a predefined list of files
-files = list.files(pattern = "\\\\.R$", recursive = TRUE)
-seek_in("(?<=library\\\\()[^\\\\)]+", files)
+# Search for lines containing "error" in all .log files recursively
+seek("error", filter = "\\\\.log$", recurse = TRUE)
+
+# Search for specific headers in CSV files that may use different delimiters.
+files = list.files(pattern = "(?i)\\\\.csv$", full.names = TRUE, recursive = TRUE)
+seek_in(
+  files = files,
+  pattern = "(?i)^id([,;])date\\\\1last_name\\\\1first_name",
+  n_max = 1
+)
+
+# Search for specific configuration settings inside YAML files
+seek("^database:", filter = "(?i)\\\\.ya?ml$", recurse = TRUE
+)
+
+# Search for usage of "TODO" comments inside project source code
+seek("TODO", path = "src/", filter = "(?i)\\\\.(R|py|cpp|h)$", recurse = TRUE)
 }
 
 }
-\concept{seek}
+\seealso{
+\code{\link[readr:read_lines]{readr::read_lines()}}, \code{\link[stringr:str_detect]{stringr::str_detect()}}, \code{\link[fs:dir_ls]{fs::dir_ls()}}
+}
 \keyword{internal}

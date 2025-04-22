@@ -16,11 +16,9 @@ knitr::opts_chunk$set(
 # seekr
 
 <!-- badges: start -->
-
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN status](https://www.r-pkg.org/badges/version/seekr)](https://CRAN.R-project.org/package=seekr)
 [![R-CMD-check](https://github.com/smartiing/seekr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/smartiing/seekr/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/smartiing/seekr/graph/badge.svg)](https://app.codecov.io/gh/smartiing/seekr)
 <!-- badges: end -->
 
 **seekr** is an R package designed to help you search for specific patterns within text files.
@@ -44,12 +42,11 @@ devtools::install_github("smartiing/seekr")
 
 Each function returns a tibble with the following columns:
 
-- `file`: Index of the file in the list.
-- `path`: Path to the file.
-- `line`: Line number where the pattern was found.
-- `content`: Content of the matching line.
+- `path`: Path to the file (relative or absolute).
+- `line_number`: Line number where the pattern was found.
 - `match`: The first match found in the line.
-- `matches`: All matches found in the line.
+- `matches`: All matches found in the line (if matches = TRUE).
+- `line`: Content of the matching line.
 
 
 ## Example

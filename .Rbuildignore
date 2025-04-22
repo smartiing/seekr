@@ -9,3 +9,4 @@
 ^air\.toml$
 ^seekr\.R$
 ^\.github$
+^codecov\.yml$
