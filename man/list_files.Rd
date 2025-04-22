@@ -2,31 +2,39 @@
 % Please edit documentation in R/list-files.R
 \name{list_files}
 \alias{list_files}
-\title{List All Files in a Directory}
+\title{List Files in Directory}
 \usage{
-list_files(path, recursive, all.files)
+list_files(path, recurse, all)
 }
 \arguments{
-\item{path}{a character vector of full path names; the default
-    corresponds to the working directory, \code{\link[base]{getwd}()}.  Tilde
-    expansion (see \code{\link[base]{path.expand}}) is performed.  Missing
-    values will be ignored.  Elements with a marked encoding will
-    be converted to the native encoding (and if that fails, considered
-    non-existent).}
+\item{path}{A character vector of one or more paths.}
 
-\item{recursive}{logical.  Should the listing recurse into directories?}
+\item{recurse}{If \code{TRUE} recurse fully, if a positive number the number of levels
+to recurse.}
 
-\item{all.files}{a logical value.  If \code{FALSE}, only the
-    names of visible files are returned (following Unix-style visibility,
-    that is files whose name does not start with a dot).  If \code{TRUE},
-    all file names will be returned.}
+\item{all}{If \code{TRUE} hidden files are also returned.}
 }
 \value{
-A character vector of normalized file paths.
+A character vector of unique file paths. If no files are found, the function aborts with a
+message suggesting how to adjust search parameters (\code{recurse} and \code{all}), and includes a
+class-specific error identifier depending on the search mode:
+\itemize{
+\item \code{"error_list_files_TT"} for \code{recurse = TRUE}, \code{all = TRUE}
+\item \code{"error_list_files_TF"} for \code{recurse = TRUE}, \code{all = FALSE}
+\item \code{"error_list_files_FT"} for \code{recurse = FALSE}, \code{all = TRUE}
+\item \code{"error_list_files_FF"} for \code{recurse = FALSE}, \code{all = FALSE}
+}
 }
 \description{
-Lists all files in a specified directory using \code{\link[base:list.files]{base::list.files()}}, with options
-to include subdirectories and hidden files. If no files are found, provides
-informative error messages.
+Lists all files from a given directory with support for recursive search and inclusion of hidden files.
+The function throws a specific error when no files are found, based on the combination of
+\code{recurse} and \code{all} parameters. Returned file paths are made unique and are assumed to be
+normalized using forward slashes (\code{/}).
+}
+\examples{
+\dontrun{
+list_files("myfolder", recurse = TRUE, all = FALSE)
+}
+
 }
 \keyword{internal}

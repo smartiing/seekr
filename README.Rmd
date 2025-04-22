@@ -44,12 +44,11 @@ devtools::install_github("smartiing/seekr")
 
 Each function returns a tibble with the following columns:
 
-- `file`: Index of the file in the list.
-- `path`: Path to the file.
-- `line`: Line number where the pattern was found.
-- `content`: Content of the matching line.
+- `path`: Path to the file (relative or absolute).
+- `line_number`: Line number where the pattern was found.
 - `match`: The first match found in the line.
-- `matches`: All matches found in the line.
+- `matches`: All matches found in the line (if matches = TRUE).
+- `line`: Content of the matching line.
 
 
 ## Example
