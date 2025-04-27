@@ -2,7 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2025-04-27T19:35Z
+last_built: 2025-04-27T20:29Z
 urls:
   reference: https://smartiing.github.io/seekr/reference
   article: https://smartiing.github.io/seekr/articles
