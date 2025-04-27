@@ -150,7 +150,16 @@ seek_in = function(
 }
 
 
-#' @rdname seek
+#' @title Read and Prepare Matching Lines
+#'
+#' @description
+#' Reads a set of files, filters lines based on a regular expression pattern,
+#' and constructs a tidy tibble of the results.
+#'
+#' @inheritParams seek
+#'
+#' @returns A tibble with one row per matching line.
+#'
 #' @keywords internal
 seek_lines = function(
   files,
