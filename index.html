@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">seekr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,7 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -68,10 +69,13 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of <strong>seekr</strong> from GitHub with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"smartiing/seekr"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Install it directly from CRAN:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"seekr"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Or the the development version from GitHub:</span></span>
+<span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"smartiing/seekr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a>
@@ -116,18 +120,18 @@
 <span>  </span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">found</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 53 × 4</span></span>
-<span><span class="co">#&gt;    path                     line_number match  line                             </span></span>
-<span><span class="co">#&gt;    &lt;fs::path&gt;                     &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;                            </span></span>
-<span><span class="co">#&gt;  1 /01mtcarse2429fe498b.csv          20 Honda  "\"Honda Civic\",30.4,4,75.7,52,…</span></span>
-<span><span class="co">#&gt;  2 /01mtcarse2429fe498b.csv          21 Toyota "\"Toyota Corolla\",33.9,4,71.1,…</span></span>
-<span><span class="co">#&gt;  3 /01mtcarse2429fe498b.csv          22 Toyota "\"Toyota Corona\",21.5,4,120.1,…</span></span>
-<span><span class="co">#&gt;  4 /02irise243cbe1447.csv             2 setosa "\"1\",5.1,3.5,1.4,0.2,\"setosa\…</span></span>
-<span><span class="co">#&gt;  5 /02irise243cbe1447.csv             3 setosa "\"2\",4.9,3,1.4,0.2,\"setosa\"" </span></span>
-<span><span class="co">#&gt;  6 /02irise243cbe1447.csv             4 setosa "\"3\",4.7,3.2,1.3,0.2,\"setosa\…</span></span>
-<span><span class="co">#&gt;  7 /02irise243cbe1447.csv             5 setosa "\"4\",4.6,3.1,1.5,0.2,\"setosa\…</span></span>
-<span><span class="co">#&gt;  8 /02irise243cbe1447.csv             6 setosa "\"5\",5,3.6,1.4,0.2,\"setosa\"" </span></span>
-<span><span class="co">#&gt;  9 /02irise243cbe1447.csv             7 setosa "\"6\",5.4,3.9,1.7,0.4,\"setosa\…</span></span>
-<span><span class="co">#&gt; 10 /02irise243cbe1447.csv             8 setosa "\"7\",4.6,3.4,1.4,0.3,\"setosa\…</span></span>
+<span><span class="co">#&gt;    path                      line_number match  line                            </span></span>
+<span><span class="co">#&gt;    &lt;fs::path&gt;                      &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;                           </span></span>
+<span><span class="co">#&gt;  1 /01mtcars1ce438082ced.csv          20 Honda  "\"Honda Civic\",30.4,4,75.7,52…</span></span>
+<span><span class="co">#&gt;  2 /01mtcars1ce438082ced.csv          21 Toyota "\"Toyota Corolla\",33.9,4,71.1…</span></span>
+<span><span class="co">#&gt;  3 /01mtcars1ce438082ced.csv          22 Toyota "\"Toyota Corona\",21.5,4,120.1…</span></span>
+<span><span class="co">#&gt;  4 /02iris1ce4651a7270.csv             2 setosa "\"1\",5.1,3.5,1.4,0.2,\"setosa…</span></span>
+<span><span class="co">#&gt;  5 /02iris1ce4651a7270.csv             3 setosa "\"2\",4.9,3,1.4,0.2,\"setosa\""</span></span>
+<span><span class="co">#&gt;  6 /02iris1ce4651a7270.csv             4 setosa "\"3\",4.7,3.2,1.3,0.2,\"setosa…</span></span>
+<span><span class="co">#&gt;  7 /02iris1ce4651a7270.csv             5 setosa "\"4\",4.6,3.1,1.5,0.2,\"setosa…</span></span>
+<span><span class="co">#&gt;  8 /02iris1ce4651a7270.csv             6 setosa "\"5\",5,3.6,1.4,0.2,\"setosa\""</span></span>
+<span><span class="co">#&gt;  9 /02iris1ce4651a7270.csv             7 setosa "\"6\",5.4,3.9,1.7,0.4,\"setosa…</span></span>
+<span><span class="co">#&gt; 10 /02iris1ce4651a7270.csv             8 setosa "\"7\",4.6,3.4,1.4,0.3,\"setosa…</span></span>
 <span><span class="co">#&gt; # ℹ 43 more rows</span></span>
 <span>  </span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">tmp_mtcars</span>, <span class="va">tmp_iris</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -165,7 +169,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Sacha Martingay <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Sacha Martingay <br><small class="roles"> Author, maintainer, copyright holder </small>  </li>
 </ul>
 </div>
 
