@@ -131,7 +131,8 @@ automatically ignored and absolute paths are kept to avoid ambiguity.</p></dd>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The overall process involves the following steps:</p><ul><li><p><strong>File Selection</strong></p><ul><li><p><code>seek()</code>: Files are discovered using <code><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">fs::dir_ls()</a></code>, starting from one or more directories.</p></li>
+    <p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a></p>
+<p>The overall process involves the following steps:</p><ul><li><p><strong>File Selection</strong></p><ul><li><p><code>seek()</code>: Files are discovered using <code><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">fs::dir_ls()</a></code>, starting from one or more directories.</p></li>
 <li><p><code>seek_in()</code>: Files are directly supplied by the user (no discovery phase).</p></li>
 </ul></li>
 <li><p><strong>File Filtering</strong></p><ul><li><p>Files located inside <code>.git/</code> folders are automatically excluded.</p></li>
@@ -150,7 +151,7 @@ configuration files, logs, and other structured text data.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="https://readr.tidyverse.org/reference/read_lines.html" class="external-link">readr::read_lines()</a></code>, <code><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">stringr::str_detect()</a></code>, <code><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">fs::dir_ls()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">fs::dir_ls()</a></code>, <code><a href="https://readr.tidyverse.org/reference/read_lines.html" class="external-link">readr::read_lines()</a></code>, <code><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">stringr::str_detect()</a></code></p></div>
     </div>
 
     <div class="section level2">
