@@ -27,13 +27,14 @@ knitr::opts_chunk$set(
 
 ## Installation
 
-You can install the development version of **seekr** from GitHub with:
+```{r, eval = FALSE}
+# Install it directly from CRAN:
+install.packages("seekr")
 
-```r
-# install.packages("devtools")
-devtools::install_github("smartiing/seekr")
+# Or the the development version from GitHub:
+# install.packages("pak")
+pak::pak("smartiing/seekr")
 ```
-
 
 ## Functions
 
