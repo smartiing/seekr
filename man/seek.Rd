@@ -70,6 +70,8 @@ applies optional file name and text file filtering, and searches lines.
 }
 }
 \details{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 The overall process involves the following steps:
 \itemize{
 \item \strong{File Selection}
@@ -125,6 +127,6 @@ seek("TODO", path = "src/", filter = "(?i)\\\\.(R|py|cpp|h)$", recurse = TRUE)
 
 }
 \seealso{
-\code{\link[readr:read_lines]{readr::read_lines()}}, \code{\link[stringr:str_detect]{stringr::str_detect()}}, \code{\link[fs:dir_ls]{fs::dir_ls()}}
+\code{\link[fs:dir_ls]{fs::dir_ls()}}, \code{\link[readr:read_lines]{readr::read_lines()}}, \code{\link[stringr:str_detect]{stringr::str_detect()}}
 }
 \keyword{internal}

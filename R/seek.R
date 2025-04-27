@@ -1,3 +1,5 @@
+#' `r lifecycle::badge("experimental")`
+#'
 #' @title Extract Matching Lines from Files
 #'
 #' @description
@@ -81,7 +83,7 @@
 #' seek("TODO", path = "src/", filter = "(?i)\\.(R|py|cpp|h)$", recurse = TRUE)
 #' }
 #'
-#' @seealso [readr::read_lines()], [stringr::str_detect()], [fs::dir_ls()]
+#' @seealso [fs::dir_ls()], [readr::read_lines()], [stringr::str_detect()]
 #'
 #' @export
 seek = function(
