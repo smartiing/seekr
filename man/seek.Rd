@@ -3,7 +3,6 @@
 \name{seek}
 \alias{seek}
 \alias{seek_in}
-\alias{seek_lines}
 \title{Extract Matching Lines from Files}
 \usage{
 seek(
@@ -19,8 +18,6 @@ seek(
 )
 
 seek_in(files, pattern, ..., matches = FALSE)
-
-seek_lines(files, pattern, ..., path, relative_path, matches)
 }
 \arguments{
 \item{pattern}{A regular expression pattern used to match lines.}
@@ -129,4 +126,3 @@ seek("TODO", path = "src/", filter = "(?i)\\\\.(R|py|cpp|h)$", recurse = TRUE)
 \seealso{
 \code{\link[fs:dir_ls]{fs::dir_ls()}}, \code{\link[readr:read_lines]{readr::read_lines()}}, \code{\link[stringr:str_detect]{stringr::str_detect()}}
 }
-\keyword{internal}
