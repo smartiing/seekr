@@ -49,14 +49,13 @@ read_filter_lines = function(files, pattern, ...) {
   for (i in seq_along(files)) {
     tryCatch(
       expr = {
+        tmp = character(0)
         tmp = readr::read_lines(files[[i]], ...)
       }, warning = function(w) {
-        tmp <<- character(0)
         if (should_print_cli) {
           cli::cli_alert_warning("Problem reading : {files[[i]]}")
         }
       }, error = function(e) {
-        tmp <<- character(0)
         if (should_print_cli) {
           cli::cli_alert_warning("Problem reading : {files[[i]]}")
         }
