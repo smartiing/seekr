@@ -7,8 +7,8 @@
 \usage{
 seek(
   pattern,
-  ...,
   path = ".",
+  ...,
   filter = NULL,
   negate = FALSE,
   recurse = FALSE,
@@ -22,11 +22,11 @@ seek_in(files, pattern, ..., matches = FALSE)
 \arguments{
 \item{pattern}{A regular expression pattern used to match lines.}
 
-\item{...}{Additional arguments passed to \code{\link[readr:read_lines]{readr::read_lines()}}, such as
-\code{skip}, \code{n_max}, or \code{locale}.}
-
 \item{path}{A character vector of one or more directories where files should be
 discovered (only for \code{seek()}).}
+
+\item{...}{Additional arguments passed to \code{\link[readr:read_lines]{readr::read_lines()}}, such as
+\code{skip}, \code{n_max}, or \code{locale}.}
 
 \item{filter}{Optional. A regular expression pattern used to filter file paths
 before reading. If \code{NULL}, all text files are considered.}

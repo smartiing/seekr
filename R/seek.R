@@ -88,8 +88,8 @@
 #' @export
 seek = function(
   pattern,
-  ...,
   path = ".",
+  ...,
   filter = NULL,
   negate = FALSE,
   recurse = FALSE,
