@@ -1,3 +1,5 @@
+# seekr 0.1.2
+
 # seekr 0.1.1
 
 * Added realistic, minimal files (`.R`, `.csv`, `.log`, `.yaml`, `.json`) to 
