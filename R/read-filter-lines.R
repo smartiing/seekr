@@ -24,13 +24,7 @@
 #' If a file raises a warning or an error during reading, it is silently skipped and
 #' contributes an empty entry to the result lists.
 #'
-#' @examples
-#' \dontrun{
-#' read_filter_lines(c("file1.txt", "file2.csv"), pattern = "^ERROR")
-#' }
-#'
 #' @keywords internal
-
 read_filter_lines = function(files, pattern, ...) {
   N = length(files)
   line_number = vector("list", N)

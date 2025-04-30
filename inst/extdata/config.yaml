@@ -1,0 +1,13 @@
+database:
+  host: localhost
+  port: 5432
+  user: admin
+  password: secret
+
+logging:
+  level: INFO
+  filepath: /var/log/myapp.log
+
+features:
+  enable_tracking: true
+  max_users: 100

@@ -55,22 +55,28 @@ Each function returns a tibble with the following columns:
 ## Example
 
 ```{r}
-# Search for lines containing 'particular words' in csv files within the specified folder
-tmp_mtcars = tempfile("01mtcars", fileext = ".csv")
-tmp_iris = tempfile("02iris", fileext = ".csv")
+library(seekr)
 
-write.csv(mtcars, tmp_mtcars)
-write.csv(iris, tmp_iris)
+path = system.file("extdata", package = "seekr")
 
-found = seekr::seek(
-  pattern = "(?i)toyota|honda|setosa", 
-  path = tempdir(), 
-  filter = "\\.csv$"
-)
-  
-print(found)
-  
-unlink(c(tmp_mtcars, tmp_iris))
+# Search all function definitions in R files
+seek("[^\\s]+(?= (=|<-) function\\()", path, filter = "\\.R$")
+
+# Search for usage of "TODO" comments in source code in a case insensitive way
+seek("(?i)TODO", path, filter = "\\.R$")
+
+# Search for error/warning in log files
+seek("(?i)error", path, filter = "\\.log$")
+
+# Search for config keys in YAML
+seek("database:", path, filter = "\\.ya?ml$")
+
+# Looking for "length" in all types of text files
+seek("(?i)length", path)
+
+# Search for specific CSV headers using seek_in() and reading only the first line
+csv_files <- list.files(path, "\\.csv$", full.names = TRUE)
+seek_in(csv_files, "(?i)specie", n_max = 1)
 ```
 
 

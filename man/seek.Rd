@@ -31,7 +31,8 @@ discovered (only for \code{seek()}).}
 \item{filter}{Optional. A regular expression pattern used to filter file paths
 before reading. If \code{NULL}, all text files are considered.}
 
-\item{negate}{If \code{TRUE}, inverts the resulting boolean vector.}
+\item{negate}{Logical. If \code{TRUE}, files matching the \code{filter} pattern are excluded
+instead of included. Useful to skip files based on name or extension.}
 
 \item{recurse}{If \code{TRUE} recurse fully, if a positive number the number of levels
 to recurse.}
@@ -99,28 +100,26 @@ These functions are particularly useful for analyzing source code,
 configuration files, logs, and other structured text data.
 }
 \examples{
-\dontrun{
-# Search all function definitions in R files, recursively
-seek("[^\\\\s]+(?= (=|<-) function\\\\()", filter = "\\\\.R$", recurse = TRUE)
+path = system.file("extdata", package = "seekr")
 
-# Search for lines containing "error" in all .log files recursively
-seek("error", filter = "\\\\.log$", recurse = TRUE)
+# Search all function definitions in R files
+seek("[^\\\\s]+(?= (=|<-) function\\\\()", path, filter = "\\\\.R$")
 
-# Search for specific headers in CSV files that may use different delimiters.
-files = list.files(pattern = "(?i)\\\\.csv$", full.names = TRUE, recursive = TRUE)
-seek_in(
-  files = files,
-  pattern = "(?i)^id([,;])date\\\\1last_name\\\\1first_name",
-  n_max = 1
-)
+# Search for usage of "TODO" comments in source code in a case insensitive way
+seek("(?i)TODO", path, filter = "\\\\.R$")
 
-# Search for specific configuration settings inside YAML files
-seek("^database:", filter = "(?i)\\\\.ya?ml$", recurse = TRUE
-)
+# Search for error/warning in log files
+seek("(?i)error", path, filter = "\\\\.log$")
 
-# Search for usage of "TODO" comments inside project source code
-seek("TODO", path = "src/", filter = "(?i)\\\\.(R|py|cpp|h)$", recurse = TRUE)
-}
+# Search for config keys in YAML
+seek("database:", path, filter = "\\\\.ya?ml$")
+
+# Looking for "length" in all types of text files
+seek("(?i)length", path)
+
+# Search for specific CSV headers using seek_in() and reading only the first line
+csv_files <- list.files(path, "\\\\.csv$", full.names = TRUE)
+seek_in(csv_files, "(?i)specie", n_max = 1)
 
 }
 \seealso{

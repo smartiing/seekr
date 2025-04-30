@@ -20,6 +20,8 @@
 #' `skip`, `n_max`, or `locale`.
 #' @param filter Optional. A regular expression pattern used to filter file paths
 #' before reading. If `NULL`, all text files are considered.
+#' @param negate Logical. If `TRUE`, files matching the `filter` pattern are excluded
+#' instead of included. Useful to skip files based on name or extension.
 #' @param relative_path Logical. If TRUE, file paths are made relative to the
 #' path argument. If multiple root paths are provided, relative_path is
 #' automatically ignored and absolute paths are kept to avoid ambiguity.
@@ -60,28 +62,26 @@
 #' configuration files, logs, and other structured text data.
 #'
 #' @examples
-#' \dontrun{
-#' # Search all function definitions in R files, recursively
-#' seek("[^\\s]+(?= (=|<-) function\\()", filter = "\\.R$", recurse = TRUE)
+#' path = system.file("extdata", package = "seekr")
 #'
-#' # Search for lines containing "error" in all .log files recursively
-#' seek("error", filter = "\\.log$", recurse = TRUE)
+#' # Search all function definitions in R files
+#' seek("[^\\s]+(?= (=|<-) function\\()", path, filter = "\\.R$")
 #'
-#' # Search for specific headers in CSV files that may use different delimiters.
-#' files = list.files(pattern = "(?i)\\.csv$", full.names = TRUE, recursive = TRUE)
-#' seek_in(
-#'   files = files,
-#'   pattern = "(?i)^id([,;])date\\1last_name\\1first_name",
-#'   n_max = 1
-#' )
+#' # Search for usage of "TODO" comments in source code in a case insensitive way
+#' seek("(?i)TODO", path, filter = "\\.R$")
 #'
-#' # Search for specific configuration settings inside YAML files
-#' seek("^database:", filter = "(?i)\\.ya?ml$", recurse = TRUE
-#' )
+#' # Search for error/warning in log files
+#' seek("(?i)error", path, filter = "\\.log$")
 #'
-#' # Search for usage of "TODO" comments inside project source code
-#' seek("TODO", path = "src/", filter = "(?i)\\.(R|py|cpp|h)$", recurse = TRUE)
-#' }
+#' # Search for config keys in YAML
+#' seek("database:", path, filter = "\\.ya?ml$")
+#'
+#' # Looking for "length" in all types of text files
+#' seek("(?i)length", path)
+#'
+#' # Search for specific CSV headers using seek_in() and reading only the first line
+#' csv_files <- list.files(path, "\\.csv$", full.names = TRUE)
+#' seek_in(csv_files, "(?i)specie", n_max = 1)
 #'
 #' @seealso [fs::dir_ls()], [readr::read_lines()], [stringr::str_detect()]
 #'

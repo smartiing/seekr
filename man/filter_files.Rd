@@ -12,7 +12,8 @@ filter_files(files, filter, negate, n = 1000L)
 \item{filter}{Optional. A regular expression pattern used to filter file paths
 before reading. If \code{NULL}, all text files are considered.}
 
-\item{negate}{If \code{TRUE}, inverts the resulting boolean vector.}
+\item{negate}{Logical. If \code{TRUE}, files matching the \code{filter} pattern are excluded
+instead of included. Useful to skip files based on name or extension.}
 
 \item{n}{The number of bytes to read for binary detection in files with unknown extensions. Defaults to 1000.}
 }

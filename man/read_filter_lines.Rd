@@ -37,10 +37,4 @@ large files. Only the lines matching the \code{pattern} are retained for each fi
 If a file raises a warning or an error during reading, it is silently skipped and
 contributes an empty entry to the result lists.
 }
-\examples{
-\dontrun{
-read_filter_lines(c("file1.txt", "file2.csv"), pattern = "^ERROR")
-}
-
-}
 \keyword{internal}

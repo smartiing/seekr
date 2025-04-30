@@ -46,36 +46,78 @@ Each function returns a tibble with the following columns:
 ## Example
 
 ``` r
-# Search for lines containing 'particular words' in csv files within the specified folder
-tmp_mtcars = tempfile("01mtcars", fileext = ".csv")
-tmp_iris = tempfile("02iris", fileext = ".csv")
+library(seekr)
+#> 
+#> Attaching package: 'seekr'
+#> The following object is masked from 'package:base':
+#> 
+#>     seek
 
-write.csv(mtcars, tmp_mtcars)
-write.csv(iris, tmp_iris)
+path = system.file("extdata", package = "seekr")
 
-found = seekr::seek(
-  pattern = "(?i)toyota|honda|setosa", 
-  path = tempdir(), 
-  filter = "\\.csv$"
-)
-  
-print(found)
-#> # A tibble: 53 × 4
-#>    path                      line_number match  line                            
-#>    <fs::path>                      <int> <chr>  <chr>                           
-#>  1 /01mtcars1ce438082ced.csv          20 Honda  "\"Honda Civic\",30.4,4,75.7,52…
-#>  2 /01mtcars1ce438082ced.csv          21 Toyota "\"Toyota Corolla\",33.9,4,71.1…
-#>  3 /01mtcars1ce438082ced.csv          22 Toyota "\"Toyota Corona\",21.5,4,120.1…
-#>  4 /02iris1ce4651a7270.csv             2 setosa "\"1\",5.1,3.5,1.4,0.2,\"setosa…
-#>  5 /02iris1ce4651a7270.csv             3 setosa "\"2\",4.9,3,1.4,0.2,\"setosa\""
-#>  6 /02iris1ce4651a7270.csv             4 setosa "\"3\",4.7,3.2,1.3,0.2,\"setosa…
-#>  7 /02iris1ce4651a7270.csv             5 setosa "\"4\",4.6,3.1,1.5,0.2,\"setosa…
-#>  8 /02iris1ce4651a7270.csv             6 setosa "\"5\",5,3.6,1.4,0.2,\"setosa\""
-#>  9 /02iris1ce4651a7270.csv             7 setosa "\"6\",5.4,3.9,1.7,0.4,\"setosa…
-#> 10 /02iris1ce4651a7270.csv             8 setosa "\"7\",4.6,3.4,1.4,0.3,\"setosa…
-#> # ℹ 43 more rows
-  
-unlink(c(tmp_mtcars, tmp_iris))
+# Search all function definitions in R files
+seek("[^\\s]+(?= (=|<-) function\\()", path, filter = "\\.R$")
+#> # A tibble: 6 × 4
+#>   path       line_number match        line                         
+#>   <fs::path>       <int> <chr>        <chr>                        
+#> 1 /script1.R           1 add_one      add_one <- function(x) {     
+#> 2 /script1.R           5 capitalize   capitalize <- function(txt) {
+#> 3 /script1.R           9 say_hello    say_hello <- function(name) {
+#> 4 /script2.R           2 mean_safe    mean_safe <- function(x) {   
+#> 5 /script2.R           7 sd_safe      sd_safe <- function(x) {     
+#> 6 /script2.R          12 print_vector print_vector <- function(v) {
+
+# Search for usage of "TODO" comments in source code in a case insensitive way
+seek("(?i)TODO", path, filter = "\\.R$")
+#> # A tibble: 1 × 4
+#>   path       line_number match line                          
+#>   <fs::path>       <int> <chr> <chr>                         
+#> 1 /script2.R           1 TODO  # TODO: optimize this function
+
+# Search for error/warning in log files
+seek("(?i)error", path, filter = "\\.log$")
+#> # A tibble: 14 × 4
+#>    path        line_number match line                                           
+#>    <fs::path>        <int> <chr> <chr>                                          
+#>  1 /server.log           3 ERROR 2025-04-29 21:52:17 ERROR : Starting process   
+#>  2 /server.log           6 ERROR 2025-04-30 04:15:43 ERROR : Retrying request   
+#>  3 /server.log           7 ERROR 2025-04-29 13:59:14 ERROR : Failed to authenti…
+#>  4 /server.log          10 ERROR 2025-04-30 17:20:48 ERROR : User login failed  
+#>  5 /server.log          11 ERROR 2025-04-30 11:41:17 ERROR : Starting process   
+#>  6 /server.log          14 ERROR 2025-04-30 00:15:59 ERROR : Connection success…
+#>  7 /server.log          16 ERROR 2025-04-29 20:39:24 ERROR : User login failed  
+#>  8 /server.log          19 ERROR 2025-04-29 17:51:14 ERROR : Timeout reached    
+#>  9 /server.log          20 ERROR 2025-04-29 18:27:07 ERROR : Retrying request   
+#> 10 /server.log          21 ERROR 2025-04-30 16:15:44 ERROR : Disk usage high    
+#> 11 /server.log          23 ERROR 2025-04-30 17:14:15 ERROR : User login failed  
+#> 12 /server.log          30 ERROR 2025-04-30 00:03:39 ERROR : Connection success…
+#> 13 /server.log          35 ERROR 2025-04-30 17:25:05 ERROR : Connection success…
+#> 14 /server.log          40 ERROR 2025-04-29 17:49:55 ERROR : Restart scheduled
+
+# Search for config keys in YAML
+seek("database:", path, filter = "\\.ya?ml$")
+#> # A tibble: 1 × 4
+#>   path         line_number match     line     
+#>   <fs::path>         <int> <chr>     <chr>    
+#> 1 /config.yaml           1 database: database:
+
+# Looking for "length" in all types of text files
+seek("(?i)length", path)
+#> # A tibble: 4 × 4
+#>   path       line_number match  line                                            
+#>   <fs::path>       <int> <chr>  <chr>                                           
+#> 1 /iris.csv            1 Length "\"Sepal.Length\",\"Sepal.Width\",\"Petal.Lengt…
+#> 2 /script2.R           3 length "  if (length(x) == 0) return(NA)"              
+#> 3 /script2.R           8 length "  if (length(x) <= 1) return(NA)"              
+#> 4 /script2.R          13 length "  print(paste('Vector of length', length(v)))"
+
+# Search for specific CSV headers using seek_in() and reading only the first line
+csv_files <- list.files(path, "\\.csv$", full.names = TRUE)
+seek_in(csv_files, "(?i)specie", n_max = 1)
+#> # A tibble: 1 × 4
+#>   path                                                   line_number match line 
+#>   <fs::path>                                                   <int> <chr> <chr>
+#> 1 …YzN7t/temp_libpath4cf462766a0b/seekr/extdata/iris.csv           1 Spec… "\"S…
 ```
 
 ## License
