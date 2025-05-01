@@ -15,7 +15,7 @@ test_that("filter_files() filters files correctly given extensions", {
   result = filter_files(files, filter = NULL)
 
   expect_true(file1 %in% result)
-  expect_false(file2 %in% result)  # PNG should be excluded
+  expect_false(file2 %in% result) # PNG should be excluded
   expect_true(file3 %in% result)
   expect_true(file4 %in% result)
 })

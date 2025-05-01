@@ -45,11 +45,13 @@ read_filter_lines = function(files, pattern, ...) {
       expr = {
         tmp = character(0)
         tmp = readr::read_lines(files[[i]], ...)
-      }, warning = function(w) {
+      },
+      warning = function(w) {
         if (should_print_cli) {
           cli::cli_alert_warning("Problem reading : {files[[i]]}")
         }
-      }, error = function(e) {
+      },
+      error = function(e) {
         if (should_print_cli) {
           cli::cli_alert_warning("Problem reading : {files[[i]]}")
         }

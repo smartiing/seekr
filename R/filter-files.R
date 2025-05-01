@@ -80,6 +80,7 @@ is_in_gitfolder = function(files) {
 #'
 #' @keywords internal
 has_known_nontext_extension = function(files) {
+  # fmt: skip
   nontext_extensions = c(
     ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", # Images
     ".wav", ".mp3", ".mp4", ".mkv", # Audio
@@ -91,7 +92,6 @@ has_known_nontext_extension = function(files) {
     ".zip", ".rar", ".gz", ".tar.gz", ".xml.gz", ".xml.bz2", # Archives
     ".woff", ".woff2", ".eot", ".ttf", # Fonts
     ".db", ".kdbx", # Databases
-    ".json.enc", # Encrypted
     ".frx", ".rwz" # Misc/unknown
   )
 
@@ -111,6 +111,7 @@ has_known_nontext_extension = function(files) {
 #'
 #' @keywords internal
 has_known_text_extension = function(files) {
+  # fmt: skip
   text_extensions = c(
     ".r", ".rmd", ".rnw", ".rd", ".rproj", ".qmd", ".rhistory", ".rprofile", ".rout", # R ecosystem
     ".py", ".ipynb", # Python
@@ -137,11 +138,9 @@ has_known_text_extension = function(files) {
     ".ml", ".mli", # OCaml
     ".lisp", ".cl", ".el", ".emacs", ".scm", ".rkt", ".ss", ".lsp", # Lisp family
     ".erl", ".hrl", ".ex", ".exs", # Erlang & Elixir
-    ".dart", # Dart / Flutter
     ".php", ".php4", ".php5", ".phtml", # PHP
     ".rb", ".erb", ".rake", ".gemspec", # Ruby
     ".pl", ".pm", ".pod", ".t", # Perl
-    ".tcl", # Tcl / Tk
     ".vb", ".vbs", # Visual Basic
     ".sql", ".psql", # SQL
     ".asm", ".s", ".S", # Assembly

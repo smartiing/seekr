@@ -19,7 +19,7 @@
 #' @keywords internal
 print_cli = function() {
   getOption("seekr.verbose", TRUE) &&
-  !testthat::is_testing()
+    !testthat::is_testing()
 }
 
 

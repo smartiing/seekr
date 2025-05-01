@@ -39,7 +39,7 @@ test_that("read_filter_lines() handles embedded null bytes with a warning", {
     result = read_filter_lines(tmp, pattern = "line")
   })
 
-  expect_length(result$line[[1]], 1)  # fallback assumes empty match
+  expect_length(result$line[[1]], 1) # fallback assumes empty match
 })
 
 

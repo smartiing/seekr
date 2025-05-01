@@ -10,7 +10,10 @@ create_mixed_test_files = function(tmpdir) {
   writeLines(c("name;age;city", "Alice;30;Paris"), file.path(tmpdir, "data2.csv"))
 
   # Log files
-  writeLines(c("INFO: Started server", "ERROR: Failed to load config"), file.path(tmpdir, "server.log"))
+  writeLines(
+    c("INFO: Started server", "ERROR: Failed to load config"),
+    file.path(tmpdir, "server.log")
+  )
   writeLines(c("ERROR: Connection timeout"), file.path(tmpdir, "error.log"))
 
   # Binary-like files (fake binary)

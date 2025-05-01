@@ -21,4 +21,3 @@ test_that("set_seekr_verbose_default() sets default only when option is unset", 
 test_that(".onLoad() executes without error", {
   expect_silent(.onLoad("seekr", "seekr"))
 })
-

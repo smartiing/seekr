@@ -44,36 +44,40 @@ list_files = function(path, recurse, all) {
 
   if (length(files) == 0L) {
     if (recurse & all) {
-      cli::cli_abort(c(
-        "!" = "No files found in {.path {path}}.",
-        "i" = "Check the folder path."
-      ),
-      class = "error_list_files_TT"
+      cli::cli_abort(
+        c(
+          "!" = "No files found in {.path {path}}.",
+          "i" = "Check the folder path."
+        ),
+        class = "error_list_files_TT"
       )
     } else if (recurse & !all) {
-      cli::cli_abort(c(
-        "!" = "No files found in {.path {path}}.",
-        "i" = "Check the folder path.",
-        "i" = "Set {.code all = TRUE} if you want to match hidden files."
-      ),
-      class = "error_list_files_TF"
+      cli::cli_abort(
+        c(
+          "!" = "No files found in {.path {path}}.",
+          "i" = "Check the folder path.",
+          "i" = "Set {.code all = TRUE} if you want to match hidden files."
+        ),
+        class = "error_list_files_TF"
       )
     } else if (!recurse & all) {
-      cli::cli_abort(c(
-        "!" = "No files found in {.path {path}}.",
-        "i" = "Check the folder path.",
-        "i" = "Set {.code recurse = TRUE} if you want to find files recursively."
-      ),
-      class = "error_list_files_FT"
+      cli::cli_abort(
+        c(
+          "!" = "No files found in {.path {path}}.",
+          "i" = "Check the folder path.",
+          "i" = "Set {.code recurse = TRUE} if you want to find files recursively."
+        ),
+        class = "error_list_files_FT"
       )
     } else if (!recurse & !all) {
-      cli::cli_abort(c(
-        "!" = "No files found in {.path {path}}.",
-        "i" = "Check the folder path.",
-        "i" = "Set {.code recurse = TRUE} if you want to find files recursively.",
-        "i" = "Set {.code all = TRUE} if you want to match hidden files."
-      ),
-      class = "error_list_files_FF"
+      cli::cli_abort(
+        c(
+          "!" = "No files found in {.path {path}}.",
+          "i" = "Check the folder path.",
+          "i" = "Set {.code recurse = TRUE} if you want to find files recursively.",
+          "i" = "Set {.code all = TRUE} if you want to match hidden files."
+        ),
+        class = "error_list_files_FF"
       )
     }
   }

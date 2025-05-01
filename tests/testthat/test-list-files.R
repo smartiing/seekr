@@ -68,5 +68,3 @@ test_that("mock cli for coverage", {
 
   expect_no_error(list_files(tmp, FALSE, FALSE))
 })
-
-
