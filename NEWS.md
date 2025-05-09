@@ -1,4 +1,8 @@
-# seekr (development version)
+# seekr 0.1.3
+
+* Fixed a test that incorrectly assumed how `normalizePath()` behaves on macOS.
+  The test now avoids relying on full file paths and instead checks file names,
+  ensuring compatibility across platforms.
 
 # seekr 0.1.2
 

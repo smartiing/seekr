@@ -117,7 +117,7 @@ seek_in(csv_files, "(?i)specie", n_max = 1)
 #> # A tibble: 1 × 4
 #>   path                                                   line_number match line 
 #>   <fs::path>                                                   <int> <chr> <chr>
-#> 1 …YzN7t/temp_libpath4cf462766a0b/seekr/extdata/iris.csv           1 Spec… "\"S…
+#> 1 …CkRE2/temp_libpath4fd865e72d05/seekr/extdata/iris.csv           1 Spec… "\"S…
 ```
 
 ## License
