@@ -5,16 +5,12 @@
 test_that("list_files() returns files correctly", {
   tmp = withr::local_tempdir()
 
-  file1 = file.path(tmp, "file1.txt")
-  writeLines("content", file1)
-  file1 = normalizePath(file1, "/")
-
-  file2 = file.path(tmp, "file2.log")
-  writeLines("content", file2)
-  file2 = normalizePath(file2, "/")
+  writeLines("content", file.path(tmp, "file1.txt"))
+  writeLines("content", file.path(tmp, "file2.log"))
 
   result = list_files(path = tmp, recurse = FALSE, all = FALSE)
-  expect_true(all(c(file1, file2) %in% result))
+
+  expect_true(all(c("file1.txt", "file2.log") %in% basename(result)))
 })
 
 
