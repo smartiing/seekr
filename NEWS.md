@@ -1,3 +1,5 @@
+# seekr (development version)
+
 # seekr 0.1.3
 
 * Fixed a test that incorrectly assumed how `normalizePath()` behaves on macOS.

@@ -1,6 +1,6 @@
 Package: seekr
 Title: Extract Matching Lines from Matching Files
-Version: 0.1.3
+Version: 0.1.3.9000
 Authors@R: 
     person("Sacha", "Martingay", , "martingay.sacha@hotmail.com", role = c("aut", "cre", "cph"))
 Description: Provides a simple interface to recursively list files from a
