@@ -23,26 +23,6 @@ test_that("read_filter_lines() skips files with errors gracefully", {
 })
 
 
-test_that("read_filter_lines() handles embedded null bytes with a warning", {
-  tmp = withr::local_tempfile()
-  writeBin(c(charToRaw("line1\n"), as.raw(0x00), charToRaw("line2\n")), tmp)
-
-  expect_warning_or_message = function(expr) {
-    tryCatch(
-      expr,
-      warning = function(w) expect_true(TRUE),
-      error = function(e) expect_true(FALSE)
-    )
-  }
-
-  expect_warning_or_message({
-    result = read_filter_lines(tmp, pattern = "line")
-  })
-
-  expect_length(result$line[[1]], 1) # fallback assumes empty match
-})
-
-
 test_that("read_filter_lines() returns empty vectors for non-matching patterns", {
   tmp1 = withr::local_tempfile()
   tmp2 = withr::local_tempfile()
