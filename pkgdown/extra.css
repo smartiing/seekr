@@ -1,0 +1,9 @@
+.template-home img.logo {
+  width: 170px;
+  height: auto;
+}
+
+img.logo {
+  width: 150px;
+  height: auto;
+}

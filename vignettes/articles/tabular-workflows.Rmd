@@ -1,0 +1,234 @@
+---
+title: "Tabular workflows"
+description: >
+  Use dplyr and tibble workflows to inspect, filter, and update seekr_match vectors.
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+source_dir = system.file("extdata", package = "seekr")
+example_dir = file.path(tempdir(), "seekr-example")
+backup_dir = file.path(tempdir(), "seekr-backups")
+
+unlink(example_dir, recursive = TRUE)
+unlink(backup_dir, recursive = TRUE)
+
+dir.create(example_dir, recursive = TRUE)
+dir.create(backup_dir, recursive = TRUE)
+
+options(seekr.backup_dir = backup_dir)
+
+file.copy(
+  from = source_dir,
+  to = example_dir,
+  recursive = TRUE
+)
+
+path = file.path(example_dir, "extdata")
+knitr::opts_knit$set(root.dir = path)
+```
+
+## Overview
+
+`seek()`/`seekr()` returns matches as a `seekr_match` vector. For many workflows, you can inspect and refine this vector directly with `print()`, `summary()`, and `filter_match()`.
+
+Sometimes, however, it is useful to switch to a tabular workflow. This is especially true when you want to summarize matches by file, filter based on group-level information, or prepare replacements with data frame tools.
+
+This article shows how to:
+
+- convert a `seekr_match` vector to a tibble with `as_tibble()`,
+- inspect matches with grouped summaries,
+- filter matches using group-level logic,
+- update replacements with `dplyr`,
+- convert back to a `seekr_match` vector with `as_match()`,
+- apply replacements with `replace_files()`.
+
+The examples use a temporary copy of the example files shipped with `seekr`, so they are safe to modify.
+
+## Find matches
+
+Suppose we want to inspect log messages.
+
+```{r, echo = TRUE, eval = FALSE}
+library(seekr)
+library(dplyr)
+library(purrr)
+library(stringr)
+```
+
+```{r, include = FALSE, eval = TRUE}
+library(seekr)
+library(dplyr)
+library(purrr)
+library(stringr)
+options(width = 150)
+```
+
+```{r}
+x <- seek("([A-Z]+) : (.+$)", extension = "log")
+x
+```
+
+We summarize directly to have an idea of what was found.
+
+```{r}
+summary(x)
+```
+
+The summary gives a compact overview of the matches, affected files, extensions, and match/replacement combinations but only the first 10 elements are printed. Here are all of them.
+
+```{r}
+x |> summary() |> print(n = Inf)
+```
+
+## Filter matches directly
+
+For simple filtering, `filter_match()` is usually enough. It evaluates expressions directly on the fields of the `seekr_match` vector.
+
+For example, we can keep only `DEBUG` lines.
+
+```{r}
+xf <- filter_match(x, str_detect(match, "^DEBUG"))
+```
+
+At this point, `xf` is simply our `seekr_match` vector, filtered.
+
+```{r}
+print(xf)
+```
+
+## Convert to a tibble
+
+For more complex inspection, convert the match vector to a tibble and put the path at the end for display reasons.
+
+```{r}
+xdf <- 
+  xf |>
+  as_tibble() |>
+  relocate(path, .after = last_col())
+
+xdf
+```
+
+This gives one row per match and one column per field, which makes grouped summaries easy.
+
+For example, we could create a custom summary per file where we see the number of matches and distinct matches as well as the first and last lines where we find a match.
+
+```{r}
+xdf |>
+  summarise(
+    n_matches = n(),
+    n_distinct_matches = n_distinct(match),
+    first_line = min(start_line),
+    last_line = max(end_line),
+    .by = path
+  )
+```
+
+This kind of question is often easier to answer with a tibble than with the match vector directly.
+
+## Filter with group-level information
+
+A tabular workflow is also useful when filtering depends on group-level information.
+
+For example, suppose we only want to keep the latest occurrence of each distinct log message in each file.
+
+```{r}
+latest <-
+  xdf |>
+  mutate(
+    match_rank_from_end = row_number(desc(start_line)),
+    .by = c(path, match)
+  ) |>
+  filter(match_rank_from_end == 1L)
+
+latest
+```
+
+We can also continue filtering with regular `dplyr` expressions. Here, we remove messages mentioning connections.
+
+```{r}
+latest <-
+  latest |>
+  filter_out(str_detect(match, "Connection"))
+
+latest
+```
+
+The extra column `match_rank_from_end` is useful while working as a tibble, but it is not part of a `seekr_match` vector. `as_match()` will ignore extra columns and validate the required match fields when converting back.
+
+## Update replacements in a tibble
+
+Finally, a tibble workflow can also be used to prepare replacements.
+
+Here, we create different replacements depending on the content of each match.
+
+```{r}
+latest <-
+  latest |>
+  mutate(
+    replacement = case_when(
+      str_detect(match, "Disk") ~ str_to_upper(match),
+      str_detect(match, "config") ~ str_to_lower(match),
+      .default = str_to_title(match)
+    )
+  )
+
+latest |>
+  count(match, replacement)
+```
+
+## Convert back to a seekr_match vector
+
+Before replacing files, convert the tibble back to a `seekr_match` vector. The result can be printed again with replacement previews now that some replacements have been set.
+
+```{r}
+to_replace <- as_match(latest)
+to_replace
+```
+
+## Replace selected matches
+
+`replace_files()` applies replacements from the current `seekr_match` vector.
+
+This is important: only the matches still present in `to_replace` are replaced. Matches that were filtered out of the tibble workflow are not modified.
+
+```{r}
+replaced <- replace_files(to_replace)
+replaced
+```
+
+## Restore the example files
+
+The examples above modified files in a temporary directory. `replace_files()` created a backup before writing, so we can restore the previous contents if we need to.
+
+```{r}
+bck <- last_backup()
+bck
+restore_files(from = bck$backup, to = bck$original)
+```
+
+After restoring, the original matches are back.
+
+```{r}
+after_restore <- seek("([A-Z]+) : (.+$)", extension = "log")
+print(after_restore)
+identical(x, after_restore)
+```
+
+```{r cleaning, include = FALSE, eval = FALSE}
+unlink(example_dir, recursive = TRUE)
+unlink(backup_dir, recursive = TRUE)
+```
+
+## When to use this pattern
+
+You do not need a tabular workflow for every search-and-replace task.
+
+Use `filter_match()` when you want to filter matches with simple expressions based on match fields.
+
+Use `as_tibble()` and `as_match()` when you want to use data frame tools, especially for grouped summaries, group-aware filtering, joins, or more complex replacement preparation.

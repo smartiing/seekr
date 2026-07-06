@@ -1,5 +1,6 @@
 # This script generates the files in inst/extdata/ for examples and documentation.
 # Run manually when needed.
+set.seed(42)
 
 # --- 1. script1.R ---
 writeLines(c(
@@ -41,27 +42,31 @@ writeLines(c(
 
 
 # --- 3. iris.csv ---
-write.csv(iris, "inst/extdata/iris.csv", row.names = FALSE)
+write.csv(iris[sample(nrow(iris)), ], "inst/extdata/iris.csv", row.names = FALSE)
 
 # --- 4. mtcars.csv ---
-write.csv(mtcars, "inst/extdata/mtcars.csv", row.names = TRUE)
-
+write.csv(mtcars[sample(nrow(mtcars)), ], "inst/extdata/mtcars.csv", row.names = TRUE)
 
 # --- 5. server.log ---
-set.seed(42)
-levels <- c("INFO", "ERROR", "DEBUG", "WARNING")
-messages <- c(
-  "Starting process", "Connection successful", "Failed to authenticate",
-  "Retrying request", "Disk usage high", "Timeout reached", "Loading config",
-  "User login failed", "Restart scheduled"
-)
-log_lines <- replicate(40, {
-  lvl <- sample(levels, 1)
-  msg <- sample(messages, 1)
-  ts <- format(Sys.time() - runif(1, 0, 100000), "%Y-%m-%d %H:%M:%S")
-  paste(ts, lvl, ":", msg)
-})
-writeLines(log_lines, "inst/extdata/server.log")
+create_log_lines = function() {
+  levels <- c("INFO", "ERROR", "DEBUG", "WARNING")
+  messages <- c(
+    "Starting process", "Connection successful", "Failed to authenticate",
+    "Retrying request", "Disk usage high", "Timeout reached", "Loading config",
+    "User login failed", "Restart scheduled"
+  )
+  log_lines <- replicate(40, {
+    lvl <- sample(levels, 1)
+    msg <- sample(messages, 1)
+    ts <- format(Sys.time() - runif(1, 0, 100000), "%Y-%m-%d %H:%M:%S")
+    paste(ts, lvl, ":", msg)
+  })
+
+  return(log_lines)
+}
+
+writeLines(create_log_lines(), "inst/extdata/server1.log")
+writeLines(create_log_lines(), "inst/extdata/server2.log")
 
 
 # --- 6. config.yaml ---
@@ -96,3 +101,5 @@ writeLines(c(
   '  }',
   "}"
 ), "inst/extdata/data.json")
+
+

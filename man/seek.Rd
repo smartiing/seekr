@@ -2,126 +2,311 @@
 % Please edit documentation in R/seek.R
 \name{seek}
 \alias{seek}
-\alias{seek_in}
-\title{Extract Matching Lines from Files}
+\alias{seekr}
+\title{Find matches in text files}
 \usage{
 seek(
   pattern,
-  path = ".",
+  replacement = NULL,
   ...,
-  filter = NULL,
-  negate = FALSE,
-  recurse = FALSE,
+  path = ".",
+  recurse = TRUE,
   all = FALSE,
-  relative_path = TRUE,
-  matches = FALSE
+  use_git = FALSE,
+  extension = NULL,
+  path_pattern = NULL,
+  max_file_size = Inf,
+  exclude = seekr::exclude_functions,
+  context = 5L,
+  encoding = "UTF-8",
+  .progress = seekr_option("seekr.progress")
 )
 
-seek_in(files, pattern, ..., matches = FALSE)
+seekr(
+  pattern,
+  replacement = NULL,
+  ...,
+  path = ".",
+  recurse = TRUE,
+  all = FALSE,
+  use_git = FALSE,
+  path_pattern = NULL,
+  max_file_size = Inf,
+  exclude = seekr::exclude_functions,
+  context = 5L,
+  encoding = "UTF-8",
+  .progress = seekr_option("seekr.progress")
+)
 }
 \arguments{
-\item{pattern}{A regular expression pattern used to match lines.}
+\item{pattern}{Pattern to search for, matched using \link[stringr:stringr]{stringr} (ICU regular
+expressions). Either:
+\itemize{
+\item A string, automatically wrapped as \code{stringr::regex()} with
+\code{ignore_case = FALSE}, \code{multiline = TRUE}, \code{comments = FALSE}, and
+\code{dotall = FALSE}.
+\item A \code{stringr_pattern} object such as \code{\link[stringr:regex]{stringr::regex()}},
+\code{\link[stringr:fixed]{stringr::fixed()}}, or \code{\link[stringr:coll]{stringr::coll()}}, used as-is for more control.
+}}
 
-\item{path}{A character vector of one or more directories where files should be
-discovered (only for \code{seek()}).}
+\item{replacement}{Replacement to associate with each match. Replacements are
+computed immediately during the search and stored in the result. Either:
+\itemize{
+\item \code{NULL} (default): no replacement. \code{\link[=replace_files]{replace_files()}} cannot be called
+without setting replacements first.
+\item A plain string, used literally as replacement text.
+\item A string with backreferences of the form \verb{\\1}, \verb{\\2}, etc., replaced
+with the corresponding capture group from \code{pattern}.
+\item A function, called once per file with a character vector of all matches
+found in that file, and expected to return a character vector of the same
+length (e.g. \link{toupper}).
+\item A function wrapped with \code{\link[=with_capture_groups_matrix]{with_capture_groups_matrix()}}, called once per file with a
+character matrix where the first column is the full match and the
+remaining columns are the capture groups.
+}}
 
-\item{...}{Additional arguments passed to \code{\link[readr:read_lines]{readr::read_lines()}}, such as
-\code{skip}, \code{n_max}, or \code{locale}.}
+\item{...}{These dots are for future extensions and must be empty.}
 
-\item{filter}{Optional. A regular expression pattern used to filter file paths
-before reading. If \code{NULL}, all text files are considered.}
+\item{path}{A character vector of one or more existing directories to
+search in. Defaults to \code{"."} (the current working directory).}
 
-\item{negate}{Logical. If \code{TRUE}, files matching the \code{filter} pattern are excluded
-instead of included. Useful to skip files based on name or extension.}
+\item{recurse}{Controls how deep the directory traversal goes to list files. Either:
+\itemize{
+\item \code{TRUE} (default): recurse into all subdirectories.
+\item \code{FALSE}: only list files at the top level of each directory in \code{path}.
+\item A positive integer: limit recursion to that many levels deep.
+}}
 
-\item{recurse}{If \code{TRUE} recurse fully, if a positive number the number of levels
-to recurse.}
+\item{all}{Whether to list hidden files and directories. Default is \code{FALSE}.}
 
-\item{all}{If \code{TRUE} hidden files are also returned.}
+\item{use_git}{Should Git be used to restrict file discovery inside Git
+repositories? If \code{TRUE}, \code{\link[=list_files]{list_files()}} keeps only files that were first
+discovered according to \code{path}, \code{recurse}, and \code{all}, and are also returned
+by \verb{git ls-files --cached --others --exclude-standard}. \code{use_git = TRUE} looks
+for the Git root by walking upward from each supplied \code{path}, but it does not
+recursively search downward for Git repositories in subdirectories. Git must
+be installed and available on \code{PATH}.}
 
-\item{relative_path}{Logical. If TRUE, file paths are made relative to the
-path argument. If multiple root paths are provided, relative_path is
-automatically ignored and absolute paths are kept to avoid ambiguity.}
+\item{extension}{Optional character vector of file extensions to keep.
+Either:
+\itemize{
+\item \code{NULL} (default): no filtering by extension; all extensions are kept.
+\item A character vector of extensions to keep, with or without a leading dot
+(e.g. \code{c("R", ".Rmd", "qmd")}).
+}
 
-\item{matches}{Logical. If \code{TRUE}, all matches per line are also returned in a
-\code{matches} list-column.}
+Extensions are normalized before matching: leading dots are stripped,
+matching is case-insensitive, and duplicates are ignored. Only the last
+component of compound extensions is used (e.g. \code{"tar.gz"} uses \code{"gz"}),
+with a warning.}
 
-\item{files}{A character vector of files to search (only for \code{seek_in()}).}
+\item{path_pattern}{Optional pattern applied to filter normalized file paths (see
+\code{\link[=as_seekr_path]{as_seekr_path()}}). Either:
+\itemize{
+\item \code{NULL} (default): no filtering by path.
+\item A string, interpreted as a regular expression via \code{\link[stringr:regex]{stringr::regex()}}.
+\item A \code{stringr_pattern} object such as \code{\link[stringr:regex]{stringr::regex()}} or
+\code{\link[stringr:fixed]{stringr::fixed()}}.
+}}
+
+\item{max_file_size}{Maximum file size in bytes. Files larger than this
+value are excluded. Default is \code{Inf}, meaning no files are excluded by
+size. Zero and negative values are treated as \code{Inf}.}
+
+\item{exclude}{Named list of functions used to exclude unwanted
+files during filtering. Either:
+\itemize{
+\item \code{NULL}, to disable additional exclude functions.
+\item A named list of functions, each taking a character vector of normalized
+file paths and returning a logical vector of the same length, where
+\code{TRUE} means the file should be excluded.
+}
+
+Defaults to \link{exclude_functions}, which excludes common non-text or
+irrelevant files.}
+
+\item{context}{Number of surrounding lines to capture around each match.
+Either:
+\itemize{
+\item A single non-negative integer (default: \code{5L}): captures the same number
+of lines before and after each match.
+\item A pair of non-negative integers \code{c(before, after)}: captures \code{before}
+lines before and \code{after} lines after each match.
+}}
+
+\item{encoding}{Encoding used to decode file content during the matching
+step. Either:
+\itemize{
+\item A single string (default: \code{"UTF-8"}), applied to all files.
+\item \code{NULL}: encoding is guessed for each file individually using
+\code{\link[stringi:stri_enc_detect]{stringi::stri_enc_detect()}}, falling back to \code{"UTF-8"} when detection
+fails.
+}
+
+Note: \code{\link[=replace_files]{replace_files()}} always writes files in UTF-8. A warning is issued
+once per session when any file is read with a non-UTF-8 encoding. By default,
+\code{\link[=replace_files]{replace_files()}} refuses to write those matches unless
+\code{allow_encoding_change = TRUE} is set.}
+
+\item{.progress}{Whether to display progress messages. Default is \code{TRUE} in
+interactive sessions and \code{FALSE} otherwise (see \code{\link[rlang:is_interactive]{rlang::is_interactive()}}).
+Can be set globally with \code{options(seekr.progress = FALSE)}.}
 }
 \value{
-A tibble with one row per matched line, containing:
-\itemize{
-\item \code{path}: File path (relative or absolute).
-\item \code{line_number}: Line number in the file.
-\item \code{match}: The first matched substring.
-\item \code{matches}: All matched substrings (if \code{matches = TRUE}).
-\item \code{line}: Full content of the matching line.
-}
+A \code{\link{seekr_match}} vector. Each element represents one match and carries the
+file path, match position, matched text, optional replacement, context
+lines, encoding, and a hash of the searched text used for replacement safety.
+The vector is always returned, even when empty.
+
+An attribute \code{"exclusions"} is attached to the result after filtering, containing
+a data frame with one row per input file and one column per exclusion function,
+detailing which files were excluded and why. Retrieve it with \code{\link[=exclusions]{exclusions()}}.
+
+If the result is empty, use \code{\link[=empty_stage]{empty_stage()}} to see whether the pipeline became
+empty during input, listing, filtering, or matching.
 }
 \description{
-These functions search through one or more text files, extract lines matching
-a regular expression pattern, and return a tibble containing the results.
-\itemize{
-\item \code{seek()}: Discovers files inside one or more directories (recursively or not),
-applies optional file name and text file filtering, and searches lines.
-\item \code{seek_in()}: Searches inside a user-provided character vector of files.
-}
-}
-\details{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+\code{seek()} searches text files for a pattern and returns a \code{\link{seekr_match}}
+vector. The result can be inspected, filtered, and passed to \code{\link[=replace_files]{replace_files()}}
+to apply replacements.
 
-The overall process involves the following steps:
-\itemize{
-\item \strong{File Selection}
-\itemize{
-\item \code{seek()}: Files are discovered using \code{\link[fs:dir_ls]{fs::dir_ls()}}, starting from one or more directories.
-\item \code{seek_in()}: Files are directly supplied by the user (no discovery phase).
-}
-\item \strong{File Filtering}
-\itemize{
-\item Files located inside \verb{.git/} folders are automatically excluded.
-\item Files with known non-text extensions (e.g., \code{.png}, \code{.exe}, \code{.rds}) are excluded.
-\item If a file's extension is unknown, a check is performed to detect embedded null bytes (binary indicator).
-\item Optionally, an additional regex-based path filter (\code{filter}) can be applied.
-}
-\item \strong{Line Reading}
-\itemize{
-\item Files are read line-by-line using \code{\link[readr:read_lines]{readr::read_lines()}}.
-\item Only lines matching the provided regular expression \code{pattern} are retained.
-\item If a file cannot be read, it is skipped gracefully without failing the process.
-}
-\item \strong{Data Frame Construction}
-\itemize{
-\item A tibble is constructed with one row per matched line.
-}
-}
+\code{seekr()} is a convenience wrapper around \code{seek()} that restricts the search
+to R, R Markdown, and Quarto files (\code{.R}, \code{.Rmd}, \code{.qmd}).
 
-These functions are particularly useful for analyzing source code,
-configuration files, logs, and other structured text data.
+\code{\link[=list_files]{list_files()}}, \code{\link[=filter_files]{filter_files()}}, and \code{\link[=match_files]{match_files()}} are the three building
+blocks of \code{\link[=seek]{seek()}}. They can be called individually when you need more
+control over each step.
+\subsection{Steps}{
+\itemize{
+\item \strong{\code{\link[=list_files]{list_files()}}} starts from \code{path}, optionally \code{use_git} to restrict file
+discovery, and \code{recurse}s into subdirectories to list files.  By default, not
+\code{all} files are listed, with hidden files and directories excluded.
+\item \strong{\code{\link[=filter_files]{filter_files()}}} keeps files matching \code{extension} and \code{path_pattern} and
+not exceeding \code{max_file_size}. Finally, the \code{exclude} functions are applied to
+the remaining files, discarding common non-text or irrelevant files by default.
+\item \strong{\code{\link[=match_files]{match_files()}}} reads each file, decodes them using \code{encoding}, finds
+\code{pattern} matches, and captures surrounding \code{context} lines. A \code{replacement}
+can be provided to stage changes for later application with \code{\link[=replace_files]{replace_files()}}.
+}
+}
 }
 \examples{
-path = system.file("extdata", package = "seekr")
+# Create a small temporary project to search in
+example_dir <- tempfile("seekr-example")
+dir.create(example_dir)
+dir.create(file.path(example_dir, "R"))
+dir.create(file.path(example_dir, "tests"))
+dir.create(file.path(example_dir, "data"))
 
-# Search all function definitions in R files
-seek("[^\\\\s]+(?= (=|<-) function\\\\()", path, filter = "\\\\.R$")
+writeLines(
+  c(
+    "old_fn <- function(x) {",
+    "  # TODO: rename foo",
+    "  foo + x",
+    "}"
+  ),
+  file.path(example_dir, "R", "code.R")
+)
 
-# Search for usage of "TODO" comments in source code in a case insensitive way
-seek("(?i)TODO", path, filter = "\\\\.R$")
+writeLines(
+  c(
+    "test_that('foo works', {",
+    "  # TODO: update test",
+    "  expect_equal(foo, 1)",
+    "})"
+  ),
+  file.path(example_dir, "tests", "test-code.R")
+)
 
-# Search for error/warning in log files
-seek("(?i)error", path, filter = "\\\\.log$")
+writeLines(
+  c(
+    "name,value",
+    "foo,1",
+    "bar,2"
+  ),
+  file.path(example_dir, "data", "values.csv")
+)
 
-# Search for config keys in YAML
-seek("database:", path, filter = "\\\\.ya?ml$")
+# seek() is built from three lower-level functions
+files <- list_files(example_dir)
+filtered <- filter_files(files, extension = "R", path_pattern = "/R/")
+x <- match_files(filtered, "foo", "bar")
 
-# Looking for "length" in all types of text files
-seek("(?i)length", path)
+# These functions can be piped
+y <-
+  example_dir |>
+  list_files() |>
+  filter_files(extension = "R", path_pattern = "/R/") |>
+  match_files("foo", "bar")
 
-# Search for specific CSV headers using seek_in() and reading only the first line
-csv_files <- list.files(path, "\\\\.csv$", full.names = TRUE)
-seek_in(csv_files, "(?i)specie", n_max = 1)
+identical(x, y)
+
+# This is equivalent to the seek() call below
+z <- seek("foo", "bar", path = example_dir, extension = "R", path_pattern = "/R/")
+identical(y, z)
+
+# Search for a pattern in all text files
+x <- seek("TODO", path = example_dir)
+print(x)
+
+# Search only in R files
+seek("TODO", path = example_dir, extension = "R")
+
+# Search only in a specific subfolder
+seek("TODO", path = example_dir, path_pattern = "/R/")
+
+# seekr() is a shortcut for searching R, R Markdown, and Quarto files
+seekr("old_fn", path = example_dir)
+
+# Stage a plain string replacement
+x <- seek("old_fn", "new_fn", path = example_dir)
+x
+
+# Stage replacements with a function
+x <- seek(
+  "foo|bar",
+  replacement = function(x) ifelse(x == "foo", "bar", "foo"),
+  path = example_dir
+)
+x
+
+# Stage replacements after searching
+x <- seekr("foo|bar", path = example_dir)
+field(x, "replacement") <- ifelse(field(x, "match") == "foo", "bar", "foo")
+x
+
+# Create a temporary backup directory
+backup_dir <- tempfile("seekr-backup")
+dir.create(backup_dir)
+
+# Apply replacements after inspection
+replace_files(x, backup_dir = backup_dir)
+
+# Restore files from the latest backup
+bck <- last_backup(backup_dir = backup_dir)
+restore_files(from = bck$backup, to = bck$original, backup_dir = backup_dir)
+
+# See which files were excluded
+exclusions(x)
+
+# empty_stage() explains where the pipeline became empty
+dir.create(file.path(example_dir, "empty"))
+
+empty_stage(seek("foo", path = character()))
+empty_stage(seek("foo", path = file.path(example_dir, "empty")))
+empty_stage(seek("foo", path = example_dir, extension = "dummy"))
+empty_stage(seek("missing_pattern", path = example_dir))
+
+# Remove the two temporary directories
+unlink(backup_dir, recursive = TRUE)
+unlink(example_dir, recursive = TRUE)
 
 }
 \seealso{
-\code{\link[fs:dir_ls]{fs::dir_ls()}}, \code{\link[readr:read_lines]{readr::read_lines()}}, \code{\link[stringr:str_detect]{stringr::str_detect()}}
+\itemize{
+\item \link{seekr_match} for the match object structure and available methods.
+\item \code{\link[=print.seekr_match]{print.seekr_match()}} and \code{\link[=summary.seekr_match]{summary.seekr_match()}} to inspect results.
+\item \code{\link[=filter_match]{filter_match()}} to subset matches.
+\item \code{\link[=replace_files]{replace_files()}} to apply replacements.
+}
 }

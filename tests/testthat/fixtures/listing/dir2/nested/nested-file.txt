@@ -1,0 +1,5 @@
+
+
+
+Nested file in dir2.
+after
