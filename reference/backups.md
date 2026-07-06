@@ -141,7 +141,7 @@ writeLines("y <- old_name(2)", file2)
 x <- seekr("old_name", replacement = "new_name", path = project_dir)
 x
 #> <seekr::match[2]> 2 sources
-#> Common Path: /tmp/RtmpqR02ap/seekr_project1a41447a11d2
+#> Common Path: /tmp/RtmpqXrCrO/seekr_project19efd56dca
 #> 
 #> script1.R [1]
 #> [1] -- 1 | old_name <- function(x) x + 1
@@ -168,8 +168,8 @@ list_backups(backup_dir = backup_dir)
 #> # A tibble: 2 × 9
 #>      id created_at          operation description original                backup
 #>   <int> <dttm>              <chr>     <chr>       <chr>                   <chr> 
-#> 1     1 2026-07-06 21:50:21 replace   NA          /tmp/RtmpqR02ap/seekr_… /tmp/…
-#> 2     1 2026-07-06 21:50:21 replace   NA          /tmp/RtmpqR02ap/seekr_… /tmp/…
+#> 1     1 2026-07-06 22:04:48 replace   NA          /tmp/RtmpqXrCrO/seekr_… /tmp/…
+#> 2     1 2026-07-06 22:04:48 replace   NA          /tmp/RtmpqXrCrO/seekr_… /tmp/…
 #> # ℹ 3 more variables: original_exists <lgl>, backup_exists <lgl>,
 #> #   size <fs::bytes>
 
@@ -197,10 +197,10 @@ list_backups(backup_dir = backup_dir)
 #> # A tibble: 4 × 9
 #>      id created_at          operation description original                backup
 #>   <int> <dttm>              <chr>     <chr>       <chr>                   <chr> 
-#> 1     2 2026-07-06 21:50:21 restore   NA          /tmp/RtmpqR02ap/seekr_… /tmp/…
-#> 2     2 2026-07-06 21:50:21 restore   NA          /tmp/RtmpqR02ap/seekr_… /tmp/…
-#> 3     1 2026-07-06 21:50:21 replace   NA          /tmp/RtmpqR02ap/seekr_… /tmp/…
-#> 4     1 2026-07-06 21:50:21 replace   NA          /tmp/RtmpqR02ap/seekr_… /tmp/…
+#> 1     2 2026-07-06 22:04:48 restore   NA          /tmp/RtmpqXrCrO/seekr_… /tmp/…
+#> 2     2 2026-07-06 22:04:48 restore   NA          /tmp/RtmpqXrCrO/seekr_… /tmp/…
+#> 3     1 2026-07-06 22:04:48 replace   NA          /tmp/RtmpqXrCrO/seekr_… /tmp/…
+#> 4     1 2026-07-06 22:04:48 replace   NA          /tmp/RtmpqXrCrO/seekr_… /tmp/…
 #> # ℹ 3 more variables: original_exists <lgl>, backup_exists <lgl>,
 #> #   size <fs::bytes>
 
@@ -213,7 +213,7 @@ readLines(file2)
 # The original pattern is found again
 seekr("old_name", path = project_dir)
 #> <seekr::match[2]> 2 sources
-#> Common Path: /tmp/RtmpqR02ap/seekr_project1a41447a11d2
+#> Common Path: /tmp/RtmpqXrCrO/seekr_project19efd56dca
 #> 
 #> script1.R [1]
 #> [1] -> 1 | old_name <- function(x) x + 1

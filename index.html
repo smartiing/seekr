@@ -140,32 +140,32 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/list_files.html">list_files</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">files</span></span>
-<span><span class="co">#&gt; [1] "C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata/config.yaml"</span></span>
-<span><span class="co">#&gt; [2] "C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata/data.json"  </span></span>
-<span><span class="co">#&gt; [3] "C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata/iris.csv"   </span></span>
-<span><span class="co">#&gt; [4] "C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata/mtcars.csv" </span></span>
-<span><span class="co">#&gt; [5] "C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata/script1.R"  </span></span>
-<span><span class="co">#&gt; [6] "C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata/script2.R"  </span></span>
-<span><span class="co">#&gt; [7] "C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata/server1.log"</span></span>
-<span><span class="co">#&gt; [8] "C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata/server2.log"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata/config.yaml"</span></span>
+<span><span class="co">#&gt; [2] "C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata/data.json"  </span></span>
+<span><span class="co">#&gt; [3] "C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata/iris.csv"   </span></span>
+<span><span class="co">#&gt; [4] "C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata/mtcars.csv" </span></span>
+<span><span class="co">#&gt; [5] "C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata/script1.R"  </span></span>
+<span><span class="co">#&gt; [6] "C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata/script2.R"  </span></span>
+<span><span class="co">#&gt; [7] "C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata/server1.log"</span></span>
+<span><span class="co">#&gt; [8] "C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata/server2.log"</span></span></code></pre></div>
 <p>Then filter to keep only R files. <code><a href="reference/filter_files.html">filter_files()</a></code> records which files were excluded and why. The <code>exclusions</code> attribute can be retrieved using <code><a href="reference/exclusions.html">exclusions()</a></code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/filter_files.html">filter_files</a></span><span class="op">(</span><span class="va">files</span>, extension <span class="op">=</span> <span class="st">"R"</span><span class="op">)</span></span>
 <span><span class="va">filtered</span></span>
-<span><span class="co">#&gt; [1] "C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata/script1.R"</span></span>
-<span><span class="co">#&gt; [2] "C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata/script2.R"</span></span>
+<span><span class="co">#&gt; [1] "C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata/script1.R"</span></span>
+<span><span class="co">#&gt; [2] "C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata/script2.R"</span></span>
 <span><span class="co">#&gt; attr(,"exclusions")</span></span>
 <span><span class="co">#&gt; # A tibble: 8 × 7</span></span>
 <span><span class="co">#&gt;   path                                                    excluded exclude_by_extension is_git_dir is_dependency_dir is_minified_file is_not_text_mime</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;                                                   &lt;lgl&gt;    &lt;lgl&gt;                &lt;lgl&gt;      &lt;lgl&gt;             &lt;lgl&gt;            &lt;lgl&gt;           </span></span>
-<span><span class="co">#&gt; 1 C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-… TRUE     TRUE                 NA         NA                NA               NA              </span></span>
-<span><span class="co">#&gt; 2 C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-… TRUE     TRUE                 NA         NA                NA               NA              </span></span>
-<span><span class="co">#&gt; 3 C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-… TRUE     TRUE                 NA         NA                NA               NA              </span></span>
-<span><span class="co">#&gt; 4 C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-… TRUE     TRUE                 NA         NA                NA               NA              </span></span>
-<span><span class="co">#&gt; 5 C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
-<span><span class="co">#&gt; 6 C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
-<span><span class="co">#&gt; 7 C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-… TRUE     TRUE                 NA         NA                NA               NA              </span></span>
-<span><span class="co">#&gt; 8 C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-… TRUE     TRUE                 NA         NA                NA               NA</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-… TRUE     TRUE                 NA         NA                NA               NA              </span></span>
+<span><span class="co">#&gt; 2 C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-… TRUE     TRUE                 NA         NA                NA               NA              </span></span>
+<span><span class="co">#&gt; 3 C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-… TRUE     TRUE                 NA         NA                NA               NA              </span></span>
+<span><span class="co">#&gt; 4 C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-… TRUE     TRUE                 NA         NA                NA               NA              </span></span>
+<span><span class="co">#&gt; 5 C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
+<span><span class="co">#&gt; 6 C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
+<span><span class="co">#&gt; 7 C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-… TRUE     TRUE                 NA         NA                NA               NA              </span></span>
+<span><span class="co">#&gt; 8 C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-… TRUE     TRUE                 NA         NA                NA               NA</span></span></code></pre></div>
 <p>Now that we have a list of files, we can search for function names composed of two words separated by an underscore and prepare a replacement that reverses them.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_pattern</span> <span class="op">&lt;-</span> <span class="st">"([a-z]+)_([a-z]+)(?= &lt;- function)"</span></span>
@@ -180,7 +180,7 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[5]&gt;<span style="color: #767676; font-style: italic;"> vctrs::rcrd</span></span></span>
-<span><span class="co">#&gt; path        <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #767676;">"</span>C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata/script1.R<span style="color: #767676;">", "</span>C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/<span style="color: #767676;">…</span></span></span>
+<span><span class="co">#&gt; path        <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #767676;">"</span>C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata/script1.R<span style="color: #767676;">", "</span>C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/<span style="color: #767676;">…</span></span></span>
 <span><span class="co">#&gt; start_line  <span style="color: #767676; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #767676;">, </span>9<span style="color: #767676;">, </span>2<span style="color: #767676;">, </span>7<span style="color: #767676;">, </span>12</span></span>
 <span><span class="co">#&gt; end_line    <span style="color: #767676; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #767676;">, </span>9<span style="color: #767676;">, </span>2<span style="color: #767676;">, </span>7<span style="color: #767676;">, </span>12</span></span>
 <span><span class="co">#&gt; start       <span style="color: #767676; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #767676;">, </span>115<span style="color: #767676;">, </span>33<span style="color: #767676;">, </span>125<span style="color: #767676;">, </span>213</span></span>
@@ -205,7 +205,7 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ── &lt;seekr::match[5]&gt; ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Top sources <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt;  • <span style="color: #0000BB;">script2.R</span> : 3 <span style="color: #767676;">(60.0%)</span></span></span>
@@ -227,7 +227,7 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[5]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
@@ -274,7 +274,7 @@
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/filter_match.html">filter_match</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"safe"</span>, <span class="va">match</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3L</span>, <span class="fl">1L</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[3]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
@@ -308,7 +308,7 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, context <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[3]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
@@ -349,8 +349,8 @@
 <span><span class="co">#&gt; # A tibble: 2 × 9</span></span>
 <span><span class="co">#&gt;      id created_at          operation description original                                                  backup original_exists backup_exists  size</span></span>
 <span><span class="co">#&gt;   &lt;int&gt; &lt;dttm&gt;              &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt;                                                     &lt;chr&gt;  &lt;lgl&gt;           &lt;lgl&gt;         &lt;fs:&gt;</span></span>
-<span><span class="co">#&gt; 1     1 2026-07-06 23:32:04 replace   &lt;NA&gt;        C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-ex… C:/Us… TRUE            TRUE            172</span></span>
-<span><span class="co">#&gt; 2     1 2026-07-06 23:32:04 replace   &lt;NA&gt;        C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-ex… C:/Us… TRUE            TRUE            293</span></span></code></pre></div>
+<span><span class="co">#&gt; 1     1 2026-07-07 00:02:41 replace   &lt;NA&gt;        C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-ex… C:/Us… TRUE            TRUE            172</span></span>
+<span><span class="co">#&gt; 2     1 2026-07-07 00:02:41 replace   &lt;NA&gt;        C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-ex… C:/Us… TRUE            TRUE            293</span></span></code></pre></div>
 <p>Use <code><a href="reference/restore_files.html">restore_files()</a></code> to restore the previous file contents from the backup.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/restore_files.html">restore_files</a></span><span class="op">(</span>from <span class="op">=</span> <span class="va">bck</span><span class="op">$</span><span class="va">backup</span>, to <span class="op">=</span> <span class="va">bck</span><span class="op">$</span><span class="va">original</span><span class="op">)</span></span>
@@ -362,10 +362,10 @@
 <span><span class="co">#&gt; # A tibble: 4 × 9</span></span>
 <span><span class="co">#&gt;      id created_at          operation description original                                                  backup original_exists backup_exists  size</span></span>
 <span><span class="co">#&gt;   &lt;int&gt; &lt;dttm&gt;              &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt;                                                     &lt;chr&gt;  &lt;lgl&gt;           &lt;lgl&gt;         &lt;fs:&gt;</span></span>
-<span><span class="co">#&gt; 1     2 2026-07-06 23:32:04 restore   &lt;NA&gt;        C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-ex… C:/Us… TRUE            TRUE            172</span></span>
-<span><span class="co">#&gt; 2     2 2026-07-06 23:32:04 restore   &lt;NA&gt;        C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-ex… C:/Us… TRUE            TRUE            293</span></span>
-<span><span class="co">#&gt; 3     1 2026-07-06 23:32:04 replace   &lt;NA&gt;        C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-ex… C:/Us… TRUE            TRUE            172</span></span>
-<span><span class="co">#&gt; 4     1 2026-07-06 23:32:04 replace   &lt;NA&gt;        C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-ex… C:/Us… TRUE            TRUE            293</span></span></code></pre></div>
+<span><span class="co">#&gt; 1     2 2026-07-07 00:02:42 restore   &lt;NA&gt;        C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-ex… C:/Us… TRUE            TRUE            172</span></span>
+<span><span class="co">#&gt; 2     2 2026-07-07 00:02:42 restore   &lt;NA&gt;        C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-ex… C:/Us… TRUE            TRUE            293</span></span>
+<span><span class="co">#&gt; 3     1 2026-07-07 00:02:41 replace   &lt;NA&gt;        C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-ex… C:/Us… TRUE            TRUE            172</span></span>
+<span><span class="co">#&gt; 4     1 2026-07-07 00:02:41 replace   &lt;NA&gt;        C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-ex… C:/Us… TRUE            TRUE            293</span></span></code></pre></div>
 <p>After restoring, the original matches are back.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x_restored</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/seek.html">seekr</a></span><span class="op">(</span><span class="va">my_pattern</span>, <span class="va">my_replacement</span><span class="op">)</span></span>
@@ -373,7 +373,7 @@
 <span><span class="co">#&gt; [1] TRUE</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x_restored</span>, context <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[5]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">C:/Users/smarting/AppData/Local/Temp/RtmpWI5mHp/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">C:/Users/smarting/AppData/Local/Temp/RtmpqWIj3a/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
