@@ -1,32 +1,47 @@
 Package: seekr
-Title: Extract Matching Lines from Matching Files
-Version: 0.1.4.0
+Title: Search, Inspect, and Replace Text Across Files
+Version: 0.2.0
 Authors@R: 
     person("Sacha", "Martingay", , "martingay.sacha@hotmail.com", role = c("aut", "cre", "cph"))
-Description: Provides a simple interface to recursively list files from a
-    directory, filter them using a regular expression, read their
-    contents, and extract lines that match a user-defined pattern. The
-    package returns a dataframe containing the matched lines, their
-    line numbers, file paths, and the corresponding matched substrings.
-    Designed for quick code base exploration, log inspection, or any use
-    case involving pattern-based file and line filtering.
+Description: An inspectable and composable workflow for search-and-replace in text
+    files. Files can be listed, filtered, and searched separately, with
+    inspectable exclusions showing what was excluded and why. Matches are
+    represented as structured vectors that can be printed with context,
+    summarized, and filtered. Replacements can be defined at search time or set
+    and updated after the search. Only matches present in the vector are modified 
+    when files are written. Backup and restore helpers are provided for file 
+    workflows. Text that has already been read can also be searched and updated 
+    directly, giving users control over input, output, and encoding when needed.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+Depends:
+    R (>= 4.1)
 Suggests: 
-    testthat (>= 3.0.0),
-    withr
+    testthat,
+    withr,
+    diffobj,
+    dplyr
 Config/testthat/edition: 3
 Imports: 
     checkmate,
-    cli,
+    cli (>= 3.6.1),
     fs,
-    lifecycle,
+    glue,
+    methods,
+    mime,
+    pillar,
+    processx,
     purrr,
+    rappdirs,
     readr,
+    rlang (>= 1.1.1),
+    stringi,
     stringr,
     tibble,
-    tidyr
+    utils,
+    vctrs (>= 0.6.3)
 URL: https://github.com/smartiing/seekr, https://smartiing.github.io/seekr/
 BugReports: https://github.com/smartiing/seekr/issues
+Config/roxygen2/version: 8.0.0
+Config/Needs/website: rmarkdown

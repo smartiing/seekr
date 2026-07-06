@@ -2,3 +2,72 @@ url: https://smartiing.github.io/seekr/
 template:
   bootstrap: 5
 
+articles:
+- title: "Articles"
+  navbar: ~
+  contents:
+  - articles/tabular-workflows
+  - articles/working-with-text
+  - articles/design-choices
+  - articles/performance-note
+
+reference:
+- title: Search workflow
+  desc: >
+    High-level functions for finding matches across files, from a complete
+    workflow in one call to explicit file listing, filtering, and matching steps.
+  contents:
+  - seek
+  - seekr
+  - list_files
+  - filter_files
+  - match_files
+
+- title: Search customization and diagnostics
+  desc: >
+    Helpers for customizing how files are excluded, preparing more advanced
+    replacement logic, and understanding why a search workflow did or did not
+    produce results.
+  contents:
+  - with_capture_groups_matrix
+  - empty_stage
+  - exclusions
+  - exclude_functions
+
+- title: Match vectors
+  desc: >
+    Functions for inspecting, converting, filtering, summarizing, and ordering
+    `seekr_match` vectors.
+  contents:
+  - str.seekr_match
+  - print.seekr_match
+  - summary.seekr_match
+  - as_match
+  - filter_match
+  - sort_within_files
+  - new_seekr_match
+
+- title: File replacement and backups
+  desc: >
+    Apply staged replacements to files, inspect automatic backups, and restore
+    previous file contents when needed.
+  contents:
+  - replace_files
+  - backups
+  - restore_files
+
+- title: Text-level workflow
+  desc: >
+    Lower-level helpers for matching and replacing text that has already been
+    read, when you want to control input and output yourself.
+  contents:
+  - match_text
+  - replace_text
+
+- title: Options and path helpers
+  desc: >
+    Inspect package options and normalize file paths the same way `seekr` does.
+  contents:
+  - seekr_option
+  - seekr_options
+  - as_seekr_path

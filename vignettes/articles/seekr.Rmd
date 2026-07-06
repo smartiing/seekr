@@ -1,0 +1,462 @@
+---
+title: "Getting started with seekr"
+description: >
+  A detailed walkthrough of the main seekr workflow.
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+source_dir <- system.file("extdata", package = "seekr")
+example_dir <- file.path(tempdir(), "seekr-example")
+backup_dir <- file.path(tempdir(), "seekr-backups")
+
+unlink(example_dir, recursive = TRUE)
+unlink(backup_dir, recursive = TRUE)
+
+dir.create(example_dir, recursive = TRUE)
+dir.create(backup_dir, recursive = TRUE)
+
+options(seekr.backup_dir = backup_dir)
+
+file.copy(
+  from = source_dir,
+  to = example_dir,
+  recursive = TRUE
+)
+
+path <- file.path(example_dir, "extdata")
+knitr::opts_knit$set(root.dir = path)
+```
+
+## Introduction
+
+`seekr` turns search-and-replace across files into an explicit workflow.
+
+This article gives a detailed walkthrough of that workflow. It starts from the basic steps—listing files, filtering files, and finding matches—and then shows how matches can be inspected, filtered, updated, replaced, and restored.
+
+The examples use a temporary copy of the example files shipped with `seekr`, so they are safe to modify.
+
+```{r, echo = TRUE, eval = FALSE}
+library(seekr)
+```
+
+```{r, include = FALSE, eval = TRUE}
+library(seekr)
+options(width = 150)
+```
+
+## List files
+
+The first step is to list candidate files.
+
+`list_files()` lists the files that exist and that will be filtered before looking for matches. Its main arguments are `path`, which defines where to look, `all`, which controls whether hidden files and directories are included, and `recurse`, which controls whether and how deeply subdirectories are searched.
+
+By default, `list_files()` searches recursively from the current directory, and
+ignores hidden files and directories.
+
+When searching inside a Git repository, you can also set `use_git = TRUE` to
+restrict file discovery to files Git considers relevant: tracked files and
+untracked files that are not ignored by Git.
+
+```{r list_files}
+files <- list_files()
+files
+```
+
+`list_files()` is intentionally simple. Its role is to discover candidate files, not to decide which files are relevant for a particular search. That decision is handled later by `filter_files()`.
+
+This separation is deliberate. File discovery can stay broad and predictable, while file filtering remains explicit and inspectable.
+
+## Filter files
+
+Once files have been listed, `filter_files()` excludes the files that should not be searched.
+
+### Built-in filters
+
+`filter_files()` takes a vector of file paths, typically returned by `list_files()`, and returns the subset of files that should be searched.
+
+It has three main built-in filters:
+
+- `extension`, to keep files with selected extensions,
+- `path_pattern`, to keep files whose path matches a pattern,
+- `max_file_size`, to keep files below a size limit.
+
+In addition to these built-in filters, `filter_files()` also uses a list of `exclude_functions`. These are predicate-like functions that decide whether specific files should be excluded. By default, they are used to exclude files that should usually not be searched, such as non-text files or files handled by the default exclusion rules.
+
+For example, we can keep only R files.
+
+```{r filter_files1}
+filter_files(files, extension = "R")
+```
+
+Here we combine the different types of filters to exclude the files we are not interested in.
+
+```{r filter_files2}
+# Add a dummy png file to illustrate the exclusion of non-text files by default
+files <- c(files, "server.png")
+
+filtered <- filter_files(
+  files, 
+  extension = c("r", "log", "yaml", "png"),
+  path_pattern = "script|server",
+  max_file_size = 1000L
+)
+
+filtered
+```
+
+### Inspect exclusions
+
+Filtering is inspectable. `filter_files()` records which files were excluded and why.
+
+In this example, files are first excluded by `extension`. Then, among the remaining files, paths that do not match `path_pattern` are excluded. Finally, the two log files are excluded because they are above the size limit set with `max_file_size`.
+
+Each column in the exclusions table represents one filtering or exclusion step. The last column shows that the dummy `"server.png"` file was excluded by the default rules because its extension is not associated with text files.
+
+```{r exclusions1}
+exclusions(filtered)
+```
+
+This is useful because file filtering can otherwise be hard to audit. Instead of silently excluding files, `seekr` lets you inspect what was excluded at each step.
+
+### Custom exclude functions
+
+In addition to the built-in filters, `filter_files()` uses a list of exclude functions. These functions receive file paths and return `TRUE` for files that should be excluded.
+
+`seekr` provides a default set of exclude functions.
+
+```{r}
+names(exclude_functions)
+```
+
+You can add your own **named** exclude function by modifying a copy of `exclude_functions`. Custom functions will also appear on their dedicated column in the `exclusions()` data frame.
+
+```{r exclude_functions}
+my_exclude_functions <- c(
+  exclude_functions,
+  exclude_script2 = function(path) grepl("script2[.]R$", path)
+)
+
+filtered_custom <- filter_files(
+  files,
+  extension = "R",
+  exclude = my_exclude_functions
+)
+
+filtered_custom
+```
+
+The order of exclude functions matters. They are evaluated in the order in which they appear in `exclude`, so changing that order can change which exclusion reason is recorded first. It can also matter for performance: computationally expensive functions are usually better placed near the end.
+
+If no exclude functions are used, the exclusions table simply contains the file paths and an `excluded` column set to `FALSE`.
+
+```{r exclusions3}
+files |> filter_files(exclude = NULL) |> exclusions()
+```
+
+## Find matches
+
+Now that we have selected the files we want to search, we can look for matches with `match_files()`.
+
+The two central arguments are `pattern` and `replacement`. `pattern` defines what to look for. `replacement` is optional: when provided, it prepares replacement values for later, but it does not modify any file. Files are only modified when `replace_files()` is called.
+
+`match_files()` also has a few arguments that control how files are read and how matches are recorded:
+
+- `context` controls how many lines before and after each match are stored in the `seekr_match` vector.
+- `encoding` controls how files are decoded. By default, files are read as UTF-8. Set `encoding = NULL` if you want `seekr` to try to detect the encoding with `stringi::stri_enc_detect()`.
+
+### Regular expression patterns
+
+Here we look for function names composed of two words separated by an underscore followed by ` <- function`.
+
+```{r match1}
+matches <- match_files(filtered, "([a-z]+)_([a-z]+)(?= <- function)")
+matches
+```
+
+A plain character string is automatically treated as an ICU regular expression via `stringr::regex()`, as in `stringr`, except that `multiline` is set to `TRUE` by default. Because `multiline = TRUE`, anchors such as `^` and `$` can match line boundaries inside a file.
+
+These two calls are therefore equivalent.
+
+```{r match2, eval = FALSE}
+match_files(filtered, pattern)
+
+match_files(
+  filtered,
+  stringr::regex(
+    "([a-z]+)_([a-z]+)(?= <- function)",
+    ignore_case = FALSE,
+    multiline = TRUE,
+    comments = FALSE,
+    dotall = FALSE
+  )
+)
+```
+
+For more control, pass a `stringr` pattern object directly. For example, we can make the search case-insensitive.
+
+```{r match3}
+match_files(filtered, stringr::regex("FUNCTION", ignore_case = TRUE))
+```
+
+For more details about regular expressions in `stringr`, see the [stringr regular expressions documentation](https://stringr.tidyverse.org/articles/regular-expressions.html).
+
+### Literal text patterns
+
+If you want to search for literal text instead of a regular expression, use `stringr::fixed()`.
+
+```{r match4}
+match_files(filtered, stringr::fixed("<- function("))
+```
+
+This is useful when the text contains characters that would otherwise have a special meaning in a regular expression. Note that `stringr::fixed()` performs bytewise matching, so `stringr::coll()` may be more appropriate for locale-sensitive text.
+
+For more details about the different pattern engines in `stringr`, see the [stringr introduction](https://stringr.tidyverse.org/articles/stringr.html#engines).
+
+## Prepare replacements
+
+Searching and replacing are separate steps in `seekr`.
+
+You can prepare replacements when searching, but files are not modified until you call `replace_files()`. This makes it possible to search first, inspect the result, filter matches, update replacements if needed, and only then write changes to disk.
+
+`seekr` offers five ways to prepare replacements during the matching step:
+
+- `NULL`, the default, to plan no replacement.
+- A plain string, used literally as replacement text.
+- A string with backreferences of the form `\\1`, `\\2`, and so on, replaced with the corresponding capture groups from `pattern`.
+- A function, called once per file with a character vector of all matches found in that file, and expected to return a character vector of the same length, such as `toupper()`.
+- A function wrapped with `with_capture_groups_matrix()`, called once per file with a character matrix where the first column is the full match and the remaining columns are the capture groups.
+
+### Literal replacements
+
+The simplest replacement is a string.
+
+```{r replacement1}
+match_files(
+  filtered,
+  pattern = stringr::fixed("safe"),
+  replacement = "checked"
+)
+```
+
+Here, every match of `"safe"` gets the same planned replacement: `"checked"`.
+
+### Capture groups
+
+Replacement strings can also refer to capture groups from a regular expression.
+
+Here, we reverse the two parts of each function name.
+
+```{r replacement2}
+match_files(filtered, "(\\w+)_(\\w+)(?= <- function)", "\\2_\\1")
+```
+
+### Function replacements
+
+A replacement can also be a function. The function receives a character vector of matched texts and must return one replacement value per match. It is vectorized over the matches found in a file; it is not called separately for each individual match.
+
+```{r replacement3}
+match_files(filtered, "([a-z]+)_([a-z]+)(?= <- function)", toupper)
+```
+
+### Capture group matrix replacements
+
+For more complex replacements, wrap a function with `with_capture_groups_matrix()`.
+
+The function receives the capture group matrix returned by the matching engine. The first column is the full match, and the following columns are the capture groups.
+
+```{r replacement4}
+repl_with_matrix <- function(M) {
+  # full_match <- M[, 1L]
+  group1 <- M[, 2L]
+  group2 <- M[, 3L]
+  
+  paste0(toupper(group2), "_", tolower(group1))
+}
+
+repl_with_matrix <- with_capture_groups_matrix(repl_with_matrix)
+match_files(filtered, "([a-z]+)_([a-z]+)(?= <- function)", repl_with_matrix)
+```
+
+This is useful when the replacement logic depends on several captured parts of the match.
+
+For workflows where text has already been read, or where you want to control reading and writing yourself, see [Working with text](working-with-text.html).
+
+## Use `seek()` and `seekr()`
+
+The previous sections used the lower-level steps explicitly. For common workflows, `seek()` combines listing, filtering, and matching in one call. `seekr()` is a shortcut around `seek()` with R, R Markdown, and Quarto extensions selected by default.
+
+```{r seek}
+files <- list_files()
+filtered <- filter_files(files, extension = "R")
+x <- match_files(filtered, "(\\w+)_(\\w+)(?= <- function)", "\\2_\\1")
+
+y <- seekr("(\\w+)_(\\w+)(?= <- function)", "\\2_\\1")
+
+identical(x, y)
+```
+
+Note that:
+
+- the vector of matches returned by `seekr()` also contains the `exclusions()` attribute,
+- when no matches are found, the vector returned by `seek()`/`seekr()` also contains an `empty_stage()` attribute that helps explain where the workflow became empty.
+
+## Inspect the `seekr_match` vector
+
+The result of `match_files()`, `seek()`, and `seekr()` is a `seekr_match` vector.
+
+A `seekr_match` vector behaves like a vector of matches, but each match also stores fields such as the file path, match location, matched text, planned replacement, surrounding context, and encoding.
+
+```{r inspect1}
+str(x)
+```
+
+You can inspect the available fields with `fields()`.
+
+```{r inspect2}
+fields(x)
+```
+
+Individual fields can be accessed with `field()`.
+
+```{r inspect3}
+field(x, "match")
+field(x, "replacement")
+field(x, "path")
+```
+
+Use `summary()` to get a compact overview of the matches and planned replacements.
+
+```{r summary}
+summary(x)
+```
+
+Use `print()` to inspect matches with surrounding context and preview replacements before modifying files.
+
+```{r print}
+print(x, context = c(2L, 1L))
+```
+
+In terminals that support OSC8 hyperlinks, printed file locations can also be clickable.
+
+For more on why `seekr` represents search results this way, see [Design choices](design-choices.html).
+
+## Filter matches
+
+Because a `seekr_match` is a vector, it can be subset like any other R vector.
+
+```{r subsetting}
+x[!grepl("safe", field(x, "match"))]
+```
+
+However, `filter_match()` is usually more convenient. It evaluates expressions directly on the fields of the `seekr_match` vector.
+
+```{r filter_match}
+xf <- x |> filter_match(!grepl("safe", match))
+xf
+```
+
+The result is still a `seekr_match` vector, so it can be printed, summarized, modified, or passed to `replace_files()`.
+
+```{r print_filter_match}
+print(xf, context = c(2L, 1L))
+```
+
+## Use tabular workflows
+
+For many workflows, `filter_match()` and `field()` are enough.
+
+For more complex operations, it can be useful to convert a `seekr_match` vector to a tibble, work with it using tabular tools, and then convert it back to a `seekr_match` vector before replacing files.
+
+This is especially useful for grouped summaries, joins, group-aware filtering, or replacement logic that is easier to express with `dplyr`.
+
+When converting back, `as_match()` validates that the tibble still contains the fields required to reconstruct a valid `seekr_match` vector. This makes it possible to use tabular workflows while still returning to the main `seekr` replacement workflow.
+
+For examples, see the `as_match()` documentation and the article [Tabular workflows](tabular-workflows.html).
+
+## Update replacements after inspection
+
+You do not need to decide every replacement when searching.
+
+The `replacement` field can be set or updated after matches have been inspected or filtered.
+
+```{r update_replacement}
+first_path <- field(xf, "path")[[1L]]
+repl <- field(xf, "replacement")
+
+field(xf, "replacement") <- ifelse(
+  field(xf, "path") == first_path,
+  toupper(repl),
+  tolower(repl)
+)
+
+print(xf, context = c(2L, 1L))
+```
+
+This makes it possible to search broadly, inspect the result, keep only the matches that matter, and then decide what each selected match should become.
+
+## Replace selected matches
+
+**Important:** `replace_files()` writes modified files in UTF-8. If you need to control how files are written, use the workflow described in [Working with text](working-with-text.html).
+
+When the selected matches and replacements look right, we can call `replace_files()` which starts from the current `seekr_match` vector.
+
+If you found five matches, filtered the vector down to three matches, and updated their replacements, only those three remaining matches are replaced, each with its corresponding replacement.
+
+Before writing, `replace_files()` checks that every selected match has a replacement and that the hash of each affected file still matches the hash recorded when the `seekr_match` vector was created. If a file has changed since the search, replacement stops before writing that file, and the search should be run again on the current file contents.
+
+If you created several `seekr_match` vectors from the same file state, combine them before replacing. After the first replacement, the file hash changes, so a second call using matches from the old file state will fail. For example, use `replace_files(c(x, y))` instead of calling `replace_files(x)` and then `replace_files(y)`.
+
+By default, `backup = TRUE`, so each file that will be modified is backed up before it is written. A `description` can be provided to make the backup easier to identify later. The backup directory can also be changed with `backup_dir` or the `seekr.backup_dir` option.
+
+```{r replace_files}
+replaced <- replace_files(xf, description = "Inverse function names")
+replaced
+```
+
+After replacement, we can search again.
+
+```{r}
+seekr("([a-z]+)_([a-z]+)(?= <- function)") |> print(context = c(0L, 3L))
+```
+
+## Restore files
+
+After modifying files, backups can be inspected with `list_backups()`, and the most recent backup can be retrieved with `last_backup()`.
+
+```{r}
+bck <- last_backup()
+bck
+```
+
+Use `restore_files()` to restore the previous file contents.
+
+```{r}
+restore_files(
+  from = bck$backup, 
+  to = bck$original,
+  description = "restore after reversing function names by mistake"
+)
+```
+
+By default, restoring files also creates a backup before writing, so both operations remain available in the backup history. This makes it possible to undo a replacement, while still keeping a record of the files that were present just before the restore operation.
+
+```{r}
+list_backups()
+```
+
+After restoring, the original matches are back.
+
+```{r}
+after_restore <- seekr("([a-z]+)_([a-z]+)(?= <- function)")
+print(after_restore, context = c(2L, 1L))
+```
+
+```{r cleaning, include = FALSE, eval = FALSE}
+unlink(example_dir, recursive = TRUE)
+unlink(backup_dir, recursive = TRUE)
+```

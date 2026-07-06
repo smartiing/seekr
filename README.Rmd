@@ -1,5 +1,9 @@
 ---
-output: github_document
+output:
+  github_document:
+    html_preview: false
+params:
+  seekr_print_mode: "plain"
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -13,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# seekr <a href="https://smartiing.github.io/seekr/"><img src="man/figures/logo.png" align="right" height="138" alt="seekr website" /></a>
+# seekr <a href="https://smartiing.github.io/seekr/"><img src="man/figures/logo.png" align="right" height="150" alt="seekr website" /></a>
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/seekr)](https://CRAN.R-project.org/package=seekr)
@@ -23,63 +27,207 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-**seekr** is an R package designed to help you search for specific patterns within text files.
+`seekr` turns search-and-replace into an inspectable R workflow.
+
+Instead of modifying files as soon as a pattern is found, `seekr` returns a `seekr_match` vector. Each element represents one match in one file and stores its location, matched text, surrounding context lines, and optional replacement.
+
+You can keep working with that vector after the search: inspect the result, remove unwanted matches, and define or revise the replacement associated with each remaining match. When you are ready, only those matches are written back to disk.
+
+The [design choices article](https://smartiing.github.io/seekr/articles/design-choices.html) explains why `seekr` uses this representation and how it makes safe replacement possible.
+
+In real projects, search-and-replace often raises questions beyond finding a pattern: Which files were considered? Which files were excluded, and why? Which matches were found? Which replacements will be applied? Can I keep only some matches? Can I restore the previous file contents if needed?
+
+`seekr` provides a set of functions that make this workflow explicit, composable, and safe:
+
+- **List files** with `list_files()`. Start from one or more directories, recurse into subdirectories, optionally restrict discovery with Git, and get a normalized character vector of file paths.
+- **Filter files** with `filter_files()`. Keep files by extension, path pattern, or size, and use a sensible default set of exclude functions to remove files that should not be searched.
+- **Understand exclusions** with `exclusions()`. Inspect which files were excluded and why, instead of silently excluding files by mistake.
+- **Match patterns** with `match_files()`, or use `seek()` to combine listing, filtering, and matching in one call. Replacements can be literal strings, backreferences, functions, or functions that operate on the capture group matrix.
+- **Summarize matches** with `summary()`. Get a compact overview of the number of matches, their distribution by file and extension, and the frequency of each match/replacement pair.
+- **Print matches** with `print()`. Inspect matches with surrounding context, preview replacements, and use rich terminal output with clickable OSC8 links when supported.
+- **Filter matches** with `filter_match()`. Keep or discard matches after searching, without running the search again.
+- **Set or update replacements** with `field()`. Search first, inspect the result, then update the `replacement` field to decide what each selected match should become before writing files.
+- **Replace selected matches** with `replace_files()`. Starting from a `seekr_match` vector, `replace_files()` checks that each affected file still has the same text that was searched, then replaces only the matches still present in the vector with their corresponding replacements.
+- **Inspect and restore backups** with `list_backups()`, `last_backup()`, `restore_files()`, and `restore_files_interactive()`. Review automatic backups and recover previous file contents if something did not go as expected.
+
+For more advanced workflows, a `seekr_match` vector can also be converted to a tibble with `as_tibble()` and converted back with `as_match()`. This can make it easier to create custom summaries, filter matches, or prepare replacements with grouped operations. See the [tabular workflows article](https://smartiing.github.io/seekr/articles/tabular-workflows.html) for a detailed example.
+
+If your text does not come directly from files, or if you want to control reading and writing yourself, see [working with text article](https://smartiing.github.io/seekr/articles/working-with-text.html).
+
+For larger repositories or performance-sensitive searches, see the [performance notes article](https://smartiing.github.io/seekr/articles/performance-note.html).
+
+Patterns are powered by [`stringr`](https://stringr.tidyverse.org/) and ICU regular expressions, so you can use familiar tools such as `stringr::regex()`, `stringr::fixed()`, and `stringr::coll()` when you need more control.
+
 
 ## Installation
 
 ```{r, eval = FALSE}
-# Install it directly from CRAN:
+# Install the package from CRAN:
 install.packages("seekr")
-
-# Or the the development version from GitHub:
-# install.packages("pak")
-pak::pak("smartiing/seekr")
 ```
 
-## Functions
 
-**seekr** provides two main functions:
+## Usage
 
-- `seek()`: Search for a pattern in files within a specified directory.
-- `seek_in()`: Search for a pattern in a given list of files.
+```{r setup, include = FALSE}
+library(seekr)
+options(width = 150)
 
-Each function returns a tibble with the following columns:
+source_dir <- system.file("extdata", package = "seekr")
+example_dir <- file.path(tempdir(), "seekr-example")
+backup_dir <- file.path(tempdir(), "seekr-backups")
 
-- `path`: Path to the file (relative or absolute).
-- `line_number`: Line number where the pattern was found.
-- `match`: The first match found in the line.
-- `matches`: All matches found in the line (if matches = TRUE).
-- `line`: Content of the matching line.
+unlink(example_dir, recursive = TRUE)
+unlink(backup_dir, recursive = TRUE)
 
+dir.create(example_dir, recursive = TRUE)
+dir.create(backup_dir, recursive = TRUE)
 
-## Example
+options(seekr.backup_dir = backup_dir)
+options(seekr.print.mode = params$seekr_print_mode)
+
+file.copy(
+  from = source_dir,
+  to = example_dir,
+  recursive = TRUE
+)
+
+path <- file.path(example_dir, "extdata")
+knitr::opts_knit$set(root.dir = path)
+```
+
+### Find matches
+
+First, list all files that could be searched.
 
 ```{r}
-library(seekr)
-
-path = system.file("extdata", package = "seekr")
-
-# Search all function definitions in R files
-seek("[^\\s]+(?= (=|<-) function\\()", path, filter = "\\.R$")
-
-# Search for usage of "TODO" comments in source code in a case insensitive way
-seek("(?i)TODO", path, filter = "\\.R$")
-
-# Search for error/warning in log files
-seek("(?i)error", path, filter = "\\.log$")
-
-# Search for config keys in YAML
-seek("database:", path, filter = "\\.ya?ml$")
-
-# Looking for "length" in all types of text files
-seek("(?i)length", path)
-
-# Search for specific CSV headers using seek_in() and reading only the first line
-csv_files <- list.files(path, "\\.csv$", full.names = TRUE)
-seek_in(csv_files, "(?i)specie", n_max = 1)
+files <- list_files()
+files
 ```
 
+Then filter to keep only R files. `filter_files()` records which files were excluded and why. The `exclusions` attribute can be retrieved using `exclusions()`. 
 
-## License
+```{r}
+filtered <- filter_files(files, extension = "R")
+filtered
+```
 
-This package is licensed under the MIT License.
+Now that we have a list of files, we can search for function names composed of at least two words separated by an underscore and prepare a replacement that reverses them.
+
+```{r}
+my_pattern <- "([a-z]+)_([a-z]+)(?= <- function)"
+my_replacement <- "\\2_\\1"
+
+x <- match_files(filtered, my_pattern, my_replacement)
+```
+
+The listing, filtering, and matching steps can also be combined in one step with `seek()`. `seekr()` is a convenience wrapper around `seek()` that restricts the search to R, R Markdown, and Quarto files (`.R`, `.Rmd`, `.qmd`).
+
+```{r}
+y <- seek(my_pattern, my_replacement, extension = "R")
+identical(x, y)
+```
+
+### Inspect matches
+`x` is a `seekr_match` vector. It behaves like a vector of matches, but each match also stores fields that can be inspected with `fields()` and accessed with `field()`.
+
+```{r}
+str(x)
+fields(x)
+field(x, "match")
+field(x, "replacement")
+```
+
+Use `summary()` to get a compact overview of the matches and planned replacements.
+
+```{r}
+summary(x)
+```
+
+Use `print()` to inspect each match with surrounding context and preview the replacement.
+
+```{r}
+print(x, context = c(0, 3))
+```
+
+### Filter matches and update replacements
+Matches can be filtered without reading the files again. Here, we remove matches whose matched text contains `"safe"`.
+
+```{r}
+x <- filter_match(x, !grepl("safe", match))
+print(x, context = c(0L, 3L))
+```
+
+Replacements can also be set/updated after inspection. Here, we convert the replacement to upper case and preview the result.
+
+```{r}
+field(x, "replacement") = toupper(field(x, "replacement"))
+print(x, context = c(0, 3))
+```
+
+### Replace selected matches
+Now that they are ready, we can apply our selected replacements. `replace_files()` starts from the current `seekr_match` vector and replaces only the matches still present in that vector, each with its corresponding replacement.
+
+Before writing, `replace_files()` checks that every selected match has a replacement and that the hash of each affected file still matches the hash recorded when the `seekr_match` vector was created. If a file has changed since the search, replacement stops and the search should be run again on the current file contents.
+
+```{r}
+replace_files(x)
+```
+
+In this example, the replacement strings still match `mypattern` if we ignore the case. This lets us search again and verify that the three selected matches were replaced, while the two excluded matches were left unchanged.
+
+```{r}
+seekr(regex(my_pattern, ignore_case = TRUE))
+```
+
+### Restore files
+By default, `replace_files()` creates a backup in the default `backup_dir` before modifying files. The latest backup can be retrieved with `last_backup()`.
+
+```{r}
+bck <- last_backup()
+bck
+```
+
+Use `restore_files()` to restore the previous file contents from the backup.
+
+```{r}
+restore_files(from = bck$backup, to = bck$original)
+```
+
+`restore_files()` also creates a backup, by default, before restoring files.
+
+```{r}
+list_backups()
+```
+
+Once the files have been restored, the original files are back.
+
+```{r}
+x_restored <- seekr(my_pattern, my_replacement)
+identical(y, x_restored)
+print(x_restored, context = c(0, 2))
+```
+
+### Pipe workflow
+
+The main `seekr` functions are designed to compose: the output of one step can usually be passed directly to the next. In real use, you will often pause to inspect, filter, or update the result, but the pipe form makes the structure of the workflow clear.
+
+```{r eval=FALSE}
+x <-
+  list_files() |>
+  filter_files(extension = "R") |>
+  match_files(my_pattern, my_replacement) |>
+  filter_match(!grepl("safe", match)) |>
+  replace_files()
+```
+
+```{r cleaning, include = FALSE, eval = FALSE}
+unlink(example_dir, recursive = TRUE)
+unlink(backup_dir, recursive = TRUE)
+```
+
+## Clickable output
+
+`seekr` is designed to make search results actionable. When your terminal supports OSC8 hyperlinks, printed matches include clickable file locations, so you can inspect matches in the console and jump directly to the corresponding file and line.
+
+<img src="man/figures/example_summary_print.gif" alt="Summary and print of seekr matches with context and replacement preview">
