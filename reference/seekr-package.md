@@ -1,12 +1,15 @@
-# seekr: Extract Matching Lines from Matching Files
+# seekr: Search, Inspect, and Replace Text Across Files
 
-Provides a simple interface to recursively list files from a directory,
-filter them using a regular expression, read their contents, and extract
-lines that match a user-defined pattern. The package returns a dataframe
-containing the matched lines, their line numbers, file paths, and the
-corresponding matched substrings. Designed for quick code base
-exploration, log inspection, or any use case involving pattern-based
-file and line filtering.
+An inspectable and composable workflow for search-and-replace in text
+files. Files can be listed, filtered, and searched separately, with
+inspectable exclusions showing what was excluded and why. Matches are
+represented as structured vectors that can be printed with context,
+summarized, and filtered. Replacements can be defined at search time or
+set and updated after the search. Only matches present in the vector are
+modified when files are written. Backup and restore helpers are provided
+for file workflows. Text that has already been read can also be searched
+and updated directly, giving users control over input, output, and
+encoding when needed.
 
 ## See also
 
@@ -22,3 +25,7 @@ Useful links:
 
 **Maintainer**: Sacha Martingay <martingay.sacha@hotmail.com>
 \[copyright holder\]
+
+Authors:
+
+- Sacha Martingay <martingay.sacha@hotmail.com> \[copyright holder\]

@@ -1,217 +1,461 @@
-# Extract Matching Lines from Files
+# Find matches in text files
 
-These functions search through one or more text files, extract lines
-matching a regular expression pattern, and return a tibble containing
-the results.
+`seek()` searches text files for a pattern and returns a
+[`seekr_match`](https://smartiing.github.io/seekr/reference/seekr_match.md)
+vector. The result can be inspected, filtered, and passed to
+[`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md)
+to apply replacements.
 
-- `seek()`: Discovers files inside one or more directories (recursively
-  or not), applies optional file name and text file filtering, and
-  searches lines.
+`seekr()` is a convenience wrapper around `seek()` that restricts the
+search to R, R Markdown, and Quarto files (`.R`, `.Rmd`, `.qmd`).
 
-- `seek_in()`: Searches inside a user-provided character vector of
-  files.
+[`list_files()`](https://smartiing.github.io/seekr/reference/list_files.md),
+[`filter_files()`](https://smartiing.github.io/seekr/reference/filter_files.md),
+and
+[`match_files()`](https://smartiing.github.io/seekr/reference/match_files.md)
+are the three building blocks of `seek()`. They can be called
+individually when you need more control over each step.
+
+### Steps
+
+- **[`list_files()`](https://smartiing.github.io/seekr/reference/list_files.md)**
+  starts from `path` and `recurse`s into subdirectories to list files.
+  By default, not `all` files are listed, with hidden files and
+  directories excluded.
+
+- **[`filter_files()`](https://smartiing.github.io/seekr/reference/filter_files.md)**
+  keeps files matching `extension` and `path_pattern` and not exceeding
+  `max_file_size`. Finally, the `exclude` functions are applied to the
+  remaining files, discarding common non-text or irrelevant files by
+  default.
+
+- **[`match_files()`](https://smartiing.github.io/seekr/reference/match_files.md)**
+  reads each file, decodes them using `encoding`, finds `pattern`
+  matches, and captures surrounding `context` lines. A `replacement` can
+  be provided to stage changes for later application with
+  [`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md).
 
 ## Usage
 
 ``` r
 seek(
   pattern,
-  path = ".",
+  replacement = NULL,
   ...,
-  filter = NULL,
-  negate = FALSE,
-  recurse = FALSE,
+  path = ".",
+  recurse = TRUE,
   all = FALSE,
-  relative_path = TRUE,
-  matches = FALSE
+  extension = NULL,
+  path_pattern = NULL,
+  max_file_size = Inf,
+  exclude = seekr::exclude_functions,
+  context = 5L,
+  encoding = "UTF-8",
+  .progress = seekr_option("seekr.progress")
 )
 
-seek_in(files, pattern, ..., matches = FALSE)
+seekr(
+  pattern,
+  replacement = NULL,
+  ...,
+  path = ".",
+  recurse = TRUE,
+  all = FALSE,
+  path_pattern = NULL,
+  max_file_size = Inf,
+  exclude = seekr::exclude_functions,
+  context = 5L,
+  encoding = "UTF-8",
+  .progress = seekr_option("seekr.progress")
+)
 ```
 
 ## Arguments
 
 - pattern:
 
-  A regular expression pattern used to match lines.
+  Pattern to search for, matched using
+  [stringr](https://stringr.tidyverse.org/reference/stringr-package.html)
+  (ICU regular expressions). Either:
 
-- path:
+  - A string, automatically wrapped as
+    [`stringr::regex()`](https://stringr.tidyverse.org/reference/modifiers.html)
+    with `ignore_case = FALSE`, `multiline = TRUE`, `comments = FALSE`,
+    and `dotall = FALSE`.
 
-  A character vector of one or more directories where files should be
-  discovered (only for `seek()`).
+  - A `stringr_pattern` object such as
+    [`stringr::regex()`](https://stringr.tidyverse.org/reference/modifiers.html),
+    [`stringr::fixed()`](https://stringr.tidyverse.org/reference/modifiers.html),
+    or
+    [`stringr::coll()`](https://stringr.tidyverse.org/reference/modifiers.html),
+    used as-is for more control.
+
+- replacement:
+
+  Replacement to associate with each match. Replacements are computed
+  immediately during the search and stored in the result. Either:
+
+  - `NULL` (default): no replacement.
+    [`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md)
+    cannot be called without setting replacements first.
+
+  - A plain string, used literally as replacement text.
+
+  - A string with backreferences of the form `\1`, `\2`, etc., replaced
+    with the corresponding capture group from `pattern`.
+
+  - A function, called once per file with a character vector of all
+    matches found in that file, and expected to return a character
+    vector of the same length (e.g.
+    [toupper](https://rdrr.io/r/base/chartr.html)).
+
+  - A function wrapped with
+    [`with_capture_groups_matrix()`](https://smartiing.github.io/seekr/reference/with_capture_groups_matrix.md),
+    called once per file with a character matrix where the first column
+    is the full match and the remaining columns are the capture groups.
 
 - ...:
 
-  Additional arguments passed to
-  [`readr::read_lines()`](https://readr.tidyverse.org/reference/read_lines.html),
-  such as `skip`, `n_max`, or `locale`.
+  These dots are for future extensions and must be empty.
 
-- filter:
+- path:
 
-  Optional. A regular expression pattern used to filter file paths
-  before reading. If `NULL`, all text files are considered.
-
-- negate:
-
-  Logical. If `TRUE`, files matching the `filter` pattern are excluded
-  instead of included. Useful to skip files based on name or extension.
+  A character vector of one or more existing directories to search in.
+  Defaults to `"."` (the current working directory).
 
 - recurse:
 
-  If `TRUE` recurse fully, if a positive number the number of levels to
-  recurse.
+  Controls how deep the directory traversal goes to list files. Either:
+
+  - `TRUE` (default): recurse into all subdirectories.
+
+  - `FALSE`: only list files at the top level of each directory in
+    `path`.
+
+  - A positive integer: limit recursion to that many levels deep.
 
 - all:
 
-  If `TRUE` hidden files are also returned.
+  Whether to list hidden files and directories. Default is `FALSE`.
 
-- relative_path:
+- extension:
 
-  Logical. If TRUE, file paths are made relative to the path argument.
-  If multiple root paths are provided, relative_path is automatically
-  ignored and absolute paths are kept to avoid ambiguity.
+  Optional character vector of file extensions to keep. Either:
 
-- matches:
+  - `NULL` (default): no filtering by extension; all extensions are
+    kept.
 
-  Logical. If `TRUE`, all matches per line are also returned in a
-  `matches` list-column.
+  - A character vector of extensions to keep, with or without a leading
+    dot (e.g. `c("R", ".Rmd", "qmd")`).
 
-- files:
+  Extensions are normalized before matching: leading dots are stripped,
+  matching is case-insensitive, and duplicates are ignored. Only the
+  last component of compound extensions is used (e.g. `"tar.gz"` uses
+  `"gz"`), with a warning.
 
-  A character vector of files to search (only for `seek_in()`).
+- path_pattern:
+
+  Optional pattern applied to filter normalized file paths (see
+  [`as_seekr_path()`](https://smartiing.github.io/seekr/reference/as_seekr_path.md)).
+  Either:
+
+  - `NULL` (default): no filtering by path.
+
+  - A string, interpreted as a regular expression via
+    [`stringr::regex()`](https://stringr.tidyverse.org/reference/modifiers.html).
+
+  - A `stringr_pattern` object such as
+    [`stringr::regex()`](https://stringr.tidyverse.org/reference/modifiers.html)
+    or
+    [`stringr::fixed()`](https://stringr.tidyverse.org/reference/modifiers.html).
+
+- max_file_size:
+
+  Maximum file size in bytes. Files larger than this value are excluded.
+  Default is `Inf`, meaning no files are excluded by size. Zero and
+  negative values are treated as `Inf`.
+
+- exclude:
+
+  Named list of functions used to exclude unwanted files during
+  filtering. Either:
+
+  - `NULL`, to disable additional exclude functions.
+
+  - A named list of functions, each taking a character vector of
+    normalized file paths and returning a logical vector of the same
+    length, where `TRUE` means the file should be excluded.
+
+  Defaults to
+  [exclude_functions](https://smartiing.github.io/seekr/reference/exclude_functions.md),
+  which excludes common non-text or irrelevant files.
+
+- context:
+
+  Number of surrounding lines to capture around each match. Either:
+
+  - A single non-negative integer (default: `5L`): captures the same
+    number of lines before and after each match.
+
+  - A pair of non-negative integers `c(before, after)`: captures
+    `before` lines before and `after` lines after each match.
+
+- encoding:
+
+  Encoding used to decode file content during the matching step. Either:
+
+  - A single string (default: `"UTF-8"`), applied to all files.
+
+  - `NULL`: encoding is guessed for each file individually using
+    [`stringi::stri_enc_detect()`](https://rdrr.io/pkg/stringi/man/stri_enc_detect.html),
+    falling back to `"UTF-8"` when detection fails.
+
+  Note:
+  [`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md)
+  always writes files in UTF-8. A warning is issued once per session
+  when any file is read with a non-UTF-8 encoding. By default,
+  [`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md)
+  refuses to write those matches unless `allow_encoding_change = TRUE`
+  is set.
+
+- .progress:
+
+  Whether to display progress messages. Default is `TRUE` in interactive
+  sessions and `FALSE` otherwise (see
+  [`rlang::is_interactive()`](https://rlang.r-lib.org/reference/is_interactive.html)).
+  Can be set globally with `options(seekr.progress = FALSE)`.
 
 ## Value
 
-A tibble with one row per matched line, containing:
+A
+[`seekr_match`](https://smartiing.github.io/seekr/reference/seekr_match.md)
+vector. Each element represents one match and carries the file path,
+match position, matched text, optional replacement, context lines,
+encoding, and a hash of the searched text used for replacement safety.
+The vector is always returned, even when empty.
 
-- `path`: File path (relative or absolute).
+An attribute `"exclusions"` is attached to the result after filtering,
+containing a data frame with one row per input file and one column per
+exclusion function, detailing which files were excluded and why.
+Retrieve it with
+[`exclusions()`](https://smartiing.github.io/seekr/reference/exclusions.md).
 
-- `line_number`: Line number in the file.
-
-- `match`: The first matched substring.
-
-- `matches`: All matched substrings (if `matches = TRUE`).
-
-- `line`: Full content of the matching line.
-
-## Details
-
-**\[experimental\]**
-
-The overall process involves the following steps:
-
-- **File Selection**
-
-  - `seek()`: Files are discovered using
-    [`fs::dir_ls()`](https://fs.r-lib.org/reference/dir_ls.html),
-    starting from one or more directories.
-
-  - `seek_in()`: Files are directly supplied by the user (no discovery
-    phase).
-
-- **File Filtering**
-
-  - Files located inside `.git/` folders are automatically excluded.
-
-  - Files with known non-text extensions (e.g., `.png`, `.exe`, `.rds`)
-    are excluded.
-
-  - If a file's extension is unknown, a check is performed to detect
-    embedded null bytes (binary indicator).
-
-  - Optionally, an additional regex-based path filter (`filter`) can be
-    applied.
-
-- **Line Reading**
-
-  - Files are read line-by-line using
-    [`readr::read_lines()`](https://readr.tidyverse.org/reference/read_lines.html).
-
-  - Only lines matching the provided regular expression `pattern` are
-    retained.
-
-  - If a file cannot be read, it is skipped gracefully without failing
-    the process.
-
-- **Data Frame Construction**
-
-  - A tibble is constructed with one row per matched line.
-
-These functions are particularly useful for analyzing source code,
-configuration files, logs, and other structured text data.
+If the result is empty, use
+[`empty_stage()`](https://smartiing.github.io/seekr/reference/empty_stage.md)
+to see whether the pipeline became empty during input, listing,
+filtering, or matching.
 
 ## See also
 
-[`fs::dir_ls()`](https://fs.r-lib.org/reference/dir_ls.html),
-[`readr::read_lines()`](https://readr.tidyverse.org/reference/read_lines.html),
-[`stringr::str_detect()`](https://stringr.tidyverse.org/reference/str_detect.html)
+- [seekr_match](https://smartiing.github.io/seekr/reference/seekr_match.md)
+  for the match object structure and available methods.
+
+- [`print.seekr_match()`](https://smartiing.github.io/seekr/reference/print.seekr_match.md)
+  and
+  [`summary.seekr_match()`](https://smartiing.github.io/seekr/reference/summary.seekr_match.md)
+  to inspect results.
+
+- [`filter_match()`](https://smartiing.github.io/seekr/reference/filter_match.md)
+  to subset matches.
+
+- [`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md)
+  to apply replacements.
 
 ## Examples
 
 ``` r
-path = system.file("extdata", package = "seekr")
+# Create a small temporary project to search in
+example_dir <- tempfile("seekr-example")
+dir.create(example_dir)
+dir.create(file.path(example_dir, "R"))
+dir.create(file.path(example_dir, "tests"))
+dir.create(file.path(example_dir, "data"))
 
-# Search all function definitions in R files
-seek("[^\\s]+(?= (=|<-) function\\()", path, filter = "\\.R$")
-#> # A tibble: 6 × 4
-#>   path       line_number match        line                         
-#>   <fs::path>       <int> <chr>        <chr>                        
-#> 1 /script1.R           1 add_one      add_one <- function(x) {     
-#> 2 /script1.R           5 capitalize   capitalize <- function(txt) {
-#> 3 /script1.R           9 say_hello    say_hello <- function(name) {
-#> 4 /script2.R           2 mean_safe    mean_safe <- function(x) {   
-#> 5 /script2.R           7 sd_safe      sd_safe <- function(x) {     
-#> 6 /script2.R          12 print_vector print_vector <- function(v) {
+writeLines(
+  c(
+    "old_fn <- function(x) {",
+    "  # TODO: rename foo",
+    "  foo + x",
+    "}"
+  ),
+  file.path(example_dir, "R", "code.R")
+)
 
-# Search for usage of "TODO" comments in source code in a case insensitive way
-seek("(?i)TODO", path, filter = "\\.R$")
-#> # A tibble: 1 × 4
-#>   path       line_number match line                          
-#>   <fs::path>       <int> <chr> <chr>                         
-#> 1 /script2.R           1 TODO  # TODO: optimize this function
+writeLines(
+  c(
+    "test_that('foo works', {",
+    "  # TODO: update test",
+    "  expect_equal(foo, 1)",
+    "})"
+  ),
+  file.path(example_dir, "tests", "test-code.R")
+)
 
-# Search for error/warning in log files
-seek("(?i)error", path, filter = "\\.log$")
-#> # A tibble: 14 × 4
-#>    path        line_number match line                                           
-#>    <fs::path>        <int> <chr> <chr>                                          
-#>  1 /server.log           3 ERROR 2025-04-29 21:52:17 ERROR : Starting process   
-#>  2 /server.log           6 ERROR 2025-04-30 04:15:43 ERROR : Retrying request   
-#>  3 /server.log           7 ERROR 2025-04-29 13:59:14 ERROR : Failed to authenti…
-#>  4 /server.log          10 ERROR 2025-04-30 17:20:48 ERROR : User login failed  
-#>  5 /server.log          11 ERROR 2025-04-30 11:41:17 ERROR : Starting process   
-#>  6 /server.log          14 ERROR 2025-04-30 00:15:59 ERROR : Connection success…
-#>  7 /server.log          16 ERROR 2025-04-29 20:39:24 ERROR : User login failed  
-#>  8 /server.log          19 ERROR 2025-04-29 17:51:14 ERROR : Timeout reached    
-#>  9 /server.log          20 ERROR 2025-04-29 18:27:07 ERROR : Retrying request   
-#> 10 /server.log          21 ERROR 2025-04-30 16:15:44 ERROR : Disk usage high    
-#> 11 /server.log          23 ERROR 2025-04-30 17:14:15 ERROR : User login failed  
-#> 12 /server.log          30 ERROR 2025-04-30 00:03:39 ERROR : Connection success…
-#> 13 /server.log          35 ERROR 2025-04-30 17:25:05 ERROR : Connection success…
-#> 14 /server.log          40 ERROR 2025-04-29 17:49:55 ERROR : Restart scheduled  
+writeLines(
+  c(
+    "name,value",
+    "foo,1",
+    "bar,2"
+  ),
+  file.path(example_dir, "data", "values.csv")
+)
 
-# Search for config keys in YAML
-seek("database:", path, filter = "\\.ya?ml$")
-#> # A tibble: 1 × 4
-#>   path         line_number match     line     
-#>   <fs::path>         <int> <chr>     <chr>    
-#> 1 /config.yaml           1 database: database:
+# seek() is built from three lower-level functions
+files <- list_files(example_dir)
+filtered <- filter_files(files, extension = "R", path_pattern = "/R/")
+x <- match_files(filtered, "foo", "bar")
 
-# Looking for "length" in all types of text files
-seek("(?i)length", path)
-#> # A tibble: 4 × 4
-#>   path       line_number match  line                                            
-#>   <fs::path>       <int> <chr>  <chr>                                           
-#> 1 /iris.csv            1 Length "\"Sepal.Length\",\"Sepal.Width\",\"Petal.Lengt…
-#> 2 /script2.R           3 length "  if (length(x) == 0) return(NA)"              
-#> 3 /script2.R           8 length "  if (length(x) <= 1) return(NA)"              
-#> 4 /script2.R          13 length "  print(paste('Vector of length', length(v)))" 
+# These functions can be piped
+y <-
+  example_dir |>
+  list_files() |>
+  filter_files(extension = "R", path_pattern = "/R/") |>
+  match_files("foo", "bar")
 
-# Search for specific CSV headers using seek_in() and reading only the first line
-csv_files <- list.files(path, "\\.csv$", full.names = TRUE)
-seek_in(csv_files, "(?i)specie", n_max = 1)
-#> # A tibble: 1 × 4
-#>   path                                                   line_number match line 
-#>   <fs::path>                                                   <int> <chr> <chr>
-#> 1 /home/runner/work/_temp/Library/seekr/extdata/iris.csv           1 Spec… "\"S…
+identical(x, y)
+#> [1] TRUE
+
+# This is equivalent to the seek() call below
+z <- seek("foo", "bar", path = example_dir, extension = "R", path_pattern = "/R/")
+identical(y, z)
+#> [1] TRUE
+
+# Search for a pattern in all text files
+x <- seek("TODO", path = example_dir)
+print(x)
+#> <seekr::match[2]> 2 sources
+#> Common Path: /tmp/RtmpqR02ap/seekr-example1a41710cab9d
+#> 
+#> R/code.R [1]
+#> [1] -> 2 |   # TODO: rename foo
+#> 
+#> tests/test-code.R [1]
+#> [2] -> 2 |   # TODO: update test
+#> 
+
+# Search only in R files
+seek("TODO", path = example_dir, extension = "R")
+#> <seekr::match[2]> 2 sources
+#> Common Path: /tmp/RtmpqR02ap/seekr-example1a41710cab9d
+#> 
+#> R/code.R [1]
+#> [1] -> 2 |   # TODO: rename foo
+#> 
+#> tests/test-code.R [1]
+#> [2] -> 2 |   # TODO: update test
+#> 
+
+# Search only in a specific subfolder
+seek("TODO", path = example_dir, path_pattern = "/R/")
+#> <seekr::match[1]> 1 source
+#> /tmp/RtmpqR02ap/seekr-example1a41710cab9d/R/code.R [1]
+#> [1] -> 2 |   # TODO: rename foo
+#> 
+
+# seekr() is a shortcut for searching R, R Markdown, and Quarto files
+seekr("old_fn", path = example_dir)
+#> <seekr::match[1]> 1 source
+#> /tmp/RtmpqR02ap/seekr-example1a41710cab9d/R/code.R [1]
+#> [1] -> 1 | old_fn <- function(x) {
+#> 
+
+# Stage a plain string replacement
+x <- seek("old_fn", "new_fn", path = example_dir)
+x
+#> <seekr::match[1]> 1 source
+#> /tmp/RtmpqR02ap/seekr-example1a41710cab9d/R/code.R [1]
+#> [1] -- 1 | old_fn <- function(x) {
+#>     ++ 1 | new_fn <- function(x) {
+#> 
+
+# Stage replacements with a function
+x <- seek(
+  "foo|bar",
+  replacement = function(x) ifelse(x == "foo", "bar", "foo"),
+  path = example_dir
+)
+x
+#> <seekr::match[6]> 3 sources
+#> Common Path: /tmp/RtmpqR02ap/seekr-example1a41710cab9d
+#> 
+#> R/code.R [2]
+#> [1] -- 2 |   # TODO: rename foo
+#>     ++ 2 |   # TODO: rename bar
+#> [2] -- 3 |   foo + x
+#>     ++ 3 |   bar + x
+#> 
+#> data/values.csv [2]
+#> [3] -- 2 | foo,1
+#>     ++ 2 | bar,1
+#> [4] -- 3 | bar,2
+#>     ++ 3 | foo,2
+#> 
+#> tests/test-code.R [2]
+#> [5] -- 1 | test_that('foo works', {
+#>     ++ 1 | test_that('bar works', {
+#> [6] -- 3 |   expect_equal(foo, 1)
+#>     ++ 3 |   expect_equal(bar, 1)
+#> 
+
+# Stage replacements after searching
+x <- seekr("foo|bar", path = example_dir)
+field(x, "replacement") <- ifelse(field(x, "match") == "foo", "bar", "foo")
+x
+#> <seekr::match[4]> 2 sources
+#> Common Path: /tmp/RtmpqR02ap/seekr-example1a41710cab9d
+#> 
+#> R/code.R [2]
+#> [1] -- 2 |   # TODO: rename foo
+#>     ++ 2 |   # TODO: rename bar
+#> [2] -- 3 |   foo + x
+#>     ++ 3 |   bar + x
+#> 
+#> tests/test-code.R [2]
+#> [3] -- 1 | test_that('foo works', {
+#>     ++ 1 | test_that('bar works', {
+#> [4] -- 3 |   expect_equal(foo, 1)
+#>     ++ 3 |   expect_equal(bar, 1)
+#> 
+
+# Create a temporary backup directory
+backup_dir <- tempfile("seekr-backup")
+dir.create(backup_dir)
+
+# Apply replacements after inspection
+replace_files(x, backup_dir = backup_dir)
+
+# Restore files from the latest backup
+bck <- last_backup(backup_dir = backup_dir)
+restore_files(from = bck$backup, to = bck$original, backup_dir = backup_dir)
+#> ℹ Creating a backup of the current version of each existing destination file
+#>   before restoring it.
+#> ℹ This ensures you can revert to the state before restoration if needed.
+
+# See which files were excluded
+exclusions(x)
+#> # A tibble: 3 × 7
+#>   path                excluded exclude_by_extension is_git_dir is_dependency_dir
+#>   <chr>               <lgl>    <lgl>                <lgl>      <lgl>            
+#> 1 /tmp/RtmpqR02ap/se… FALSE    FALSE                FALSE      FALSE            
+#> 2 /tmp/RtmpqR02ap/se… TRUE     TRUE                 NA         NA               
+#> 3 /tmp/RtmpqR02ap/se… FALSE    FALSE                FALSE      FALSE            
+#> # ℹ 2 more variables: is_minified_file <lgl>, is_not_text_mime <lgl>
+
+# empty_stage() explains where the pipeline became empty
+dir.create(file.path(example_dir, "empty"))
+
+empty_stage(seek("foo", path = character()))
+#> [1] "input"
+empty_stage(seek("foo", path = file.path(example_dir, "empty")))
+#> [1] "list"
+empty_stage(seek("foo", path = example_dir, extension = "dummy"))
+#> Use `exclusions()` to understand why all files were excluded.
+#> This message is displayed once per session.
+#> [1] "filter"
+empty_stage(seek("missing_pattern", path = example_dir))
+#> [1] "match"
+
+# Remove the two temporary directories
+unlink(backup_dir, recursive = TRUE)
+unlink(example_dir, recursive = TRUE)
 ```

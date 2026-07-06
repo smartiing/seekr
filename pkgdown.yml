@@ -1,8 +1,13 @@
-pandoc: 3.1.11
+pandoc: 3.8.3
 pkgdown: 2.2.0
 pkgdown_sha: ~
-articles: {}
-last_built: 2026-02-07T23:08Z
+articles:
+  articles/design-choices: design-choices.html
+  articles/performance-note: performance-note.html
+  articles/seekr: seekr.html
+  articles/tabular-workflows: tabular-workflows.html
+  articles/working-with-text: working-with-text.html
+last_built: 2026-07-06T21:50Z
 urls:
   reference: https://smartiing.github.io/seekr/reference
   article: https://smartiing.github.io/seekr/articles

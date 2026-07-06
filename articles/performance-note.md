@@ -1,0 +1,148 @@
+# Performance notes
+
+`seekr` is not a fast text search tool. It is a structured text search
+and replacement workflow for R. These are different goals, and it helps
+to be clear about the trade-off before working with large file sets.
+
+## Why seekr is slower than CLI tools
+
+When `seekr` searches a file, it does more than check whether a pattern
+matches.
+
+For every match it finds, it stores the source path, the absolute
+character positions, the line and column positions, the matched text,
+the staged replacement if any, the line containing the match,
+surrounding context lines, the encoding, and a hash of the searched text
+that
+[`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md)
+uses later to verify the file has not changed.
+
+This is what makes the following workflow possible:
+
+``` r
+
+library(seekr)
+
+x <- seekr("foo|bar", toupper)
+
+summary(x)
+print(x, context = 2)
+
+x <- filter_match(x, !grepl("/generated/", path))
+
+replace_files(x)
+```
+
+The cost is real. `seekr` reads each file as a complete string, builds a
+structured R object for every match, and does all of this sequentially
+in a single R process. For most source code projects this is not a
+problem. For very large repositories, it can be.
+
+The main cases where performance is likely to matter:
+
+- **Large repositories** with tens of thousands of files.
+- **Large individual files**, because each file must fit in memory as
+  text.
+- **Files with very large lines**, because the match line is stored and
+  by default some context lines too, minified files such as JavaScript,
+  generated JSON, and one-line data dumps are common examples for which
+  `seekr` might not be the best fit. The default exclude functions
+  remove some of these by default, but not all.
+- **Workloads where you only need file names**, not structured match
+  objects. For this, a CLI tool such as `ripgrep` that will stop as soon
+  as it finds a match is a better fit.
+
+## Two practical strategies for larger workloads
+
+### Pre-filter with ripgrep
+
+`ripgrep` is not managed by `seekr`: installing it, making it available
+on your system `PATH`, and dealing with platform-specific command-line
+details are left to the user. The goal here is only to show a possible
+pattern for advanced users with heavy workloads and willing to use
+`ripgrep` for performance.
+
+If the main bottleneck is the number of files or volume of data, you can
+use `ripgrep` to identify which files contain the pattern, then pass
+only those files to
+[`match_files()`](https://smartiing.github.io/seekr/reference/match_files.md).
+
+``` r
+
+# requires ripgrep to be installed and accessible to PATH
+pattern <- "function"
+path <- system.file("extdata", package = "seekr")
+
+files_with_a_match <- system2(
+  command = "rg",
+  args = c("-l", shQuote(pattern), shQuote(path)),
+  stdout = TRUE
+)
+
+x <- match_files(files_with_a_match, pattern, toupper)
+x
+```
+
+This keeps `seekr`’s structured match objects while offloading the
+initial scan to a tool optimized for raw throughput.
+
+### Parallelize with mirai
+
+If you want to parallelize the search itself, you can split the file
+vector into chunks and run
+[`match_files()`](https://smartiing.github.io/seekr/reference/match_files.md)
+on each chunk with [`mirai`](https://mirai.r-lib.org/index.html).
+
+The idea:
+
+1.  List and filter files as usual.
+2.  Split the file vector into `N` roughly equal chunks.
+3.  Start `N` [`mirai`](https://mirai.r-lib.org/index.html) daemons.
+4.  Call
+    [`match_files()`](https://smartiing.github.io/seekr/reference/match_files.md)
+    on each chunk in parallel.
+5.  Combine the resulting `seekr_match` vectors.
+
+``` r
+
+library(seekr)
+library(mirai)
+
+files <-
+  list_files() |>
+  filter_files(extension = "R")
+
+# Sequential version, useful as a reference
+x <- match_files(files, "foo", "bar")
+attr(x, "exclusions") <- NULL
+
+N <- 8L
+
+mirai::daemons(N)
+mirai::everywhere(library(seekr))
+
+split_files <- unname(split(files, cut(seq_along(files), N)))
+
+matches_list <- mirai::mirai_map(
+  split_files,
+  \(files) match_files(files, "foo", "bar", .progress = FALSE)
+)[]
+
+mirai::daemons(0)
+
+y <- Reduce(c, matches_list, init = new_seekr_match())
+
+identical(x, y)
+#> TRUE
+```
+
+As a rough example: searching a simple pattern across about 48,000 R
+files (roughly 500 MB of text) took about 80 seconds sequentially and
+about 20 seconds with 8 daemons on one machine. Files were likely cached
+by the OS at that point. This is a single data point, not a benchmark.
+Actual results depend on the storage device, number of cores, file
+sizes, pattern complexity, and how many matches need to be materialized.
+
+For small projects, the overhead of starting workers and combining
+results is probably not worth the added code. The sequential workflow is
+simpler and usually fast enough.
