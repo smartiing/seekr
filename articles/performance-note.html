@@ -121,9 +121,8 @@ for which <code>seekr</code> might not be the best fit. The default
 exclude functions remove some of these by default, but not all.</li>
 <li>
 <strong>Workloads where you only need file names</strong>, not
-structured match objects. For this, a CLI tool such as
-<code>ripgrep</code> that will stop as soon as it finds a match is a
-better fit.</li>
+structured match objects. For this, a CLI tool such as <a href="https://github.com/burntsushi/ripgrep" class="external-link"><code>ripgrep</code></a>
+that will stop as soon as it finds a match is a better fit.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -132,15 +131,17 @@ better fit.</li>
 <div class="section level3">
 <h3 id="pre-filter-with-ripgrep">Pre-filter with ripgrep<a class="anchor" aria-label="anchor" href="#pre-filter-with-ripgrep"></a>
 </h3>
-<p><code>ripgrep</code> is not managed by <code>seekr</code>: installing
-it, making it available on your system <code>PATH</code>, and dealing
-with platform-specific command-line details are left to the user. The
-goal here is only to show a possible pattern for advanced users with
-heavy workloads and willing to use <code>ripgrep</code> for
-performance.</p>
+<p><a href="https://github.com/burntsushi/ripgrep" class="external-link"><code>ripgrep</code></a> is
+not managed by <code>seekr</code>: installing it, making it available on
+your system <code>PATH</code>, and dealing with platform-specific
+command-line details are left to the user. The goal here is only to show
+a possible pattern for advanced users with heavy workloads and willing
+to use <a href="https://github.com/burntsushi/ripgrep" class="external-link"><code>ripgrep</code></a>
+for performance.</p>
 <p>If the main bottleneck is the number of files or volume of data, you
-can use <code>ripgrep</code> to identify which files contain the
-pattern, then pass only those files to <code><a href="../reference/match_files.html">match_files()</a></code>.</p>
+can use <a href="https://github.com/burntsushi/ripgrep" class="external-link"><code>ripgrep</code></a> to
+identify which files contain the pattern, then pass only those files to
+<code><a href="../reference/match_files.html">match_files()</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># requires ripgrep to be installed and accessible to PATH</span></span>
 <span><span class="va">pattern</span> <span class="op">&lt;-</span> <span class="st">"function"</span></span>

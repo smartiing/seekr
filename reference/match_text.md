@@ -1,24 +1,15 @@
 # Find matches in text
 
-`match_text()` is a low-level helper for matching a pattern in text
-directly. It does not read from disk. Use
-[`match_files()`](https://smartiing.github.io/seekr/reference/match_files.md)
-or
-[`seek()`](https://smartiing.github.io/seekr/reference/seek.md)/[`seekr()`](https://smartiing.github.io/seekr/reference/seek.md)
-for the usual workflow.
+`match_text()` searches text that has already been read into R. It is
+the text-level counterpart of
+[`match_files()`](https://smartiing.github.io/seekr/reference/match_files.md):
+it does not read from disk and does not record file encoding
+information.
 
 ## Usage
 
 ``` r
-match_text(
-  text,
-  path,
-  pattern,
-  replacement = NULL,
-  ...,
-  context = 5L,
-  encoding = NA_character_
-)
+match_text(text, path, pattern, replacement = NULL, ..., context = 5L)
 ```
 
 ## Arguments
@@ -93,19 +84,28 @@ match_text(
   - A pair of non-negative integers `c(before, after)`: captures
     `before` lines before and `after` lines after each match.
 
-- encoding:
-
-  Optional encoding metadata associated with `text`. The default is
-  `NA_character_`, meaning that no file encoding was recorded. Supply a
-  concrete encoding only if the resulting matches should later be passed
-  to
-  [`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md).
-
 ## Value
 
 A
 [`seekr_match`](https://smartiing.github.io/seekr/reference/seekr_match.md)
 vector.
+
+## Details
+
+The resulting
+[`seekr_match`](https://smartiing.github.io/seekr/reference/seekr_match.md)
+vector can be inspected, summarized, filtered, updated, and passed to
+[`replace_text()`](https://smartiing.github.io/seekr/reference/replace_text.md).
+It is not intended to be passed to
+[`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md),
+because `seekr` did not read the source file and does not control how
+the text was decoded.
+
+Use
+[`match_files()`](https://smartiing.github.io/seekr/reference/match_files.md)
+or
+[`seek()`](https://smartiing.github.io/seekr/reference/seek.md)/[`seekr()`](https://smartiing.github.io/seekr/reference/seek.md)
+for the usual file workflow.
 
 ## Examples
 

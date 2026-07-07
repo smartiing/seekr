@@ -341,7 +341,7 @@ empty during input, listing, filtering, or matching.</p>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">seek</span><span class="op">(</span><span class="st">"TODO"</span>, path <span class="op">=</span> <span class="va">example_dir</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;seekr::match[2]&gt;<span style="color: #767676;"> 2 sources</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpXS3Weq/seekr-example19f064ccf45b</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmpq5soNa/seekr-example1a0c1051bfbb</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">R/code.R</span> <span style="color: #767676;">[1]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -&gt; 2 <span style="color: #767676;">|</span>   # <span style="color: #00BBBB;">TODO</span>: rename foo</span>
@@ -353,7 +353,7 @@ empty during input, listing, filtering, or matching.</p>
 <span class="r-in"><span><span class="co"># Search only in R files</span></span></span>
 <span class="r-in"><span><span class="fu">seek</span><span class="op">(</span><span class="st">"TODO"</span>, path <span class="op">=</span> <span class="va">example_dir</span>, extension <span class="op">=</span> <span class="st">"R"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;seekr::match[2]&gt;<span style="color: #767676;"> 2 sources</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpXS3Weq/seekr-example19f064ccf45b</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmpq5soNa/seekr-example1a0c1051bfbb</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">R/code.R</span> <span style="color: #767676;">[1]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -&gt; 2 <span style="color: #767676;">|</span>   # <span style="color: #00BBBB;">TODO</span>: rename foo</span>
@@ -365,14 +365,14 @@ empty during input, listing, filtering, or matching.</p>
 <span class="r-in"><span><span class="co"># Search only in a specific subfolder</span></span></span>
 <span class="r-in"><span><span class="fu">seek</span><span class="op">(</span><span class="st">"TODO"</span>, path <span class="op">=</span> <span class="va">example_dir</span>, path_pattern <span class="op">=</span> <span class="st">"/R/"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;seekr::match[1]&gt;<span style="color: #767676;"> 1 source</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">/tmp/RtmpXS3Weq/seekr-example19f064ccf45b/R/code.R</span> <span style="color: #767676;">[1]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">/tmp/Rtmpq5soNa/seekr-example1a0c1051bfbb/R/code.R</span> <span style="color: #767676;">[1]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -&gt; 2 <span style="color: #767676;">|</span>   # <span style="color: #00BBBB;">TODO</span>: rename foo</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># seekr() is a shortcut for searching R, R Markdown, and Quarto files</span></span></span>
 <span class="r-in"><span><span class="fu">seekr</span><span class="op">(</span><span class="st">"old_fn"</span>, path <span class="op">=</span> <span class="va">example_dir</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;seekr::match[1]&gt;<span style="color: #767676;"> 1 source</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">/tmp/RtmpXS3Weq/seekr-example19f064ccf45b/R/code.R</span> <span style="color: #767676;">[1]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">/tmp/Rtmpq5soNa/seekr-example1a0c1051bfbb/R/code.R</span> <span style="color: #767676;">[1]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -&gt; 1 <span style="color: #767676;">|</span> <span style="color: #00BBBB;">old_fn</span> &lt;- function(x) {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
@@ -380,7 +380,7 @@ empty during input, listing, filtering, or matching.</p>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">seek</span><span class="op">(</span><span class="st">"old_fn"</span>, <span class="st">"new_fn"</span>, path <span class="op">=</span> <span class="va">example_dir</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;seekr::match[1]&gt;<span style="color: #767676;"> 1 source</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">/tmp/RtmpXS3Weq/seekr-example19f064ccf45b/R/code.R</span> <span style="color: #767676;">[1]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">/tmp/Rtmpq5soNa/seekr-example1a0c1051bfbb/R/code.R</span> <span style="color: #767676;">[1]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -- 1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">old_fn</span> &lt;- function(x) {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     ++ 1 <span style="color: #767676;">|</span> <span style="color: #00BB00;">new_fn</span> &lt;- function(x) {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -393,7 +393,7 @@ empty during input, listing, filtering, or matching.</p>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;seekr::match[6]&gt;<span style="color: #767676;"> 3 sources</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpXS3Weq/seekr-example19f064ccf45b</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmpq5soNa/seekr-example1a0c1051bfbb</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">R/code.R</span> <span style="color: #767676;">[2]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -- 2 <span style="color: #767676;">|</span>   # TODO: rename <span style="color: #BB0000;">foo</span></span>
@@ -419,7 +419,7 @@ empty during input, listing, filtering, or matching.</p>
 <span class="r-in"><span><span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"replacement"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"match"</span><span class="op">)</span> <span class="op">==</span> <span class="st">"foo"</span>, <span class="st">"bar"</span>, <span class="st">"foo"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;seekr::match[4]&gt;<span style="color: #767676;"> 2 sources</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpXS3Weq/seekr-example19f064ccf45b</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmpq5soNa/seekr-example1a0c1051bfbb</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">R/code.R</span> <span style="color: #767676;">[2]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -- 2 <span style="color: #767676;">|</span>   # TODO: rename <span style="color: #BB0000;">foo</span></span>
@@ -453,9 +453,9 @@ empty during input, listing, filtering, or matching.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 7</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   path                excluded exclude_by_extension is_git_dir is_dependency_dir</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> /tmp/RtmpXS3Weq/se… FALSE    FALSE                FALSE      FALSE            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> /tmp/RtmpXS3Weq/se… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> /tmp/RtmpXS3Weq/se… FALSE    FALSE                FALSE      FALSE            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> /tmp/Rtmpq5soNa/se… FALSE    FALSE                FALSE      FALSE            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> /tmp/Rtmpq5soNa/se… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> /tmp/Rtmpq5soNa/se… FALSE    FALSE                FALSE      FALSE            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: is_minified_file &lt;lgl&gt;, is_not_text_mime &lt;lgl&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># empty_stage() explains where the pipeline became empty</span></span></span>

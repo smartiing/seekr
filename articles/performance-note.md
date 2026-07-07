@@ -49,22 +49,24 @@ The main cases where performance is likely to matter:
   `seekr` might not be the best fit. The default exclude functions
   remove some of these by default, but not all.
 - **Workloads where you only need file names**, not structured match
-  objects. For this, a CLI tool such as `ripgrep` that will stop as soon
-  as it finds a match is a better fit.
+  objects. For this, a CLI tool such as
+  [`ripgrep`](https://github.com/burntsushi/ripgrep) that will stop as
+  soon as it finds a match is a better fit.
 
 ## Two practical strategies for larger workloads
 
 ### Pre-filter with ripgrep
 
-`ripgrep` is not managed by `seekr`: installing it, making it available
-on your system `PATH`, and dealing with platform-specific command-line
-details are left to the user. The goal here is only to show a possible
-pattern for advanced users with heavy workloads and willing to use
-`ripgrep` for performance.
+[`ripgrep`](https://github.com/burntsushi/ripgrep) is not managed by
+`seekr`: installing it, making it available on your system `PATH`, and
+dealing with platform-specific command-line details are left to the
+user. The goal here is only to show a possible pattern for advanced
+users with heavy workloads and willing to use
+[`ripgrep`](https://github.com/burntsushi/ripgrep) for performance.
 
 If the main bottleneck is the number of files or volume of data, you can
-use `ripgrep` to identify which files contain the pattern, then pass
-only those files to
+use [`ripgrep`](https://github.com/burntsushi/ripgrep) to identify which
+files contain the pattern, then pass only those files to
 [`match_files()`](https://smartiing.github.io/seekr/reference/match_files.md).
 
 ``` r
