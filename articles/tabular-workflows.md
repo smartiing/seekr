@@ -46,7 +46,7 @@ library(stringr)
 x <- seek("([A-Z]+) : (.+$)", extension = "log")
 x
 #> <seekr::match[80]> 2 sources
-#> Common Path: /tmp/RtmpBlEzMW/seekr-example/extdata
+#> Common Path: /tmp/RtmpbHuNcw/seekr-example/extdata
 #> 
 #> server1.log [10/40]
 #>  [1] ->  1 | 2026-06-30 01:13:45 INFO : Starting process
@@ -70,7 +70,7 @@ We summarize directly to have an idea of what was found.
 
 summary(x)
 #> ── <seekr::match[80]> ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-#> Common Path: /tmp/RtmpBlEzMW/seekr-example/extdata
+#> Common Path: /tmp/RtmpbHuNcw/seekr-example/extdata
 #> 
 #> Top sources [2]
 #>  • server1.log : 40 (50.0%)
@@ -101,9 +101,9 @@ elements are printed. Here are all of them.
 
 ``` r
 
-summary(x) |> print(n = Inf)
+x |> summary() |> print(n = Inf)
 #> ── <seekr::match[80]> ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-#> Common Path: /tmp/RtmpBlEzMW/seekr-example/extdata
+#> Common Path: /tmp/RtmpbHuNcw/seekr-example/extdata
 #> 
 #> Top sources [2]
 #>  • server1.log : 40 (50.0%)
@@ -160,37 +160,7 @@ For example, we can keep only `DEBUG` lines.
 
 ``` r
 
-xf <-
-  x |>
-  filter_match(str_detect(match, "^DEBUG"))
-
-xf
-#> <seekr::match[20]> 2 sources
-#> Common Path: /tmp/RtmpBlEzMW/seekr-example/extdata
-#> 
-#> server1.log [12]
-#>  [1] ->  2 | 2026-06-30 15:35:57 DEBUG : Disk usage high
-#>  [2] ->  6 | 2026-06-30 17:03:42 DEBUG : Connection successful
-#>  [3] ->  7 | 2026-07-01 00:54:56 DEBUG : Restart scheduled
-#>  [4] -> 12 | 2026-06-30 17:34:23 DEBUG : Timeout reached
-#>  [5] -> 14 | 2026-06-30 18:02:47 DEBUG : Disk usage high
-#>  [6] -> 19 | 2026-06-30 03:38:08 DEBUG : Loading config
-#>  [7] -> 20 | 2026-06-29 23:18:24 DEBUG : Disk usage high
-#>  [8] -> 24 | 2026-06-30 07:41:37 DEBUG : Restart scheduled
-#>  [9] -> 25 | 2026-06-30 09:38:10 DEBUG : Disk usage high
-#> [10] -> 28 | 2026-06-29 22:58:20 DEBUG : Disk usage high
-#> [11] -> 31 | 2026-06-30 03:04:51 DEBUG : Loading config
-#> [12] -> 38 | 2026-06-30 19:08:53 DEBUG : Starting process
-#> 
-#> server2.log [8]
-#> [13] ->  5 | 2026-06-30 02:03:55 DEBUG : Retrying request
-#> [14] ->  7 | 2026-07-01 00:05:54 DEBUG : Failed to authenticate
-#> [15] -> 10 | 2026-06-30 02:19:35 DEBUG : Loading config
-#> [16] -> 20 | 2026-06-30 12:13:34 DEBUG : Failed to authenticate
-#> [17] -> 30 | 2026-06-30 00:15:00 DEBUG : Disk usage high
-#> [18] -> 33 | 2026-06-30 11:03:55 DEBUG : Retrying request
-#> [19] -> 35 | 2026-06-30 04:43:43 DEBUG : Failed to authenticate
-#> [20] -> 36 | 2026-06-30 16:12:44 DEBUG : Connection successful
+xf <- filter_match(x, str_detect(match, "^DEBUG"))
 ```
 
 At this point, `xf` is simply our `seekr_match` vector, filtered.
@@ -199,7 +169,7 @@ At this point, `xf` is simply our `seekr_match` vector, filtered.
 
 print(xf)
 #> <seekr::match[20]> 2 sources
-#> Common Path: /tmp/RtmpBlEzMW/seekr-example/extdata
+#> Common Path: /tmp/RtmpbHuNcw/seekr-example/extdata
 #> 
 #> server1.log [12]
 #>  [1] ->  2 | 2026-06-30 15:35:57 DEBUG : Disk usage high
@@ -284,8 +254,8 @@ xdf |>
 #> # A tibble: 2 × 5
 #>   path                                              n_matches n_distinct_matches first_line last_line
 #>   <chr>                                                 <int>              <int>      <int>     <int>
-#> 1 /tmp/RtmpBlEzMW/seekr-example/extdata/server1.log        12                  6          2        38
-#> 2 /tmp/RtmpBlEzMW/seekr-example/extdata/server2.log         8                  5          5        36
+#> 1 /tmp/RtmpbHuNcw/seekr-example/extdata/server1.log        12                  6          2        38
+#> 2 /tmp/RtmpbHuNcw/seekr-example/extdata/server2.log         8                  5          5        36
 ```
 
 This kind of question is often easier to answer with a tibble than with
@@ -400,7 +370,7 @@ that some replacements have been set.
 to_replace <- as_match(latest)
 to_replace
 #> <seekr::match[9]> 2 sources
-#> Common Path: /tmp/RtmpBlEzMW/seekr-example/extdata
+#> Common Path: /tmp/RtmpbHuNcw/seekr-example/extdata
 #> 
 #> server1.log [5]
 #> [1] -- 12 | 2026-06-30 17:34:23 DEBUG : Timeout reached
@@ -439,7 +409,7 @@ modified.
 replaced <- replace_files(to_replace)
 replaced
 #> <seekr::match[9]> 2 sources
-#> Common Path: /tmp/RtmpBlEzMW/seekr-example/extdata
+#> Common Path: /tmp/RtmpbHuNcw/seekr-example/extdata
 #> 
 #> server1.log [5]
 #> [1] -- 12 | 2026-06-30 17:34:23 DEBUG : Timeout reached
@@ -478,8 +448,8 @@ bck
 #> # A tibble: 2 × 9
 #>      id created_at          operation description original                                          backup         original_exists backup_exists  size
 #>   <int> <dttm>              <chr>     <chr>       <chr>                                             <chr>          <lgl>           <lgl>         <fs:>
-#> 1     1 2026-07-07 06:19:40 replace   NA          /tmp/RtmpBlEzMW/seekr-example/extdata/server1.log /tmp/RtmpBlEz… TRUE            TRUE          1.76K
-#> 2     1 2026-07-07 06:19:40 replace   NA          /tmp/RtmpBlEzMW/seekr-example/extdata/server2.log /tmp/RtmpBlEz… TRUE            TRUE           1.8K
+#> 1     1 2026-07-07 08:08:13 replace   NA          /tmp/RtmpbHuNcw/seekr-example/extdata/server1.log /tmp/RtmpbHuN… TRUE            TRUE          1.76K
+#> 2     1 2026-07-07 08:08:13 replace   NA          /tmp/RtmpbHuNcw/seekr-example/extdata/server2.log /tmp/RtmpbHuN… TRUE            TRUE           1.8K
 restore_files(from = bck$backup, to = bck$original)
 #> ℹ Creating a backup of the current version of each existing destination file before restoring it.
 #> ℹ This ensures you can revert to the state before restoration if needed.
@@ -492,7 +462,7 @@ After restoring, the original matches are back.
 after_restore <- seek("([A-Z]+) : (.+$)", extension = "log")
 print(after_restore)
 #> <seekr::match[80]> 2 sources
-#> Common Path: /tmp/RtmpBlEzMW/seekr-example/extdata
+#> Common Path: /tmp/RtmpbHuNcw/seekr-example/extdata
 #> 
 #> server1.log [10/40]
 #>  [1] ->  1 | 2026-06-30 01:13:45 INFO : Starting process
