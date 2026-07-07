@@ -85,409 +85,173 @@
 record-style vector</a>: a vector object made of several same-length
 fields, where the internal field structure supports the object but is
 not the main user-facing abstraction.</p>
-<p>This article explains two related design choices:</p>
-<ol style="list-style-type: decimal">
-<li>why <code>seekr</code> represents search results as a vector of
-matches;</li>
-<li>how replacements are applied only to matches that were previously
-found and potentially filtered.</li>
-</ol>
-<p>It is not a tutorial and it does not try to show everything the
-package can do. Instead, it describes the design problem behind
-<code>seekr</code>: how to make search and replacement inspectable,
-composable, and safe from inside R.</p>
-<p>The design started from a few requirements:</p>
+<p>This article describes the main design choices behind
+<code>seekr</code>: how search results are represented, how they can be
+inspected and refined, and how replacement can remain explicit and
+safe.</p>
+</div>
+<div class="section level2">
+<h2 id="design-requirements">Design requirements<a class="anchor" aria-label="anchor" href="#design-requirements"></a>
+</h2>
+<p>The design started from the workflow <code>seekr</code> was meant to
+support. The goal was to let users:</p>
 <ul>
-<li>After the search step, files should not need to be read again until
-replacements are applied.</li>
-<li>A search result should therefore be rich enough to support most
-operations after the search without reading the files again.</li>
-<li>A user should be able to print matches with context, summarize them,
-filter them, and preview replacements.</li>
-<li>The user should be able to set or update replacements after the
-search.</li>
-<li>Each match should be independent. If a search finds fifty matches
-and the user keeps only five, those five matches should still carry
-enough information to be printed, summarized, updated, and eventually
-replaced.</li>
-<li>Replacement should be safe. When files are modified,
-<code>seekr</code> should replace the matches that were inspected and
-kept, instead of blindly rerunning a pattern and replacing whatever
-happens to match later.</li>
+<li>read files once during the search step, and read them again only if
+replacements are applied;</li>
+<li>print matches and planned replacements with surrounding
+context;</li>
+<li>preview replacements before files are written;</li>
+<li>prepare replacements either during the search step or after matches
+have been inspected;</li>
+<li>update replacements after the search;</li>
+<li>filter matches after the search, so that only the matches still
+present after filtering are replaced;</li>
+<li>replace safely only if the files didn’t change.</li>
 </ul>
 <p>The <code>seekr_match</code> vector is the object that came out of
-these constraints.</p>
-</div>
-<div class="section level2">
-<h2 id="a-first-example">A first example<a class="anchor" aria-label="anchor" href="#a-first-example"></a>
-</h2>
-<p>Here is a simple search over the example files shipped with
-<code>seekr</code>.</p>
+these constraints. It allows workflows like this:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seek.html">seekr</a></span><span class="op">(</span></span>
-<span>  pattern <span class="op">=</span> <span class="st">"([a-z]+)_([a-z]+)(?= &lt;- function)"</span>,</span>
-<span>  replacement <span class="op">=</span> <span class="st">"\\2_\\1"</span>,</span>
-<span>  path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"seekr"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>The result is a <code>seekr_match</code> vector. It can be inspected
-as a structured object.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;seekr::match[5]&gt;<span style="color: #767676; font-style: italic;"> vctrs::rcrd</span></span></span>
-<span><span class="co">#&gt; path        <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #767676;">"</span>/home/runner/work/_temp/Library/seekr/extdata/script1.R<span style="color: #767676;">", "</span>/home/runner/work/_temp/Library/seekr/extdata/script1.R<span style="color: #767676;">", "</span>/home/runner/<span style="color: #767676;">…</span></span></span>
-<span><span class="co">#&gt; start_line  <span style="color: #767676; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #767676;">, </span>9<span style="color: #767676;">, </span>2<span style="color: #767676;">, </span>7<span style="color: #767676;">, </span>12</span></span>
-<span><span class="co">#&gt; end_line    <span style="color: #767676; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #767676;">, </span>9<span style="color: #767676;">, </span>2<span style="color: #767676;">, </span>7<span style="color: #767676;">, </span>12</span></span>
-<span><span class="co">#&gt; start       <span style="color: #767676; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #767676;">, </span>107<span style="color: #767676;">, </span>32<span style="color: #767676;">, </span>119<span style="color: #767676;">, </span>202</span></span>
-<span><span class="co">#&gt; end         <span style="color: #767676; font-style: italic;">&lt;int&gt;</span> 7<span style="color: #767676;">, </span>115<span style="color: #767676;">, </span>40<span style="color: #767676;">, </span>125<span style="color: #767676;">, </span>213</span></span>
-<span><span class="co">#&gt; start_col   <span style="color: #767676; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #767676;">, </span>1<span style="color: #767676;">, </span>1<span style="color: #767676;">, </span>1<span style="color: #767676;">, </span>1</span></span>
-<span><span class="co">#&gt; end_col     <span style="color: #767676; font-style: italic;">&lt;int&gt;</span> 7<span style="color: #767676;">, </span>9<span style="color: #767676;">, </span>9<span style="color: #767676;">, </span>7<span style="color: #767676;">, </span>12</span></span>
-<span><span class="co">#&gt; match       <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #767676;">"</span>add_one<span style="color: #767676;">", "</span>say_hello<span style="color: #767676;">", "</span>mean_safe<span style="color: #767676;">", "</span>sd_safe<span style="color: #767676;">", "</span>print_vector<span style="color: #767676;">"</span></span></span>
-<span><span class="co">#&gt; replacement <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #767676;">"</span>one_add<span style="color: #767676;">", "</span>hello_say<span style="color: #767676;">", "</span>safe_mean<span style="color: #767676;">", "</span>safe_sd<span style="color: #767676;">", "</span>vector_print<span style="color: #767676;">"</span></span></span>
-<span><span class="co">#&gt; before      <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #BB0000;">NA</span><span style="color: #767676;">, "</span>\ncapitalize &lt;- function(txt) {\n  toupper(substr(txt, 1, 1))\n}\n<span style="color: #767676;">", "</span># TODO: optimize this function<span style="color: #767676;">", "</span>mean_safe &lt;- function(x<span style="color: #767676;">…</span></span></span>
-<span><span class="co">#&gt; line        <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #767676;">"</span>add_one &lt;- function(x) {<span style="color: #767676;">", "</span>say_hello &lt;- function(name) {<span style="color: #767676;">", "</span>mean_safe &lt;- function(x) {<span style="color: #767676;">", "</span>sd_safe &lt;- function(x) {<span style="color: #767676;">", "</span>print_vector<span style="color: #767676;">…</span></span></span>
-<span><span class="co">#&gt; after       <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #767676;">"</span>  return(x + 1)\n}\n\ncapitalize &lt;- function(txt) {\n  toupper(substr(txt, 1, 1))<span style="color: #767676;">", "</span>  paste('Hello', name)\n}\n<span style="color: #767676;">", "</span>  if (length(x)<span style="color: #767676;">…</span></span></span>
-<span><span class="co">#&gt; encoding    <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #767676;">"</span>UTF-8<span style="color: #767676;">", "</span>UTF-8<span style="color: #767676;">", "</span>UTF-8<span style="color: #767676;">", "</span>UTF-8<span style="color: #767676;">", "</span>UTF-8<span style="color: #767676;">"</span></span></span>
-<span><span class="co">#&gt; hash        <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #767676;">"</span>e4cc5c4031699a911e6d5029cce6d71c<span style="color: #767676;">", "</span>e4cc5c4031699a911e6d5029cce6d71c<span style="color: #767676;">", "</span>036951bf4066a0b69595b7a0d9d0eb96<span style="color: #767676;">", "</span>036951bf4066a0b69595b7a<span style="color: #767676;">…</span></span></span></code></pre></div>
-<p>Matches found can also be summarised.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ── &lt;seekr::match[5]&gt; ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/home/runner/work/_temp/Library/seekr/extdata</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Top sources <span style="color: #767676;">[2]</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #0000BB;">script2.R</span> : 3 <span style="color: #767676;">(60.0%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #0000BB;">script1.R</span> : 2 <span style="color: #767676;">(40.0%)</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Top matches/replacements <span style="color: #767676;">[5]</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #BB0000;">say_hello</span><span style="color: #767676;">/</span><span style="color: #00BB00;">hello_say</span><span style="color: #767676;">&gt;</span>       : 1 <span style="color: #767676;">(20.0%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #BB0000;">add_one</span><span style="color: #767676;">/</span><span style="color: #00BB00;">one_add</span><span style="color: #767676;">&gt;</span>           : 1 <span style="color: #767676;">(20.0%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #BB0000;">mean_safe</span><span style="color: #767676;">/</span><span style="color: #00BB00;">safe_mean</span><span style="color: #767676;">&gt;</span>       : 1 <span style="color: #767676;">(20.0%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #BB0000;">sd_safe</span><span style="color: #767676;">/</span><span style="color: #00BB00;">safe_sd</span><span style="color: #767676;">&gt;</span>           : 1 <span style="color: #767676;">(20.0%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #BB0000;">print_vector</span><span style="color: #767676;">/</span><span style="color: #00BB00;">vector_print</span><span style="color: #767676;">&gt;</span> : 1 <span style="color: #767676;">(20.0%)</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Top extension <span style="color: #767676;">[1]</span></span></span>
-<span><span class="co">#&gt;  • r : 5 <span style="color: #767676;">(100.0%)</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Top encoding <span style="color: #767676;">[1]</span></span></span>
-<span><span class="co">#&gt;  • UTF-8 : 5 <span style="color: #767676;">(100.0%)</span></span></span></code></pre></div>
-<p>It can be printed with context and replacement previews.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2L</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;seekr::match[5]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/home/runner/work/_temp/Library/seekr/extdata</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
-<span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
-<span><span class="co">#&gt;     ++  1 <span style="color: #767676;">|</span> <span style="color: #00BB00;">one_add</span> &lt;- function(x) {</span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        2 |   return(x + 1)</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        3 | }</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [2] --  9 <span style="color: #767676;">|</span> <span style="color: #BB0000;">say_hello</span> &lt;- function(name) {</span></span>
-<span><span class="co">#&gt;     ++  9 <span style="color: #767676;">|</span> <span style="color: #00BB00;">hello_say</span> &lt;- function(name) {</span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       10 |   paste('Hello', name)</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       11 | }</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">script2.R</span> <span style="color: #767676;">[3]</span></span></span>
-<span><span class="co">#&gt; [3] --  2 <span style="color: #767676;">|</span> <span style="color: #BB0000;">mean_safe</span> &lt;- function(x) {</span></span>
-<span><span class="co">#&gt;     ++  2 <span style="color: #767676;">|</span> <span style="color: #00BB00;">safe_mean</span> &lt;- function(x) {</span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        3 |   if (length(x) == 0) return(NA)</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        4 |   mean(x, na.rm = TRUE)</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [4] --  7 <span style="color: #767676;">|</span> <span style="color: #BB0000;">sd_safe</span> &lt;- function(x) {</span></span>
-<span><span class="co">#&gt;     ++  7 <span style="color: #767676;">|</span> <span style="color: #00BB00;">safe_sd</span> &lt;- function(x) {</span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        8 |   if (length(x) &lt;= 1) return(NA)</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        9 |   sd(x, na.rm = TRUE)</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [5] -- 12 <span style="color: #767676;">|</span> <span style="color: #BB0000;">print_vector</span> &lt;- function(v) {</span></span>
-<span><span class="co">#&gt;     ++ 12 <span style="color: #767676;">|</span> <span style="color: #00BB00;">vector_print</span> &lt;- function(v) {</span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       13 |   print(paste('Vector of length', length(v)))</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       14 | }</span></span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="what-each-match-needs-to-carry">What each match needs to carry<a class="anchor" aria-label="anchor" href="#what-each-match-needs-to-carry"></a>
-</h2>
-<p>To support the workflow, a match needs to remember more than the
-matched string.</p>
-<p>A <code>seekr_match</code> stores information such as the file path,
-match location, matched text, optional replacement, surrounding context,
-encoding, and a hash of the searched text. This is what allows
-<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> to display matches with context,
-<code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> to aggregate matches by file or replacement,
-<code><a href="../reference/filter_match.html">filter_match()</a></code> to filter matches without searching again,
-and <code><a href="../reference/replace_files.html">replace_files()</a></code> to later check and replace the recorded
-matches safely.</p>
-<p>The goal is that, after the search step, most decisions can be made
-from the match vector itself. The files only need to be read again when
-it is time to verify and apply replacements.</p>
-<p>That is the main reason <code>seekr_match</code> contains context,
-location, replacement, encoding, and hash information directly. It turns
-the search result into something actionable, not just something
-printable.</p>
-</div>
-<div class="section level2">
-<h2 id="why-not-plain-printed-output">Why not plain printed output?<a class="anchor" aria-label="anchor" href="#why-not-plain-printed-output"></a>
-</h2>
-<p>The simplest representation of search results is console output:
-print the matching lines and let the user read them.</p>
-<p>That works for quick exploration, but it is not enough for
-<code>seekr</code>.</p>
-<p>Printed output is hard to manipulate. It cannot easily be subset,
-filtered, summarized, converted, or passed to another function. It also
-cannot act as a contract for later replacement, because the information
-needed to apply changes safely has already been flattened into text for
-humans.</p>
-<p><code>seekr</code> needed an object that could still be printed
-nicely, but that remained structured enough for later operations.</p>
-</div>
-<div class="section level2">
-<h2 id="why-not-a-data-frame">Why not a data frame?<a class="anchor" aria-label="anchor" href="#why-not-a-data-frame"></a>
-</h2>
-<p>A data frame was the most obvious alternative.</p>
-<p>It is familiar to R users, easy to inspect, and very convenient for
-tabular workflows. In fact, <code>seekr_match</code> vectors can be
-converted to tibbles with <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code> and converted back
-with <code><a href="../reference/as_tibble.seekr_match.html">as_match()</a></code>. For examples of this style of workflow,
-see the <a href="tabular-workflows.html">tabular workflows
-article</a>.</p>
-<p>But a data frame did not feel right as the core representation.</p>
-<p>The main drawbacks were:</p>
-<ul>
-<li><p><strong>Most fields should not be modified directly.</strong>
-Fields such as <code>path</code>, <code>start_line</code>,
-<code>end_line</code>, <code>match</code>, <code>before</code>,
-<code>line</code>, <code>after</code>, <code>encoding</code>, and
-<code>hash</code> describe what was found. They are part of the recorded
-search result. In normal use, the only field users are expected to
-modify is <code>replacement</code>. A data frame makes every column feel
-equally editable, while a <code>seekr_match</code> vector makes it
-clearer that these fields describe matches rather than ordinary analysis
-variables.</p></li>
-<li><p><strong>The natural print method is not tabular.</strong> The
-most useful way to print matches is not as rows and columns. It is to
-group matches by file, show surrounding context, display the matched
-line, and preview the planned replacement. That output is closer to a
-structured search result than to a data frame.</p></li>
-<li><p><strong>The natural summary is not a data frame preview
-either.</strong> A useful summary should describe the search result: how
-many matches were found, which files and extensions are affected, and
-which match/replacement combinations are planned.</p></li>
-<li><p><strong>A match is one entity made of several fields.</strong> In
-a data frame, this idea is less explicit. The result looks like a table
-with many columns, rather than a vector where each element is one match.
-With a <code>seekr_match</code> vector, subsetting feels natural:
-<code>x[1]</code> means “the first match”, not “the first row of a table
-that happens to represent a match”.</p></li>
-<li><p><strong>The object needs match-specific behavior and
-validation.</strong> <code>seekr</code> needs to preserve invariants
-that are specific to matches: positions must be valid, matches within a
-file must not overlap, all matches for a given source must refer to a
-single searched version of that source before replacement, and so on. A
-custom vector object makes this behavior part of the
-abstraction.</p></li>
-</ul>
-<p>This does not mean that data frames are the wrong tool. They are
-extremely useful when the workflow becomes tabular: grouped summaries,
-joins, group-aware filtering, or complex replacement preparation. That
-is why <code>seekr</code> provides <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code> and
-<code><a href="../reference/as_tibble.seekr_match.html">as_match()</a></code>.</p>
-</div>
-<div class="section level2">
-<h2 id="why-not-one-object-per-file">Why not one object per file?<a class="anchor" aria-label="anchor" href="#why-not-one-object-per-file"></a>
-</h2>
-<p>Another design considered was to have a file-centric structure.</p>
-<p>For example, a search over ten files could have returned a list of
-ten file objects. Each file object could have stored the file path,
-probably the full text, the encoding, and all matches found in that
-file.</p>
-<p>This design had some attractive properties. Search happens in files,
-so grouping by file is natural. It could also avoid duplicating some
-information because values shared by all matches in a file could live
-once at the file level.</p>
-<p>But it also made the user-facing workflow much more complicated.</p>
-<p>Filtering matches would require working inside a nested structure.
-Updating replacements would mean modifying matches inside file objects.
-Combining results from several searches would raise questions about how
-to merge file-level objects. Simple operations would often require
-<code>map()</code>, loops, or custom helpers.</p>
-<p>Storing the full file text inside the result object was also not
-ideal. It would make some operations easier, but it would be expensive
-for large files or broad searches.</p>
-<p>The file-centric design was more normalized, but less pleasant to
-use. It preserved the fact that matches came from files, but it made the
-match itself less directly accessible.</p>
-<p>By contrast, a vector of matches gives the user a much simpler mental
-model: if a search returns 50 matches across 20 files, the result is a
-vector of 50 matches. Each element represents one match at one location
-in one source. This makes ordinary operations easier to reason about:
-keep some matches, drop others, filter by matched text, filter by
-context, update replacements, or combine results from several
-searches.</p>
-<p>A nested file-centric object would probably require its own class,
-its own accessors, and its own filtering helpers. If context lived at
-the file level, or had to be recomputed from stored file text, even
-simple questions such as “keep only matches whose surrounding context
-contains this word” would become much more complex.</p>
-<p>Combining results would also be less obvious. If two searches
-returned two nested file-centric objects, the user would need to
-understand how file-level objects are merged, how matches from the same
-file are combined, and how conflicting metadata is handled. With a
-<code>seekr_match</code> vector, the mental model is much simpler: two
-search results are two vectors of matches, and combining them is just
-vector concatenation, for example <code>c(x, y)</code>.</p>
-</div>
-<div class="section level2">
-<h2 id="why-a-vector-of-matches">Why a vector of matches?<a class="anchor" aria-label="anchor" href="#why-a-vector-of-matches"></a>
-</h2>
-<p>The final design is thus a vector where each element represents one
-independent match in one source. This has an important consequence: once
-matches have been found, the user can work with them as a collection of
-matches.</p>
-<p>A <code>seekr_match</code> vector can be subset, filtered, combined,
-sorted, summarized, printed, converted to a data frame, converted back,
-and eventually passed to replacement functions.</p>
-<p>This design favors independence over perfect memory efficiency. Two
-matches from the same file may store the same path. Two nearby matches
-may store overlapping context. That duplication is intentional. It means
-that each match remains understandable and actionable even after
-subsetting.</p>
-<p>If a user keeps only one match, that match still knows where it came
-from, what text was matched, what context surrounds it, and what
-replacement is planned. If a user filters fifty matches down to five,
-the remaining five are still complete.</p>
-<p>This is the trade-off at the heart of <code>seekr_match</code>: a
-little more duplication in exchange for a much simpler and more
-composable user-facing object.</p>
-</div>
-<div class="section level2">
-<h2 id="replacing-what-was-inspected">Replacing what was inspected<a class="anchor" aria-label="anchor" href="#replacing-what-was-inspected"></a>
-</h2>
-<p>The match vector also matters when files are modified.</p>
-<p>A common search-and-replace workflow is to search first, inspect the
-results, and then run a second command that performs the replacement. In
-many tools, that second step reruns the search pattern and replaces
-whatever matches at that later moment. As a result, the user cannot
-usually keep only a hand-picked subset of matches, and there is no
-protection against changes made to the file between search and
-replacement.</p>
-<p>That is not how <code>seekr</code> is designed.
-<code><a href="../reference/replace_files.html">replace_files()</a></code> starts from the current
-<code>seekr_match</code> vector. It does not rerun the original search
-and replace every new match it can find. Instead, it uses the selected
-matches and their current replacements.</p>
-<p>This is what makes the workflow inspectable. A user can search
-broadly, print the result, filter out false positives, update
-replacements, and then call <code><a href="../reference/replace_files.html">replace_files()</a></code>. Only the
-matches still present in the vector are candidates for replacement.</p>
-<p>This gives the user more control, but it creates a safety
-requirement: <code>seekr</code> must make sure that the recorded match
-positions still refer to the same text that was searched.</p>
-<p>If a file changed after the search, the recorded positions might no
-longer be valid. Text could have been inserted before and shifted the
-match. A new occurrence could have appeared. Replacing at the old
-recorded positions could modify the wrong part of the file.</p>
-<p>So <code>seekr</code> does not trust recorded positions blindly.</p>
-</div>
-<div class="section level2">
-<h2 id="why-seekr-checks-the-searched-text-hash">Why seekr checks the searched text hash<a class="anchor" aria-label="anchor" href="#why-seekr-checks-the-searched-text-hash"></a>
-</h2>
-<p>When <code>seekr</code> creates a <code>seekr_match</code> vector, it
-records a hash of the searched text.</p>
-<p>Before replacement, <code><a href="../reference/replace_files.html">replace_files()</a></code> reads the file again
-and computes the hash again. <code><a href="../reference/replace_text.html">replace_text()</a></code> does the same
-check with the text supplied by the user. Replacement proceeds only if
-the current text has the same hash as the text that was searched.</p>
-<p>In other words, <code>seekr</code> only applies replacements when the
-source text has not changed since the matches were created.</p>
-<p>This is strict, but it is easy to reason about. If the hash matches,
-the recorded positions still refer to the same text. If the hash does
-not match, <code>seekr</code> stops and asks the user to search again on
-the current version.</p>
-<p>That strictness is intentional. The point is not to guess whether a
-replacement would probably still be safe. The point is to make sure that
-<code><a href="../reference/replace_files.html">replace_files()</a></code> changes exactly the matches represented by
-the current <code>seekr_match</code> vector.</p>
-<p>This design is especially important because matches can be filtered
-and replacements can be updated after the search. Once the user has
-decided which matches to keep, <code>seekr</code> should not silently
-expand the replacement set by rerunning the pattern on a changed
-file.</p>
-<p>The consequence is simple: if the file changed, search again.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seek.html">seekr</a></span><span class="op">(</span><span class="st">"old_name"</span>, <span class="st">"new_name"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Inspect, filter, or modify x...</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, context <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_match.html">filter_match</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">path</span> <span class="op">!=</span> <span class="st">"legacy.R"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"replacement"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">toupper</a></span><span class="op">(</span><span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"replacement"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/replace_files.html">replace_files</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
-<p>If one of the files changed between <code><a href="../reference/seek.html">seekr()</a></code> and
-<code><a href="../reference/replace_files.html">replace_files()</a></code>, replacement will fail for all files before
-replacing any of the match. If a file changes while the files are being
-replaced, the remaining files will not be replaced and
-<code><a href="../reference/replace_files.html">replace_files()</a></code> will return the vector of match actually
-replaced.</p>
-<p>If one of the files changed between <code><a href="../reference/seek.html">seekr()</a></code> and the
-initial safety check in <code><a href="../reference/replace_files.html">replace_files()</a></code>, replacement fails
-before replacing any match. If a file changes while files are being
-replaced, <code><a href="../reference/replace_files.html">replace_files()</a></code> aborts before replacing that
-file. Files already processed may already have been modified, and the
-remaining files are not replaced. When backups are enabled, the backup
-created before replacement can be used to restore the previous file
-contents.</p>
-<p>This also means that <code>seekr</code> is not designed for replacing
-text in sources that are continuously changing. For example, if a log
-file receives new lines every few seconds, the hash will change between
-search and replacement unless both operations happen before the next
-write. In that case, a streaming or append-aware tool is probably a
-better fit.</p>
 </div>
 <div class="section level2">
-<h2 id="encoding-and-replacement-scope">Encoding and replacement scope<a class="anchor" aria-label="anchor" href="#encoding-and-replacement-scope"></a>
+<h2 id="why-a-match-vector">Why a match vector?<a class="anchor" aria-label="anchor" href="#why-a-match-vector"></a>
 </h2>
-<p>Encoding is another place where <code>seekr</code> deliberately
-chooses a strict and explicit design.</p>
-<p>Command-line search and replacement tools do not all handle encodings
-in the same way. Some tools operate mostly on bytes, some depend on the
-system locale, and some allow the user to specify an encoding
-explicitly. In general, a plain text file does not always carry reliable
-information about the encoding it uses, so automatic detection cannot be
-perfect.</p>
-<p><code>seekr</code> therefore does not try to be a universal
-encoding-preserving editor. When matches are created, the encoding used
-to read the source text is recorded in the <code>seekr_match</code>
-vector. When replacements are applied to files, <code>seekr</code>
-writes UTF-8 text. By default, it refuses to silently rewrite a
-non-UTF-8 file as UTF-8, the user has to make that choice
+<p>Search-and-replace is often treated as a single operation: find all
+occurrences of a pattern and replace them immediately.</p>
+<p><code>seekr</code> splits this into separate steps. A user can search
+first, inspect the matches, filter out false positives, update
+replacements, and only then write changes to disk.</p>
+<p>That workflow requires the search result to remain usable as an
+object after the search. It must be possible to subset it, combine it,
+print it, summarize it, convert it to a tibble, update planned
+replacements, and eventually pass it to
+<code><a href="../reference/replace_files.html">replace_files()</a></code>.</p>
+<p>This is why <code>seekr</code> represents search results as a vector
+of matches.</p>
+<p>Each element of the vector represents one match. The vector
+abstraction makes the common operations simple: subsetting keeps
+matches, concatenating combines matches, and filtering removes matches.
+The object can behave like a vector while still storing the metadata
+needed for inspection and replacement.</p>
+</div>
+<div class="section level2">
+<h2 id="designs-considered">Designs considered<a class="anchor" aria-label="anchor" href="#designs-considered"></a>
+</h2>
+<p>Before settling on the <code>seekr_match</code> vector, a few
+alternative designs were considered. The two most important were
+returning a data frame and returning a file-centric object.</p>
+<div class="section level3">
+<h3 id="why-not-a-data-frame">Why not a data frame?<a class="anchor" aria-label="anchor" href="#why-not-a-data-frame"></a>
+</h3>
+<p>A data frame was the most obvious alternative. It is familiar to R
+users, easy to inspect, and useful for tabular workflows.</p>
+<p><code>seekr</code> supports this workflow through
+<code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code> and <code><a href="../reference/as_tibble.seekr_match.html">as_match()</a></code>, so users can move
+to and from a tibble when that representation is convenient. See <a href="tabular-workflows.html">Tabular workflows</a> for examples.</p>
+<p>But a data frame is not the right core representation for
+<code>seekr</code>.</p>
+<p>Most fields in a match should not be edited directly by the user.
+Fields such as <code>path</code>, <code>start</code>, <code>end</code>,
+<code>match</code>, <code>line</code>, <code>encoding</code>, and
+<code>hash</code> describe what was found. They are part of the recorded
+search result. In normal use, the field users are expected to modify is
+<code>replacement</code>.</p>
+<p>In a data frame, all columns feel equally editable. A
+<code>seekr_match</code> vector makes the intended abstraction clearer:
+the object is a collection of matches, not a regular table of analysis
+variables.</p>
+<p>Printing is also not naturally tabular. The useful output for a
+search result groups matches by file, shows context, highlights the
+matched text, and previews planned replacements.</p>
+<p>Finally, a <code>seekr_match</code> vector can preserve invariants
+that would be easier to break in a plain data frame. It can behave like
+a vector while still keeping the fields required for safe replacement
+together.</p>
+</div>
+<div class="section level3">
+<h3 id="why-not-a-file-centric-object">Why not a file-centric object?<a class="anchor" aria-label="anchor" href="#why-not-a-file-centric-object"></a>
+</h3>
+<p>Another possible design was a file-centric object: one object per
+file, with the matches nested inside each file.</p>
+<p>This would mirror the structure of the input files, and it has some
+attractive properties. Search happens in files, so grouping by file is
+natural. Information shared by all matches in a file, such as the path,
+encoding, or full text, could also live once at the file level.</p>
+<p>But having a list of file objects as the result of a search would
+make the user-facing workflow harder to understand and to manipulate.
+Filtering individual matches would require working inside a nested
+structure. Updating replacements would mean modifying matches inside
+file objects. Combining results from several searches would raise
+questions about how file-level objects should be merged.</p>
+<p>It would also make common match-level questions more complex. For
+example, keeping only matches whose surrounding context contains a
+specific word should be a simple filtering operation. In a file-centric
+object, context would either need to live inside nested matches, or be
+recomputed from file-level text. Both options make the object harder to
+reason about.</p>
+<p><code>seekr</code> treats each match as the unit of work. Files still
+matter, and matches still know which file they came from, but the object
+itself is match-centric. If a search returns 50 matches across 20 files,
+the result is a vector of 50 matches. This makes common operations
+simpler: subset matches, concatenate matches, filter by matched text or
+context, update replacements, and replace the selected matches.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="replacing-inspected-matches-safely">Replacing inspected matches safely<a class="anchor" aria-label="anchor" href="#replacing-inspected-matches-safely"></a>
+</h2>
+<p>The match vector also matters when files are modified.</p>
+<p>Many search-and-replace tools show matches first, then run a second
+search when replacement is applied. <code>seekr</code> does not work
+that way. <code><a href="../reference/replace_files.html">replace_files()</a></code> starts from the current
+<code>seekr_match</code> vector and only considers the matches still
+present in that object.</p>
+<p>If the user filters out a match, that match is not replaced. If the
+user changes the <code>replacement</code> field for one match, that
+match gets its own replacement. The replacement step follows the object
+the user inspected and edited.</p>
+<p>To make this safe, <code>seekr</code> records a hash of the searched
+text when a <code>seekr_match</code> vector is created. When
+replacements are applied, the hash of the current text is computed
+again: <code><a href="../reference/replace_files.html">replace_files()</a></code> re-reads the file before writing,
+and <code><a href="../reference/replace_text.html">replace_text()</a></code> checks the text supplied by the
+user.</p>
+<p>If the hash has changed, <code>seekr</code> refuses to apply the
+replacements. This is strict by design: the goal is not to guess whether
+recorded positions are still probably safe, but to ensure that
+replacements are applied only to the exact text that was searched and
+inspected.</p>
+<p>The consequence is simple: if the text changed, search again and
+create a new <code>seekr_match</code> vector. This also means that
+<code>seekr</code> is not designed for sources that are continuously
+changing, such as log files receiving new lines every few seconds. This
+is an acceptable trade-off for a workflow focused on inspection,
+control, and safe replacement.</p>
+</div>
+<div class="section level2">
+<h2 id="encoding">Encoding<a class="anchor" aria-label="anchor" href="#encoding"></a>
+</h2>
+<p>Encoding is another place where <code>seekr</code> chooses an
+explicit design.</p>
+<p>When files are searched, the encoding used to read each file is
+recorded in the <code>seekr_match</code> vector. When replacements are
+applied with <code><a href="../reference/replace_files.html">replace_files()</a></code>, modified files are written as
+UTF-8.</p>
+<p>By default, <code><a href="../reference/replace_files.html">replace_files()</a></code> refuses to silently rewrite
+a non-UTF-8 file as UTF-8. The user has to make that choice
 explicitly.</p>
-<p>This is a design trade-off. It makes replacement less magical, but
-easier to reason about. <code>seekr</code> avoids pretending that
-encoding changes are harmless implementation details. If the user needs
-full control over reading, transforming, and writing text, they can use
-the lower-level in-memory tools described in the <a href="in-memory-text.html">working with in-memory text</a> article.</p>
-</div>
-<div class="section level2">
-<h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
-</h2>
-<p><code>seekr_match</code> exists because <code>seekr</code> treats
-search-and-replace as a workflow.</p>
-<p>A plain printed result was not structured enough. A data frame was
-familiar and had some advantages, but it did not communicate the
-match-specific behavior and invariants clearly enough. A file-centric
-object was natural in some ways, but too nested and heavy for everyday
-manipulation.</p>
-<p>A structured vector of independent matches offered the best
-trade-off.</p>
-<p>It gives each match enough information to be inspected, summarized,
-filtered, updated, and replaced later. It uses more memory than a fully
-normalized structure, but it keeps the object simple, composable, and
-directly useful.</p>
-<p>The same design also makes safe replacement possible.
-<code>seekr</code> does not rerun a search pattern at replacement time
-and replace whatever matches then. It replaces only the matches that are
-still present in the <code>seekr_match</code> vector, and only if the
-searched text has not changed.</p>
-<p>That design choice is what makes <code>seekr</code> work the way it
-does: matches are structured, replacements target only inspected
-results, file changes are detected before writing, and encoding changes
-are never hidden from the user.</p>
+<p>This is a trade-off. <code>seekr</code> does not try to be a
+universal encoding-preserving editor. Instead, it makes encoding changes
+visible and deliberate.</p>
+<p>If the user needs full control over reading and writing text, they
+can use the text-level workflow described in <a href="working-with-text.html">Working with text</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
