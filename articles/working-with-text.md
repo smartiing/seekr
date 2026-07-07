@@ -92,8 +92,7 @@ df <-
         text = body,
         path = name,
         pattern = "old_([a-z_]+)",
-        replacement = "new_\\1",
-        encoding = "UTF-8"
+        replacement = "new_\\1"
       )
     ),
     .before = name
@@ -203,7 +202,7 @@ summary(x)
 #>  •  : 5 (100.0%)
 #> 
 #> Top encoding [1]
-#>  • UTF-8 : 5 (100.0%)
+#>  • NA : 5 (100.0%)
 ```
 
 ## Filtering before replacement
