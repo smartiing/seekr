@@ -425,11 +425,13 @@ replaced, the remaining files will not be replaced and
 <code><a href="../reference/replace_files.html">replace_files()</a></code> will return the vector of match actually
 replaced.</p>
 <p>If one of the files changed between <code><a href="../reference/seek.html">seekr()</a></code> and the
-initial safety check in <code><a href="../reference/replace_files.html">replace_files()</a></code>, replacement will
-fail before replacing any match. If a file changes while files are being
-replaced, <code><a href="../reference/replace_files.html">replace_files()</a></code> stops before replacing that file.
-Files already processed may already have been modified, and the
-remaining files are not replaced.</p>
+initial safety check in <code><a href="../reference/replace_files.html">replace_files()</a></code>, replacement fails
+before replacing any match. If a file changes while files are being
+replaced, <code><a href="../reference/replace_files.html">replace_files()</a></code> aborts before replacing that
+file. Files already processed may already have been modified, and the
+remaining files are not replaced. When backups are enabled, the backup
+created before replacement can be used to restore the previous file
+contents.</p>
 <p>This also means that <code>seekr</code> is not designed for replacing
 text in sources that are continuously changing. For example, if a log
 file receives new lines every few seconds, the hash will change between

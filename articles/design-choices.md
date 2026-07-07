@@ -406,11 +406,13 @@ If one of the files changed between
 [`seekr()`](https://smartiing.github.io/seekr/reference/seek.md) and the
 initial safety check in
 [`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md),
-replacement will fail before replacing any match. If a file changes
-while files are being replaced,
+replacement fails before replacing any match. If a file changes while
+files are being replaced,
 [`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md)
-stops before replacing that file. Files already processed may already
-have been modified, and the remaining files are not replaced.
+aborts before replacing that file. Files already processed may already
+have been modified, and the remaining files are not replaced. When
+backups are enabled, the backup created before replacement can be used
+to restore the previous file contents.
 
 This also means that `seekr` is not designed for replacing text in
 sources that are continuously changing. For example, if a log file
