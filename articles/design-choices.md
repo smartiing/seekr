@@ -25,12 +25,17 @@ goal was to let users:
 - prepare replacements either during the search step or after matches
   have been inspected;
 - update replacements after the search;
-- filter matches after the search, so that only the matches still
-  present after filtering are replaced;
-- replace safely only if the files didn’t change.
+- filter matches after the intial search;
+- replace only the remaining matches, safely.
+
+More generally, the result needed to expose the information captured for
+each match, so users could use it for their own workflows. This includes
+understanding what was matched and where, filtering matches more
+precisely, summarizing search results, or preparing and updating
+replacements using the context and other captured fields.
 
 The `seekr_match` vector is the object that came out of these
-constraints. It allows workflows like this:
+requirements. It allows workflows like this:
 
 ``` r
 
@@ -92,7 +97,8 @@ But a data frame is not the right core representation for `seekr`.
 Most fields in a match should not be edited directly by the user. Fields
 such as `path`, `start`, `end`, `match`, `line`, `encoding`, and `hash`
 describe what was found. They are part of the recorded search result. In
-normal use, the field users are expected to modify is `replacement`.
+normal use, the only field users are expected to modify is
+`replacement`.
 
 In a data frame, all columns feel equally editable. A `seekr_match`
 vector makes the intended abstraction clearer: the object is a

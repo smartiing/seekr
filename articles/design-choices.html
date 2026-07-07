@@ -104,12 +104,16 @@ context;</li>
 <li>prepare replacements either during the search step or after matches
 have been inspected;</li>
 <li>update replacements after the search;</li>
-<li>filter matches after the search, so that only the matches still
-present after filtering are replaced;</li>
-<li>replace safely only if the files didn’t change.</li>
+<li>filter matches after the intial search;</li>
+<li>replace only the remaining matches, safely.</li>
 </ul>
+<p>More generally, the result needed to expose the information captured
+for each match, so users could use it for their own workflows. This
+includes understanding what was matched and where, filtering matches
+more precisely, summarizing search results, or preparing and updating
+replacements using the context and other captured fields.</p>
 <p>The <code>seekr_match</code> vector is the object that came out of
-these constraints. It allows workflows like this:</p>
+these requirements. It allows workflows like this:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seek.html">seekr</a></span><span class="op">(</span><span class="st">"old_name"</span>, <span class="st">"new_name"</span><span class="op">)</span></span>
 <span></span>
@@ -161,8 +165,8 @@ to and from a tibble when that representation is convenient. See <a href="tabula
 Fields such as <code>path</code>, <code>start</code>, <code>end</code>,
 <code>match</code>, <code>line</code>, <code>encoding</code>, and
 <code>hash</code> describe what was found. They are part of the recorded
-search result. In normal use, the field users are expected to modify is
-<code>replacement</code>.</p>
+search result. In normal use, the only field users are expected to
+modify is <code>replacement</code>.</p>
 <p>In a data frame, all columns feel equally editable. A
 <code>seekr_match</code> vector makes the intended abstraction clearer:
 the object is a collection of matches, not a regular table of analysis
