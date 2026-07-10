@@ -46,7 +46,7 @@ library(stringr)
 x <- seek("([A-Z]+) : (.+$)", extension = "log")
 x
 #> <seekr::match[80]> 2 sources
-#> Common Path: /tmp/RtmpzarMQ3/seekr-example/extdata
+#> Common Path: /tmp/RtmpBfkmF4/seekr-example/extdata
 #> 
 #> server1.log [10/40]
 #>  [1] ->  1 | 2026-06-30 01:13:45 INFO : Starting process
@@ -70,7 +70,7 @@ We summarize directly to have an idea of what was found.
 
 summary(x)
 #> ── <seekr::match[80]> ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-#> Common Path: /tmp/RtmpzarMQ3/seekr-example/extdata
+#> Common Path: /tmp/RtmpBfkmF4/seekr-example/extdata
 #> 
 #> Top sources [2]
 #>  • server1.log : 40 (50.0%)
@@ -103,7 +103,7 @@ elements are printed. Here are all of them.
 
 x |> summary() |> print(n = Inf)
 #> ── <seekr::match[80]> ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-#> Common Path: /tmp/RtmpzarMQ3/seekr-example/extdata
+#> Common Path: /tmp/RtmpBfkmF4/seekr-example/extdata
 #> 
 #> Top sources [2]
 #>  • server1.log : 40 (50.0%)
@@ -169,7 +169,7 @@ At this point, `xf` is simply our `seekr_match` vector, filtered.
 
 print(xf)
 #> <seekr::match[20]> 2 sources
-#> Common Path: /tmp/RtmpzarMQ3/seekr-example/extdata
+#> Common Path: /tmp/RtmpBfkmF4/seekr-example/extdata
 #> 
 #> server1.log [12]
 #>  [1] ->  2 | 2026-06-30 15:35:57 DEBUG : Disk usage high
@@ -254,8 +254,8 @@ xdf |>
 #> # A tibble: 2 × 5
 #>   path                                              n_matches n_distinct_matches first_line last_line
 #>   <chr>                                                 <int>              <int>      <int>     <int>
-#> 1 /tmp/RtmpzarMQ3/seekr-example/extdata/server1.log        12                  6          2        38
-#> 2 /tmp/RtmpzarMQ3/seekr-example/extdata/server2.log         8                  5          5        36
+#> 1 /tmp/RtmpBfkmF4/seekr-example/extdata/server1.log        12                  6          2        38
+#> 2 /tmp/RtmpBfkmF4/seekr-example/extdata/server2.log         8                  5          5        36
 ```
 
 This kind of question is often easier to answer with a tibble than with
@@ -370,7 +370,7 @@ that some replacements have been set.
 to_replace <- as_match(latest)
 to_replace
 #> <seekr::match[9]> 2 sources
-#> Common Path: /tmp/RtmpzarMQ3/seekr-example/extdata
+#> Common Path: /tmp/RtmpBfkmF4/seekr-example/extdata
 #> 
 #> server1.log [5]
 #> [1] -- 12 | 2026-06-30 17:34:23 DEBUG : Timeout reached
@@ -409,7 +409,7 @@ modified.
 replaced <- replace_files(to_replace)
 replaced
 #> <seekr::match[9]> 2 sources
-#> Common Path: /tmp/RtmpzarMQ3/seekr-example/extdata
+#> Common Path: /tmp/RtmpBfkmF4/seekr-example/extdata
 #> 
 #> server1.log [5]
 #> [1] -- 12 | 2026-06-30 17:34:23 DEBUG : Timeout reached
@@ -448,8 +448,8 @@ bck
 #> # A tibble: 2 × 9
 #>      id created_at          operation description original                                          backup         original_exists backup_exists  size
 #>   <int> <dttm>              <chr>     <chr>       <chr>                                             <chr>          <lgl>           <lgl>         <fs:>
-#> 1     1 2026-07-10 22:33:43 replace   NA          /tmp/RtmpzarMQ3/seekr-example/extdata/server1.log /tmp/RtmpzarM… TRUE            TRUE          1.76K
-#> 2     1 2026-07-10 22:33:43 replace   NA          /tmp/RtmpzarMQ3/seekr-example/extdata/server2.log /tmp/RtmpzarM… TRUE            TRUE           1.8K
+#> 1     1 2026-07-10 23:24:52 replace   NA          /tmp/RtmpBfkmF4/seekr-example/extdata/server1.log /tmp/RtmpBfkm… TRUE            TRUE          1.76K
+#> 2     1 2026-07-10 23:24:52 replace   NA          /tmp/RtmpBfkmF4/seekr-example/extdata/server2.log /tmp/RtmpBfkm… TRUE            TRUE           1.8K
 restore_files(from = bck$backup, to = bck$original)
 #> ℹ Creating a backup of the current version of each existing destination file before restoring it.
 #> ℹ This ensures you can revert to the state before restoration if needed.
@@ -462,7 +462,7 @@ After restoring, the original matches are back.
 after_restore <- seek("([A-Z]+) : (.+$)", extension = "log")
 print(after_restore)
 #> <seekr::match[80]> 2 sources
-#> Common Path: /tmp/RtmpzarMQ3/seekr-example/extdata
+#> Common Path: /tmp/RtmpBfkmF4/seekr-example/extdata
 #> 
 #> server1.log [10/40]
 #>  [1] ->  1 | 2026-06-30 01:13:45 INFO : Starting process
