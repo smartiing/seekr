@@ -19,9 +19,9 @@ individually when you need more control over each step.
 ### Steps
 
 - **[`list_files()`](https://smartiing.github.io/seekr/reference/list_files.md)**
-  starts from `path` and `recurse`s into subdirectories to list files.
-  By default, not `all` files are listed, with hidden files and
-  directories excluded.
+  starts from `path`, optionally `use_git` to restrict file discovery,
+  and `recurse`s into subdirectories to list files. By default, not
+  `all` files are listed, with hidden files and directories excluded.
 
 - **[`filter_files()`](https://smartiing.github.io/seekr/reference/filter_files.md)**
   keeps files matching `extension` and `path_pattern` and not exceeding
@@ -45,6 +45,7 @@ seek(
   path = ".",
   recurse = TRUE,
   all = FALSE,
+  use_git = FALSE,
   extension = NULL,
   path_pattern = NULL,
   max_file_size = Inf,
@@ -61,6 +62,7 @@ seekr(
   path = ".",
   recurse = TRUE,
   all = FALSE,
+  use_git = FALSE,
   path_pattern = NULL,
   max_file_size = Inf,
   exclude = seekr::exclude_functions,
@@ -137,6 +139,18 @@ seekr(
 - all:
 
   Whether to list hidden files and directories. Default is `FALSE`.
+
+- use_git:
+
+  Should Git be used to restrict file discovery inside Git repositories?
+  If `TRUE`,
+  [`list_files()`](https://smartiing.github.io/seekr/reference/list_files.md)
+  keeps only files that were first discovered according to `path`,
+  `recurse`, and `all`, and are also returned by
+  `git ls-files --cached --others --exclude-standard`. `use_git = TRUE`
+  looks for the Git root by walking upward from each supplied `path`,
+  but it does not recursively search downward for Git repositories in
+  subdirectories. Git must be installed and available on `PATH`.
 
 - extension:
 
@@ -324,7 +338,7 @@ identical(y, z)
 x <- seek("TODO", path = example_dir)
 print(x)
 #> <seekr::match[2]> 2 sources
-#> Common Path: /tmp/RtmpmTtjkd/seekr-example1a1077b0a1c2
+#> Common Path: /tmp/Rtmp9fSHol/seekr-example193f14ff01d6
 #> 
 #> R/code.R [1]
 #> [1] -> 2 |   # TODO: rename foo
@@ -336,7 +350,7 @@ print(x)
 # Search only in R files
 seek("TODO", path = example_dir, extension = "R")
 #> <seekr::match[2]> 2 sources
-#> Common Path: /tmp/RtmpmTtjkd/seekr-example1a1077b0a1c2
+#> Common Path: /tmp/Rtmp9fSHol/seekr-example193f14ff01d6
 #> 
 #> R/code.R [1]
 #> [1] -> 2 |   # TODO: rename foo
@@ -348,14 +362,14 @@ seek("TODO", path = example_dir, extension = "R")
 # Search only in a specific subfolder
 seek("TODO", path = example_dir, path_pattern = "/R/")
 #> <seekr::match[1]> 1 source
-#> /tmp/RtmpmTtjkd/seekr-example1a1077b0a1c2/R/code.R [1]
+#> /tmp/Rtmp9fSHol/seekr-example193f14ff01d6/R/code.R [1]
 #> [1] -> 2 |   # TODO: rename foo
 #> 
 
 # seekr() is a shortcut for searching R, R Markdown, and Quarto files
 seekr("old_fn", path = example_dir)
 #> <seekr::match[1]> 1 source
-#> /tmp/RtmpmTtjkd/seekr-example1a1077b0a1c2/R/code.R [1]
+#> /tmp/Rtmp9fSHol/seekr-example193f14ff01d6/R/code.R [1]
 #> [1] -> 1 | old_fn <- function(x) {
 #> 
 
@@ -363,7 +377,7 @@ seekr("old_fn", path = example_dir)
 x <- seek("old_fn", "new_fn", path = example_dir)
 x
 #> <seekr::match[1]> 1 source
-#> /tmp/RtmpmTtjkd/seekr-example1a1077b0a1c2/R/code.R [1]
+#> /tmp/Rtmp9fSHol/seekr-example193f14ff01d6/R/code.R [1]
 #> [1] -- 1 | old_fn <- function(x) {
 #>     ++ 1 | new_fn <- function(x) {
 #> 
@@ -376,7 +390,7 @@ x <- seek(
 )
 x
 #> <seekr::match[6]> 3 sources
-#> Common Path: /tmp/RtmpmTtjkd/seekr-example1a1077b0a1c2
+#> Common Path: /tmp/Rtmp9fSHol/seekr-example193f14ff01d6
 #> 
 #> R/code.R [2]
 #> [1] -- 2 |   # TODO: rename foo
@@ -402,7 +416,7 @@ x <- seekr("foo|bar", path = example_dir)
 field(x, "replacement") <- ifelse(field(x, "match") == "foo", "bar", "foo")
 x
 #> <seekr::match[4]> 2 sources
-#> Common Path: /tmp/RtmpmTtjkd/seekr-example1a1077b0a1c2
+#> Common Path: /tmp/Rtmp9fSHol/seekr-example193f14ff01d6
 #> 
 #> R/code.R [2]
 #> [1] -- 2 |   # TODO: rename foo
@@ -436,9 +450,9 @@ exclusions(x)
 #> # A tibble: 3 × 7
 #>   path                excluded exclude_by_extension is_git_dir is_dependency_dir
 #>   <chr>               <lgl>    <lgl>                <lgl>      <lgl>            
-#> 1 /tmp/RtmpmTtjkd/se… FALSE    FALSE                FALSE      FALSE            
-#> 2 /tmp/RtmpmTtjkd/se… TRUE     TRUE                 NA         NA               
-#> 3 /tmp/RtmpmTtjkd/se… FALSE    FALSE                FALSE      FALSE            
+#> 1 /tmp/Rtmp9fSHol/se… FALSE    FALSE                FALSE      FALSE            
+#> 2 /tmp/Rtmp9fSHol/se… TRUE     TRUE                 NA         NA               
+#> 3 /tmp/Rtmp9fSHol/se… FALSE    FALSE                FALSE      FALSE            
 #> # ℹ 2 more variables: is_minified_file <lgl>, is_not_text_mime <lgl>
 
 # empty_stage() explains where the pipeline became empty

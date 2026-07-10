@@ -53,7 +53,17 @@ The main cases where performance is likely to matter:
   [`ripgrep`](https://github.com/burntsushi/ripgrep) that will stop as
   soon as it finds a match is a better fit.
 
-## Two practical strategies for larger workloads
+## Practical strategies for larger workloads
+
+### Only list files tracked by git
+
+Before using an external search tool, one simple option for Git
+repositories is to start with Git-aware file discovery:
+
+``` r
+
+files <- list_files(use_git = TRUE)
+```
 
 ### Pre-filter with ripgrep
 

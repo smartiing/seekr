@@ -1,8 +1,9 @@
 # List files to search
 
-`list_files()` starts from `path` and `recurse`s into subdirectories to
-list files. By default, not `all` files are listed, with hidden files
-and directories excluded. It is the first step of the
+`list_files()` starts from `path` and lists candidate files. It can
+recurse into subdirectories with `recurse`, include hidden files and
+directories with `all`, and optionally restrict discovery inside Git
+repositories with `use_git`. It is the first step of the
 [`seek()`](https://smartiing.github.io/seekr/reference/seek.md)
 pipeline.
 
@@ -11,6 +12,27 @@ extensions, file sizes, or MIME types. Its only job is to turn
 directories into a character vector of file paths. Filtering happens in
 the next step,
 [`filter_files()`](https://smartiing.github.io/seekr/reference/filter_files.md).
+
+If `use_git = TRUE`, Git is used for each input path independently. For
+each path, `list_files()` asks Git whether that path is inside a Git
+repository. If it is, `list_files()` finds the repository root by
+walking upward from that path, then keeps only the files also returned
+by `git ls-files --cached --others --exclude-standard` for that
+repository.
+
+Git is used to restrict the files discovered from the input path. It
+does not expand the search. The `path`, `recurse`, and `all` arguments
+still define the initial candidate files. For example, Git-tracked
+hidden files are not returned unless `all = TRUE`, and Git-tracked files
+below the requested recursion depth are not returned.
+
+`list_files()` does not search downward for nested Git repositories. If
+an input path is not inside a Git repository, it is listed normally,
+even if it contains Git repositories in subdirectories. If you want
+Git-aware discovery for nested repositories, pass those repository
+directories explicitly in `path`.
+
+If `use_git = TRUE`, Git must be installed and available on `PATH`.
 
 The returned paths are normalized as described in
 [`as_seekr_path()`](https://smartiing.github.io/seekr/reference/as_seekr_path.md).
@@ -23,6 +45,7 @@ list_files(
   ...,
   recurse = TRUE,
   all = FALSE,
+  use_git = FALSE,
   .progress = seekr_option("seekr.progress")
 )
 ```
@@ -52,6 +75,16 @@ list_files(
 - all:
 
   Whether to list hidden files and directories. Default is `FALSE`.
+
+- use_git:
+
+  Should Git be used to restrict file discovery inside Git repositories?
+  If `TRUE`, `list_files()` keeps only files that were first discovered
+  according to `path`, `recurse`, and `all`, and are also returned by
+  `git ls-files --cached --others --exclude-standard`. `use_git = TRUE`
+  looks for the Git root by walking upward from each supplied `path`,
+  but it does not recursively search downward for Git repositories in
+  subdirectories. Git must be installed and available on `PATH`.
 
 - .progress:
 
@@ -121,4 +154,9 @@ list_files(path = ext_path, all = TRUE)
 #> [6] "/home/runner/work/_temp/Library/seekr/extdata/script2.R"  
 #> [7] "/home/runner/work/_temp/Library/seekr/extdata/server1.log"
 #> [8] "/home/runner/work/_temp/Library/seekr/extdata/server2.log"
+
+if (FALSE) { # \dontrun{
+# Use Git to restrict discovery inside Git repositories
+list_files(path = ".", use_git = TRUE)
+} # }
 ```
