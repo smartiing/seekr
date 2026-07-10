@@ -338,7 +338,7 @@ identical(y, z)
 x <- seek("TODO", path = example_dir)
 print(x)
 #> <seekr::match[2]> 2 sources
-#> Common Path: /tmp/Rtmp9fSHol/seekr-example193f14ff01d6
+#> Common Path: /tmp/RtmpKTGDR6/seekr-example1a0635aaf566
 #> 
 #> R/code.R [1]
 #> [1] -> 2 |   # TODO: rename foo
@@ -350,7 +350,7 @@ print(x)
 # Search only in R files
 seek("TODO", path = example_dir, extension = "R")
 #> <seekr::match[2]> 2 sources
-#> Common Path: /tmp/Rtmp9fSHol/seekr-example193f14ff01d6
+#> Common Path: /tmp/RtmpKTGDR6/seekr-example1a0635aaf566
 #> 
 #> R/code.R [1]
 #> [1] -> 2 |   # TODO: rename foo
@@ -362,14 +362,14 @@ seek("TODO", path = example_dir, extension = "R")
 # Search only in a specific subfolder
 seek("TODO", path = example_dir, path_pattern = "/R/")
 #> <seekr::match[1]> 1 source
-#> /tmp/Rtmp9fSHol/seekr-example193f14ff01d6/R/code.R [1]
+#> /tmp/RtmpKTGDR6/seekr-example1a0635aaf566/R/code.R [1]
 #> [1] -> 2 |   # TODO: rename foo
 #> 
 
 # seekr() is a shortcut for searching R, R Markdown, and Quarto files
 seekr("old_fn", path = example_dir)
 #> <seekr::match[1]> 1 source
-#> /tmp/Rtmp9fSHol/seekr-example193f14ff01d6/R/code.R [1]
+#> /tmp/RtmpKTGDR6/seekr-example1a0635aaf566/R/code.R [1]
 #> [1] -> 1 | old_fn <- function(x) {
 #> 
 
@@ -377,7 +377,7 @@ seekr("old_fn", path = example_dir)
 x <- seek("old_fn", "new_fn", path = example_dir)
 x
 #> <seekr::match[1]> 1 source
-#> /tmp/Rtmp9fSHol/seekr-example193f14ff01d6/R/code.R [1]
+#> /tmp/RtmpKTGDR6/seekr-example1a0635aaf566/R/code.R [1]
 #> [1] -- 1 | old_fn <- function(x) {
 #>     ++ 1 | new_fn <- function(x) {
 #> 
@@ -390,7 +390,7 @@ x <- seek(
 )
 x
 #> <seekr::match[6]> 3 sources
-#> Common Path: /tmp/Rtmp9fSHol/seekr-example193f14ff01d6
+#> Common Path: /tmp/RtmpKTGDR6/seekr-example1a0635aaf566
 #> 
 #> R/code.R [2]
 #> [1] -- 2 |   # TODO: rename foo
@@ -416,7 +416,7 @@ x <- seekr("foo|bar", path = example_dir)
 field(x, "replacement") <- ifelse(field(x, "match") == "foo", "bar", "foo")
 x
 #> <seekr::match[4]> 2 sources
-#> Common Path: /tmp/Rtmp9fSHol/seekr-example193f14ff01d6
+#> Common Path: /tmp/RtmpKTGDR6/seekr-example1a0635aaf566
 #> 
 #> R/code.R [2]
 #> [1] -- 2 |   # TODO: rename foo
@@ -450,9 +450,9 @@ exclusions(x)
 #> # A tibble: 3 × 7
 #>   path                excluded exclude_by_extension is_git_dir is_dependency_dir
 #>   <chr>               <lgl>    <lgl>                <lgl>      <lgl>            
-#> 1 /tmp/Rtmp9fSHol/se… FALSE    FALSE                FALSE      FALSE            
-#> 2 /tmp/Rtmp9fSHol/se… TRUE     TRUE                 NA         NA               
-#> 3 /tmp/Rtmp9fSHol/se… FALSE    FALSE                FALSE      FALSE            
+#> 1 /tmp/RtmpKTGDR6/se… FALSE    FALSE                FALSE      FALSE            
+#> 2 /tmp/RtmpKTGDR6/se… TRUE     TRUE                 NA         NA               
+#> 3 /tmp/RtmpKTGDR6/se… FALSE    FALSE                FALSE      FALSE            
 #> # ℹ 2 more variables: is_minified_file <lgl>, is_not_text_mime <lgl>
 
 # empty_stage() explains where the pipeline became empty
