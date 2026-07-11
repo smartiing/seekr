@@ -1,6 +1,6 @@
 Package: seekr
 Title: Search, Inspect, and Replace Text Across Files
-Version: 0.2.0
+Version: 0.2.0.9000
 Authors@R: 
     person("Sacha", "Martingay", , "martingay.sacha@hotmail.com", role = c("aut", "cre", "cph"))
 Description: An inspectable and composable workflow for search-and-replace in text
