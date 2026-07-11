@@ -4,32 +4,26 @@
 
 `seekr` turns search-and-replace into an inspectable R workflow.
 
-Instead of treating search, replacement, and file modification as a
-single operation, `seekr` separates them into explicit steps. You can
-decide which files to search, which files to exclude, inspect which
-files were excluded, what matches were found, filter them, stage or
-update replacements, and only then write the selected changes to disk.
+Instead of modifying files as soon as a pattern is found, `seekr`
+returns a `seekr_match` vector. Each element represents one match in one
+file and stores its location, matched text, surrounding context lines,
+and optional replacement.
 
-At the center of this workflow is the `seekr_match` vector: a structured
-object where each element represents one independent match in one file,
-together with its location, matched text, optional replacement, and
-surrounding context. After matching, most operations (summarizing,
-printing, filtering, and replacing) work directly with this object.
+You can keep working with that vector after the search: inspect the
+result, remove unwanted matches, and define or revise the replacement
+associated with each remaining match. When you are ready, only those
+matches are written back to disk.
 
-`seekr_match` is designed to behave like a vector of matches while
-storing the fields needed to inspect, filter, update, and replace them
-safely. The [design choices
+The [design choices
 article](https://smartiing.github.io/seekr/articles/design-choices.html)
 explains why `seekr` uses this representation and how it makes safe
 replacement possible.
 
-## Why seekr?
-
-In real projects, search-and-replace often raises questions that are
-difficult to answer: Which files were considered? Which files were
+In real projects, search-and-replace often raises questions beyond
+finding a pattern: Which files were considered? Which files were
 excluded, and why? Which matches were found? Which replacements will be
-applied? Can I keep only some matches? Can I restore the previous files
-if needed?
+applied? Can I keep only some matches? Can I restore the previous file
+contents if needed?
 
 `seekr` provides a set of functions that make this workflow explicit,
 composable, and safe:
@@ -101,11 +95,12 @@ For larger repositories or performance-sensitive searches, see the
 [performance notes
 article](https://smartiing.github.io/seekr/articles/performance-note.html).
 
-Patterns are powered by `stringr` and ICU regular expressions, so you
-can use familiar tools such as
-[`stringr::regex()`](https://stringr.tidyverse.org/reference/modifiers.html)
+Patterns are powered by [`stringr`](https://stringr.tidyverse.org/) and
+ICU regular expressions, so you can use familiar tools such as
+[`stringr::regex()`](https://stringr.tidyverse.org/reference/modifiers.html),
+[`stringr::fixed()`](https://stringr.tidyverse.org/reference/modifiers.html),
 and
-[`stringr::fixed()`](https://stringr.tidyverse.org/reference/modifiers.html)
+[`stringr::coll()`](https://stringr.tidyverse.org/reference/modifiers.html)
 when you need more control.
 
 ## Installation
@@ -118,32 +113,6 @@ install.packages("seekr")
 
 ## Usage
 
-The following example uses the example files shipped with `seekr`.
-
-In a simple workflow, you can search for a pattern, inspect or filter
-the matches, and then apply only the selected replacements.
-
-For example, this finds `"foo"` in R files listed recursively from the
-working directory, prepares `"bar"` as the replacement, excludes matches
-from files whose path contains `"test"`, and then applies the selected
-replacements to the files.
-
-``` r
-
-matches <- seek("foo", "bar", extension = "R")
-filtered <- filter_match(matches, !grepl("test", path))
-replaced <- replace_files(filtered)
-
-seekr("foo", "bar") |> 
-  filter_match(!grepl("test", path)) |> 
-  replace_files()
-```
-
-The sections below unpack this workflow step by step: how files are
-listed and filtered, how matches and replacements are stored in a
-`seekr_match` vector, how matches can be inspected or updated, and how
-replacements are finally written to disk.
-
 ### Find matches
 
 First, list all files that could be searched.
@@ -152,14 +121,14 @@ First, list all files that could be searched.
 
 files <- list_files()
 files
-#> [1] "C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata/config.yaml"
-#> [2] "C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata/data.json"  
-#> [3] "C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata/iris.csv"   
-#> [4] "C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata/mtcars.csv" 
-#> [5] "C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata/script1.R"  
-#> [6] "C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata/script2.R"  
-#> [7] "C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata/server1.log"
-#> [8] "C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata/server2.log"
+#> [1] "C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata/config.yaml"
+#> [2] "C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata/data.json"  
+#> [3] "C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata/iris.csv"   
+#> [4] "C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata/mtcars.csv" 
+#> [5] "C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata/script1.R"  
+#> [6] "C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata/script2.R"  
+#> [7] "C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata/server1.log"
+#> [8] "C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata/server2.log"
 ```
 
 Then filter to keep only R files.
@@ -172,24 +141,24 @@ can be retrieved using
 
 filtered <- filter_files(files, extension = "R")
 filtered
-#> [1] "C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata/script1.R"
-#> [2] "C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata/script2.R"
+#> [1] "C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata/script1.R"
+#> [2] "C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata/script2.R"
 #> attr(,"exclusions")
 #> # A tibble: 8 × 7
 #>   path                                                    excluded exclude_by_extension is_git_dir is_dependency_dir is_minified_file is_not_text_mime
 #>   <chr>                                                   <lgl>    <lgl>                <lgl>      <lgl>             <lgl>            <lgl>           
-#> 1 C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
-#> 2 C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
-#> 3 C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
-#> 4 C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
-#> 5 C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           
-#> 6 C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           
-#> 7 C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
-#> 8 C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-… TRUE     TRUE                 NA         NA                NA               NA
+#> 1 C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
+#> 2 C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
+#> 3 C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
+#> 4 C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
+#> 5 C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           
+#> 6 C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           
+#> 7 C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
+#> 8 C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-… TRUE     TRUE                 NA         NA                NA               NA
 ```
 
 Now that we have a list of files, we can search for function names
-composed of two words separated by an underscore and prepare a
+composed of at least two words separated by an underscore and prepare a
 replacement that reverses them.
 
 ``` r
@@ -198,6 +167,22 @@ my_pattern <- "([a-z]+)_([a-z]+)(?= <- function)"
 my_replacement <- "\\2_\\1"
 
 x <- match_files(filtered, my_pattern, my_replacement)
+```
+
+The listing, filtering, and matching steps can also be combined in one
+step with
+[`seek()`](https://smartiing.github.io/seekr/reference/seek.md).
+[`seekr()`](https://smartiing.github.io/seekr/reference/seek.md) is a
+convenience wrapper around
+[`seek()`](https://smartiing.github.io/seekr/reference/seek.md) that
+restricts the search to R, R Markdown, and Quarto files (`.R`, `.Rmd`,
+`.qmd`).
+
+``` r
+
+y <- seek(my_pattern, my_replacement, extension = "R")
+identical(x, y)
+#> [1] TRUE
 ```
 
 ### Inspect matches
@@ -211,7 +196,7 @@ with [`field()`](https://vctrs.r-lib.org/reference/fields.html).
 
 str(x)
 #> <seekr::match[5]> vctrs::rcrd
-#> path        <chr> "C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata/script1.R", "C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/…
+#> path        <chr> "C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata/script1.R", "C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/…
 #> start_line  <int> 1, 9, 2, 7, 12
 #> end_line    <int> 1, 9, 2, 7, 12
 #> start       <int> 1, 115, 33, 125, 213
@@ -241,7 +226,7 @@ overview of the matches and planned replacements.
 
 summary(x)
 #> ── <seekr::match[5]> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata
+#> Common Path: C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata
 #> 
 #> Top sources [2]
 #>  • script2.R : 3 (60.0%)
@@ -262,63 +247,45 @@ summary(x)
 ```
 
 Use [`print()`](https://rdrr.io/r/base/print.html) to inspect each match
-with surrounding context and preview the replacement. In terminals that
-support OSC8 hyperlinks, file locations are printed as clickable links,
-so you can jump directly from the console to the start of the match.
+with surrounding context and preview the replacement.
 
 ``` r
 
-print(x, context = c(2, 1))
+print(x, context = c(0, 3))
 #> <seekr::match[5]> 2 sources
-#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata
+#> Common Path: C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {
 #>     ++  1 | one_add <- function(x) {
 #>         2 |   return(x + 1)
+#>         3 | }
+#>         4 | 
 #> 
-#>         7 | }
-#>         8 | 
 #> [2] --  9 | say_hello <- function(name) {
 #>     ++  9 | hello_say <- function(name) {
 #>        10 |   paste('Hello', name)
+#>        11 | }
+#>        12 | 
 #> 
 #> script2.R [3]
-#>         1 | # TODO: optimize this function
 #> [3] --  2 | mean_safe <- function(x) {
 #>     ++  2 | safe_mean <- function(x) {
 #>         3 |   if (length(x) == 0) return(NA)
-#> 
+#>         4 |   mean(x, na.rm = TRUE)
 #>         5 | }
-#>         6 | 
+#> 
 #> [4] --  7 | sd_safe <- function(x) {
 #>     ++  7 | safe_sd <- function(x) {
 #>         8 |   if (length(x) <= 1) return(NA)
-#> 
+#>         9 |   sd(x, na.rm = TRUE)
 #>        10 | }
-#>        11 | 
+#> 
 #> [5] -- 12 | print_vector <- function(v) {
 #>     ++ 12 | vector_print <- function(v) {
 #>        13 |   print(paste('Vector of length', length(v)))
-```
-
-The listing, filtering, and matching steps can also be combined in one
-step with
-[`seek()`](https://smartiing.github.io/seekr/reference/seek.md).
-[`seekr()`](https://smartiing.github.io/seekr/reference/seek.md) is a
-convenience wrapper around
-[`seek()`](https://smartiing.github.io/seekr/reference/seek.md) that
-restricts the search to R, R Markdown, and Quarto files (`.R`, `.Rmd`,
-`.qmd`).
-
-``` r
-
-y <- seek(my_pattern, my_replacement, extension = "R")
-z <- seekr(my_pattern, my_replacement)
-identical(x, y)
-#> [1] TRUE
-identical(y, z)
-#> [1] TRUE
+#>        14 | }
+#>        15 | 
 ```
 
 ### Filter matches and update replacements
@@ -329,68 +296,60 @@ matches whose matched text contains `"safe"`.
 ``` r
 
 x <- filter_match(x, !grepl("safe", match))
-print(x, context = c(3L, 1L))
+print(x, context = c(0L, 3L))
 #> <seekr::match[3]> 2 sources
-#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata
-#> 
-#> script1.R [2]
-#> [1] --  1 | add_one <- function(x) {
-#>     ++  1 | one_add <- function(x) {
-#>         2 |   return(x + 1)
-#> 
-#>         6 |   toupper(substr(txt, 1, 1))
-#>         7 | }
-#>         8 | 
-#> [2] --  9 | say_hello <- function(name) {
-#>     ++  9 | hello_say <- function(name) {
-#>        10 |   paste('Hello', name)
-#> 
-#> script2.R [1]
-#>         9 |   sd(x, na.rm = TRUE)
-#>        10 | }
-#>        11 | 
-#> [3] -- 12 | print_vector <- function(v) {
-#>     ++ 12 | vector_print <- function(v) {
-#>        13 |   print(paste('Vector of length', length(v)))
-```
-
-Replacements can also be updated after inspection. Here, we convert the
-replacement to upper case when the word `"hello"` is in the match text.
-
-``` r
-
-repl <- field(x, "replacement")
-
-field(x, "replacement") = ifelse(
-  grepl("hello", field(x, "match")),
-  toupper(repl),
-  repl
-)
-
-print(x, context = 2L)
-#> <seekr::match[3]> 2 sources
-#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata
+#> Common Path: C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {
 #>     ++  1 | one_add <- function(x) {
 #>         2 |   return(x + 1)
 #>         3 | }
+#>         4 | 
 #> 
-#>         7 | }
-#>         8 | 
 #> [2] --  9 | say_hello <- function(name) {
-#>     ++  9 | HELLO_SAY <- function(name) {
+#>     ++  9 | hello_say <- function(name) {
 #>        10 |   paste('Hello', name)
 #>        11 | }
+#>        12 | 
 #> 
 #> script2.R [1]
-#>        10 | }
-#>        11 | 
 #> [3] -- 12 | print_vector <- function(v) {
 #>     ++ 12 | vector_print <- function(v) {
 #>        13 |   print(paste('Vector of length', length(v)))
 #>        14 | }
+#>        15 | 
+```
+
+Replacements can also be set/updated after inspection. Here, we convert
+the replacement to upper case and preview the result.
+
+``` r
+
+field(x, "replacement") = toupper(field(x, "replacement"))
+print(x, context = c(0, 3))
+#> <seekr::match[3]> 2 sources
+#> Common Path: C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata
+#> 
+#> script1.R [2]
+#> [1] --  1 | add_one <- function(x) {
+#>     ++  1 | ONE_ADD <- function(x) {
+#>         2 |   return(x + 1)
+#>         3 | }
+#>         4 | 
+#> 
+#> [2] --  9 | say_hello <- function(name) {
+#>     ++  9 | HELLO_SAY <- function(name) {
+#>        10 |   paste('Hello', name)
+#>        11 | }
+#>        12 | 
+#> 
+#> script2.R [1]
+#> [3] -- 12 | print_vector <- function(v) {
+#>     ++ 12 | VECTOR_PRINT <- function(v) {
+#>        13 |   print(paste('Vector of length', length(v)))
+#>        14 | }
+#>        15 | 
 ```
 
 ### Replace selected matches
@@ -414,6 +373,27 @@ current file contents.
 replace_files(x)
 ```
 
+In this example, the replacement strings still match `mypattern` if we
+ignore the case. This lets us search again and verify that the three
+selected matches were replaced, while the two excluded matches were left
+unchanged.
+
+``` r
+
+seekr(regex(my_pattern, ignore_case = TRUE))
+#> <seekr::match[5]> 2 sources
+#> Common Path: C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata
+#> 
+#> script1.R [2]
+#> [1] ->  1 | ONE_ADD <- function(x) {
+#> [2] ->  9 | HELLO_SAY <- function(name) {
+#> 
+#> script2.R [3]
+#> [3] ->  2 | mean_safe <- function(x) {
+#> [4] ->  7 | sd_safe <- function(x) {
+#> [5] -> 12 | VECTOR_PRINT <- function(v) {
+```
+
 ### Restore files
 
 By default,
@@ -429,8 +409,8 @@ bck
 #> # A tibble: 2 × 9
 #>      id created_at          operation description original                                                  backup original_exists backup_exists  size
 #>   <int> <dttm>              <chr>     <chr>       <chr>                                                     <chr>  <lgl>           <lgl>         <fs:>
-#> 1     1 2026-07-10 23:48:08 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-ex… C:/Us… TRUE            TRUE            172
-#> 2     1 2026-07-10 23:48:08 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-ex… C:/Us… TRUE            TRUE            293
+#> 1     1 2026-07-11 22:04:46 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-ex… C:/Us… TRUE            TRUE            172
+#> 2     1 2026-07-11 22:04:46 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-ex… C:/Us… TRUE            TRUE            293
 ```
 
 Use
@@ -453,22 +433,22 @@ list_backups()
 #> # A tibble: 4 × 9
 #>      id created_at          operation description original                                                  backup original_exists backup_exists  size
 #>   <int> <dttm>              <chr>     <chr>       <chr>                                                     <chr>  <lgl>           <lgl>         <fs:>
-#> 1     2 2026-07-10 23:48:08 restore   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-ex… C:/Us… TRUE            TRUE            172
-#> 2     2 2026-07-10 23:48:08 restore   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-ex… C:/Us… TRUE            TRUE            293
-#> 3     1 2026-07-10 23:48:08 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-ex… C:/Us… TRUE            TRUE            172
-#> 4     1 2026-07-10 23:48:08 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-ex… C:/Us… TRUE            TRUE            293
+#> 1     2 2026-07-11 22:04:47 restore   <NA>        C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-ex… C:/Us… TRUE            TRUE            172
+#> 2     2 2026-07-11 22:04:47 restore   <NA>        C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-ex… C:/Us… TRUE            TRUE            293
+#> 3     1 2026-07-11 22:04:46 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-ex… C:/Us… TRUE            TRUE            172
+#> 4     1 2026-07-11 22:04:46 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-ex… C:/Us… TRUE            TRUE            293
 ```
 
-After restoring, the original matches are back.
+Once the files have been restored, the original files are back.
 
 ``` r
 
 x_restored <- seekr(my_pattern, my_replacement)
-identical(z, x_restored)
+identical(y, x_restored)
 #> [1] TRUE
-print(x_restored, context = 2L)
+print(x_restored, context = c(0, 2))
 #> <seekr::match[5]> 2 sources
-#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpqON3E2/seekr-example/extdata
+#> Common Path: C:/Users/smarting/AppData/Local/Temp/Rtmp4codmg/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {
@@ -476,27 +456,22 @@ print(x_restored, context = 2L)
 #>         2 |   return(x + 1)
 #>         3 | }
 #> 
-#>         7 | }
-#>         8 | 
 #> [2] --  9 | say_hello <- function(name) {
 #>     ++  9 | hello_say <- function(name) {
 #>        10 |   paste('Hello', name)
 #>        11 | }
 #> 
 #> script2.R [3]
-#>         1 | # TODO: optimize this function
 #> [3] --  2 | mean_safe <- function(x) {
 #>     ++  2 | safe_mean <- function(x) {
 #>         3 |   if (length(x) == 0) return(NA)
 #>         4 |   mean(x, na.rm = TRUE)
-#>         5 | }
-#>         6 | 
+#> 
 #> [4] --  7 | sd_safe <- function(x) {
 #>     ++  7 | safe_sd <- function(x) {
 #>         8 |   if (length(x) <= 1) return(NA)
 #>         9 |   sd(x, na.rm = TRUE)
-#>        10 | }
-#>        11 | 
+#> 
 #> [5] -- 12 | print_vector <- function(v) {
 #>     ++ 12 | vector_print <- function(v) {
 #>        13 |   print(paste('Vector of length', length(v)))
@@ -505,7 +480,10 @@ print(x_restored, context = 2L)
 
 ### Pipe workflow
 
-The same `seekr` workflow can also easily be written as a pipe.
+The main `seekr` functions are designed to compose: the output of one
+step can usually be passed directly to the next. In real use, you will
+often pause to inspect, filter, or update the result, but the pipe form
+makes the structure of the workflow clear.
 
 ``` r
 

@@ -24,8 +24,8 @@ goal was to let users:
 - preview replacements before files are written;
 - prepare replacements either during the search step or after matches
   have been inspected;
-- update replacements after the search;
-- filter matches after the intial search;
+- update the replacements;
+- filter to keep a subset of the matches;
 - replace only the remaining matches, safely.
 
 More generally, the result needed to expose the information captured for

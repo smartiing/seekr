@@ -1,6 +1,10 @@
 # Changelog
 
+## seekr (development version)
+
 ## seekr 0.2.0
+
+CRAN release: 2026-07-10
 
 This is a complete redesign of `seekr`.
 

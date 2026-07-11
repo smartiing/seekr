@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">seekr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,10 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.0" id="seekr-020">seekr 0.2.0<a class="anchor" aria-label="anchor" href="#seekr-020"></a></h2>
+<h2 class="pkg-version" data-toc-text="development version" id="seekr-development-version">seekr (development version)<a class="anchor" aria-label="anchor" href="#seekr-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="seekr-020">seekr 0.2.0<a class="anchor" aria-label="anchor" href="#seekr-020"></a></h2><p class="text-muted">CRAN release: 2026-07-10</p>
 <p>This is a complete redesign of <code>seekr</code>.</p>
 <p><code>seekr</code> is now a much more ambitious package built around a different model of search-and-replace. Instead of providing a small set of helpers for finding text in files, it now introduces a full workflow for listing files, filtering files, finding matches, inspecting and refining results, staging replacements, modifying selected files, creating backups, and restoring them.</p>
 <p>This release introduces the <code>seekr_match</code> vector, implemented as a vctrs record-style (<code>rcrd</code>) vector. Each element represents one independent match in one file, while fields store the file path, match location, matched text, planned replacement, surrounding context, and related metadata.</p>
