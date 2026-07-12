@@ -244,27 +244,6 @@ vector and can be inspected like any other search result.</p>
 <span><span class="co">#&gt;  • <span style="color: #BB0000;">NA</span> : 5 <span style="color: #767676;">(100.0%)</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="filtering-before-replacement">Filtering before replacement<a class="anchor" aria-label="anchor" href="#filtering-before-replacement"></a>
-</h2>
-<p>One advantage of the in-memory workflow is that the match vectors
-remain linked to the text they came from.</p>
-<p>Suppose we decide that only some procedures should be updated. For
-example, we may want to update the 3 refresh procedures, but leave other
-procedures unchanged for now.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="va">df</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"^refresh_"</span>, <span class="va">name</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">df</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
-<span><span class="co">#&gt;   name                     x                  body                                                                                                    </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                                                   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> refresh_customer_scores  <span style="color: #949494;">&lt;seekr::match [2]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_s…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> refresh_offer_flags      <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n …</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> refresh_campaign_targets <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_…</span></span></code></pre></div>
-</div>
-<div class="section level2">
 <h2 id="applying-replacements-in-memory">Applying replacements in memory<a class="anchor" aria-label="anchor" href="#applying-replacements-in-memory"></a>
 </h2>
 <p>We can now apply the selected replacements with
@@ -272,7 +251,7 @@ procedures unchanged for now.</p>
 <p>Unlike <code><a href="../reference/replace_files.html">replace_files()</a></code>, this does not write anything to
 disk. It simply returns a modified string and the updated text is now
 just another column.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -285,12 +264,13 @@ just another column.</p>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">df</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 4</span></span></span>
 <span><span class="co">#&gt;   name                     x                  replaced                                                                                           body </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                                              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> refresh_customer_scores  <span style="color: #949494;">&lt;seekr::match [2]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE cust… <span style="color: #949494;">"</span>\nC…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> refresh_offer_flags      <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_fl… <span style="color: #949494;">"</span>\nC…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> refresh_campaign_targets <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE cam… <span style="color: #949494;">"</span>\nC…</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> archive_old_events       <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION archive_new_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM even… <span style="color: #949494;">"</span>\nC…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> refresh_campaign_targets <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE cam… <span style="color: #949494;">"</span>\nC…</span></span></code></pre></div>
 <p>This is the point of the in-memory workflow: <code>seekr</code>
 helped us find, inspect, filter, and safely apply replacements, but it
 did not decide what to do with the result.</p>
@@ -303,7 +283,7 @@ them however we want.</p>
 <p>For example, we can combine the updated procedures into a single SQL
 script. We can also add comments, separators, or any other metadata that
 makes sense for the target system.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sql_script</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -334,6 +314,17 @@ makes sense for the target system.</p>
 <span><span class="co">#&gt;   UPDATE offer_flags</span></span>
 <span><span class="co">#&gt;   SET new_flag = TRUE</span></span>
 <span><span class="co">#&gt;   WHERE active = TRUE;</span></span>
+<span><span class="co">#&gt; END;</span></span>
+<span><span class="co">#&gt; $$ LANGUAGE plpgsql;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; -- Procedure: archive_old_events -------------------------------</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; CREATE OR REPLACE FUNCTION archive_new_events()</span></span>
+<span><span class="co">#&gt; RETURNS void AS $$</span></span>
+<span><span class="co">#&gt; BEGIN</span></span>
+<span><span class="co">#&gt;   DELETE FROM events</span></span>
+<span><span class="co">#&gt;   WHERE event_date &lt; CURRENT_DATE - INTERVAL '365 days';</span></span>
 <span><span class="co">#&gt; END;</span></span>
 <span><span class="co">#&gt; $$ LANGUAGE plpgsql;</span></span>
 <span><span class="co">#&gt; </span></span>

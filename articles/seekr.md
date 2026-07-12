@@ -41,10 +41,10 @@ relevant: tracked files and untracked files that are not ignored by Git.
 
 files <- list_files()
 files
-#> [1] "/tmp/RtmpHCaVpV/seekr-example/extdata/config.yaml" "/tmp/RtmpHCaVpV/seekr-example/extdata/data.json"  
-#> [3] "/tmp/RtmpHCaVpV/seekr-example/extdata/iris.csv"    "/tmp/RtmpHCaVpV/seekr-example/extdata/mtcars.csv" 
-#> [5] "/tmp/RtmpHCaVpV/seekr-example/extdata/script1.R"   "/tmp/RtmpHCaVpV/seekr-example/extdata/script2.R"  
-#> [7] "/tmp/RtmpHCaVpV/seekr-example/extdata/server1.log" "/tmp/RtmpHCaVpV/seekr-example/extdata/server2.log"
+#> [1] "/tmp/RtmpgmKfC2/seekr-example/extdata/config.yaml" "/tmp/RtmpgmKfC2/seekr-example/extdata/data.json"  
+#> [3] "/tmp/RtmpgmKfC2/seekr-example/extdata/iris.csv"    "/tmp/RtmpgmKfC2/seekr-example/extdata/mtcars.csv" 
+#> [5] "/tmp/RtmpgmKfC2/seekr-example/extdata/script1.R"   "/tmp/RtmpgmKfC2/seekr-example/extdata/script2.R"  
+#> [7] "/tmp/RtmpgmKfC2/seekr-example/extdata/server1.log" "/tmp/RtmpgmKfC2/seekr-example/extdata/server2.log"
 ```
 
 [`list_files()`](https://smartiing.github.io/seekr/reference/list_files.md)
@@ -88,19 +88,19 @@ For example, we can keep only R files.
 ``` r
 
 filter_files(files, extension = "R")
-#> [1] "/tmp/RtmpHCaVpV/seekr-example/extdata/script1.R" "/tmp/RtmpHCaVpV/seekr-example/extdata/script2.R"
+#> [1] "/tmp/RtmpgmKfC2/seekr-example/extdata/script1.R" "/tmp/RtmpgmKfC2/seekr-example/extdata/script2.R"
 #> attr(,"exclusions")
 #> # A tibble: 8 × 7
 #>   path                                              excluded exclude_by_extension is_git_dir is_dependency_dir is_minified_file is_not_text_mime
 #>   <chr>                                             <lgl>    <lgl>                <lgl>      <lgl>             <lgl>            <lgl>           
-#> 1 /tmp/RtmpHCaVpV/seekr-example/extdata/config.yaml TRUE     TRUE                 NA         NA                NA               NA              
-#> 2 /tmp/RtmpHCaVpV/seekr-example/extdata/data.json   TRUE     TRUE                 NA         NA                NA               NA              
-#> 3 /tmp/RtmpHCaVpV/seekr-example/extdata/iris.csv    TRUE     TRUE                 NA         NA                NA               NA              
-#> 4 /tmp/RtmpHCaVpV/seekr-example/extdata/mtcars.csv  TRUE     TRUE                 NA         NA                NA               NA              
-#> 5 /tmp/RtmpHCaVpV/seekr-example/extdata/script1.R   FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           
-#> 6 /tmp/RtmpHCaVpV/seekr-example/extdata/script2.R   FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           
-#> 7 /tmp/RtmpHCaVpV/seekr-example/extdata/server1.log TRUE     TRUE                 NA         NA                NA               NA              
-#> 8 /tmp/RtmpHCaVpV/seekr-example/extdata/server2.log TRUE     TRUE                 NA         NA                NA               NA
+#> 1 /tmp/RtmpgmKfC2/seekr-example/extdata/config.yaml TRUE     TRUE                 NA         NA                NA               NA              
+#> 2 /tmp/RtmpgmKfC2/seekr-example/extdata/data.json   TRUE     TRUE                 NA         NA                NA               NA              
+#> 3 /tmp/RtmpgmKfC2/seekr-example/extdata/iris.csv    TRUE     TRUE                 NA         NA                NA               NA              
+#> 4 /tmp/RtmpgmKfC2/seekr-example/extdata/mtcars.csv  TRUE     TRUE                 NA         NA                NA               NA              
+#> 5 /tmp/RtmpgmKfC2/seekr-example/extdata/script1.R   FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           
+#> 6 /tmp/RtmpgmKfC2/seekr-example/extdata/script2.R   FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           
+#> 7 /tmp/RtmpgmKfC2/seekr-example/extdata/server1.log TRUE     TRUE                 NA         NA                NA               NA              
+#> 8 /tmp/RtmpgmKfC2/seekr-example/extdata/server2.log TRUE     TRUE                 NA         NA                NA               NA
 ```
 
 Here we combine the different types of filters to exclude the files we
@@ -119,20 +119,20 @@ filtered <- filter_files(
 )
 
 filtered
-#> [1] "/tmp/RtmpHCaVpV/seekr-example/extdata/script1.R" "/tmp/RtmpHCaVpV/seekr-example/extdata/script2.R"
+#> [1] "/tmp/RtmpgmKfC2/seekr-example/extdata/script1.R" "/tmp/RtmpgmKfC2/seekr-example/extdata/script2.R"
 #> attr(,"exclusions")
 #> # A tibble: 9 × 9
 #>   path        excluded exclude_by_extension exclude_by_path_patt…¹ exclude_by_file_size is_git_dir is_dependency_dir is_minified_file is_not_text_mime
 #>   <chr>       <lgl>    <lgl>                <lgl>                  <lgl>                <lgl>      <lgl>             <lgl>            <lgl>           
-#> 1 /tmp/RtmpH… TRUE     FALSE                TRUE                   NA                   NA         NA                NA               NA              
-#> 2 /tmp/RtmpH… TRUE     TRUE                 NA                     NA                   NA         NA                NA               NA              
-#> 3 /tmp/RtmpH… TRUE     TRUE                 NA                     NA                   NA         NA                NA               NA              
-#> 4 /tmp/RtmpH… TRUE     TRUE                 NA                     NA                   NA         NA                NA               NA              
-#> 5 /tmp/RtmpH… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           
-#> 6 /tmp/RtmpH… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           
-#> 7 /tmp/RtmpH… TRUE     FALSE                FALSE                  TRUE                 NA         NA                NA               NA              
-#> 8 /tmp/RtmpH… TRUE     FALSE                FALSE                  TRUE                 NA         NA                NA               NA              
-#> 9 /tmp/RtmpH… TRUE     FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            TRUE            
+#> 1 /tmp/Rtmpg… TRUE     FALSE                TRUE                   NA                   NA         NA                NA               NA              
+#> 2 /tmp/Rtmpg… TRUE     TRUE                 NA                     NA                   NA         NA                NA               NA              
+#> 3 /tmp/Rtmpg… TRUE     TRUE                 NA                     NA                   NA         NA                NA               NA              
+#> 4 /tmp/Rtmpg… TRUE     TRUE                 NA                     NA                   NA         NA                NA               NA              
+#> 5 /tmp/Rtmpg… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           
+#> 6 /tmp/Rtmpg… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           
+#> 7 /tmp/Rtmpg… TRUE     FALSE                FALSE                  TRUE                 NA         NA                NA               NA              
+#> 8 /tmp/Rtmpg… TRUE     FALSE                FALSE                  TRUE                 NA         NA                NA               NA              
+#> 9 /tmp/Rtmpg… TRUE     FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            TRUE            
 #> # ℹ abbreviated name: ¹​exclude_by_path_pattern
 ```
 
@@ -158,15 +158,15 @@ exclusions(filtered)
 #> # A tibble: 9 × 9
 #>   path        excluded exclude_by_extension exclude_by_path_patt…¹ exclude_by_file_size is_git_dir is_dependency_dir is_minified_file is_not_text_mime
 #>   <chr>       <lgl>    <lgl>                <lgl>                  <lgl>                <lgl>      <lgl>             <lgl>            <lgl>           
-#> 1 /tmp/RtmpH… TRUE     FALSE                TRUE                   NA                   NA         NA                NA               NA              
-#> 2 /tmp/RtmpH… TRUE     TRUE                 NA                     NA                   NA         NA                NA               NA              
-#> 3 /tmp/RtmpH… TRUE     TRUE                 NA                     NA                   NA         NA                NA               NA              
-#> 4 /tmp/RtmpH… TRUE     TRUE                 NA                     NA                   NA         NA                NA               NA              
-#> 5 /tmp/RtmpH… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           
-#> 6 /tmp/RtmpH… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           
-#> 7 /tmp/RtmpH… TRUE     FALSE                FALSE                  TRUE                 NA         NA                NA               NA              
-#> 8 /tmp/RtmpH… TRUE     FALSE                FALSE                  TRUE                 NA         NA                NA               NA              
-#> 9 /tmp/RtmpH… TRUE     FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            TRUE            
+#> 1 /tmp/Rtmpg… TRUE     FALSE                TRUE                   NA                   NA         NA                NA               NA              
+#> 2 /tmp/Rtmpg… TRUE     TRUE                 NA                     NA                   NA         NA                NA               NA              
+#> 3 /tmp/Rtmpg… TRUE     TRUE                 NA                     NA                   NA         NA                NA               NA              
+#> 4 /tmp/Rtmpg… TRUE     TRUE                 NA                     NA                   NA         NA                NA               NA              
+#> 5 /tmp/Rtmpg… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           
+#> 6 /tmp/Rtmpg… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           
+#> 7 /tmp/Rtmpg… TRUE     FALSE                FALSE                  TRUE                 NA         NA                NA               NA              
+#> 8 /tmp/Rtmpg… TRUE     FALSE                FALSE                  TRUE                 NA         NA                NA               NA              
+#> 9 /tmp/Rtmpg… TRUE     FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            TRUE            
 #> # ℹ abbreviated name: ¹​exclude_by_path_pattern
 ```
 
@@ -189,9 +189,9 @@ names(exclude_functions)
 #> [1] "is_git_dir"        "is_dependency_dir" "is_minified_file"  "is_not_text_mime"
 ```
 
-You can add your own **named** exclude function by modifying a copy of
-`exclude_functions`. Custom functions will also appear on their
-dedicated column in the
+You can add your own **named** exclude function(s) by modifying a copy
+of `exclude_functions`. Custom functions will also appear on their
+dedicated column(s) in the
 [`exclusions()`](https://smartiing.github.io/seekr/reference/exclusions.md)
 data frame.
 
@@ -209,20 +209,20 @@ filtered_custom <- filter_files(
 )
 
 filtered_custom
-#> [1] "/tmp/RtmpHCaVpV/seekr-example/extdata/script1.R"
+#> [1] "/tmp/RtmpgmKfC2/seekr-example/extdata/script1.R"
 #> attr(,"exclusions")
 #> # A tibble: 9 × 8
 #>   path                                    excluded exclude_by_extension is_git_dir is_dependency_dir is_minified_file is_not_text_mime exclude_script2
 #>   <chr>                                   <lgl>    <lgl>                <lgl>      <lgl>             <lgl>            <lgl>            <lgl>          
-#> 1 /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA             
-#> 2 /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA             
-#> 3 /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA             
-#> 4 /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA             
-#> 5 /tmp/RtmpHCaVpV/seekr-example/extdata/… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE            FALSE          
-#> 6 /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     FALSE                FALSE      FALSE             FALSE            FALSE            TRUE           
-#> 7 /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA             
-#> 8 /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA             
-#> 9 /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA
+#> 1 /tmp/RtmpgmKfC2/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA             
+#> 2 /tmp/RtmpgmKfC2/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA             
+#> 3 /tmp/RtmpgmKfC2/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA             
+#> 4 /tmp/RtmpgmKfC2/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA             
+#> 5 /tmp/RtmpgmKfC2/seekr-example/extdata/… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE            FALSE          
+#> 6 /tmp/RtmpgmKfC2/seekr-example/extdata/… TRUE     FALSE                FALSE      FALSE             FALSE            FALSE            TRUE           
+#> 7 /tmp/RtmpgmKfC2/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA             
+#> 8 /tmp/RtmpgmKfC2/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA             
+#> 9 /tmp/RtmpgmKfC2/seekr-example/extdata/… TRUE     TRUE                 NA         NA                NA               NA               NA
 ```
 
 The order of exclude functions matters. They are evaluated in the order
@@ -265,7 +265,7 @@ underscore followed by `<- function`.
 matches <- match_files(filtered, "([a-z]+)_([a-z]+)(?= <- function)")
 matches
 #> <seekr::match[5]> 2 sources
-#> Common Path: /tmp/RtmpHCaVpV/seekr-example/extdata
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] ->  1 | add_one <- function(x) {
@@ -309,7 +309,7 @@ we can make the search case-insensitive.
 
 match_files(filtered, regex("FUNCTION", ignore_case = TRUE))
 #> <seekr::match[7]> 2 sources
-#> Common Path: /tmp/RtmpHCaVpV/seekr-example/extdata
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
 #> 
 #> script1.R [3]
 #> [1] ->  1 | add_one <- function(x) {
@@ -334,36 +334,30 @@ use
 [`stringr::fixed()`](https://stringr.tidyverse.org/reference/modifiers.html)
 or
 [`stringr::coll()`](https://stringr.tidyverse.org/reference/modifiers.html)
-whcih are also re-exported by `seekr`.
+which are also re-exported by `seekr`.
 
 ``` r
 
-match_files(filtered, fixed("<- function"))
-#> <seekr::match[6]> 2 sources
-#> Common Path: /tmp/RtmpHCaVpV/seekr-example/extdata
+match_files(filtered, fixed("function(x)"))
+#> <seekr::match[3]> 2 sources
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
 #> 
-#> script1.R [3]
-#> [1] ->  1 | add_one <- function(x) {
-#> [2] ->  5 | capitalize <- function(txt) {
-#> [3] ->  9 | say_hello <- function(name) {
+#> script1.R [1]
+#> [1] -> 1 | add_one <- function(x) {
 #> 
-#> script2.R [3]
-#> [4] ->  2 | mean_safe <- function(x) {
-#> [5] ->  7 | sd_safe <- function(x) {
-#> [6] -> 12 | print_vector <- function(v) {
-match_files(filtered, coll("<- function"))
-#> <seekr::match[6]> 2 sources
-#> Common Path: /tmp/RtmpHCaVpV/seekr-example/extdata
+#> script2.R [2]
+#> [2] -> 2 | mean_safe <- function(x) {
+#> [3] -> 7 | sd_safe <- function(x) {
+match_files(filtered, coll("function(x)"))
+#> <seekr::match[3]> 2 sources
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
 #> 
-#> script1.R [3]
-#> [1] ->  1 | add_one <- function(x) {
-#> [2] ->  5 | capitalize <- function(txt) {
-#> [3] ->  9 | say_hello <- function(name) {
+#> script1.R [1]
+#> [1] -> 1 | add_one <- function(x) {
 #> 
-#> script2.R [3]
-#> [4] ->  2 | mean_safe <- function(x) {
-#> [5] ->  7 | sd_safe <- function(x) {
-#> [6] -> 12 | print_vector <- function(v) {
+#> script2.R [2]
+#> [2] -> 2 | mean_safe <- function(x) {
+#> [3] -> 7 | sd_safe <- function(x) {
 ```
 
 This is useful when the text contains characters that would otherwise
@@ -416,7 +410,7 @@ match_files(
   replacement = "checked"
 )
 #> <seekr::match[2]> 1 source
-#> /tmp/RtmpHCaVpV/seekr-example/extdata/script2.R [2]
+#> /tmp/RtmpgmKfC2/seekr-example/extdata/script2.R [2]
 #> [1] -- 2 | mean_safe <- function(x) {
 #>     ++ 2 | mean_checked <- function(x) {
 #> [2] -- 7 | sd_safe <- function(x) {
@@ -441,7 +435,7 @@ match_files(
   replacement = "\\2_\\1"
 )
 #> <seekr::match[5]> 2 sources
-#> Common Path: /tmp/RtmpHCaVpV/seekr-example/extdata
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {
@@ -473,7 +467,7 @@ match_files(
   replacement = toupper
 )
 #> <seekr::match[5]> 2 sources
-#> Common Path: /tmp/RtmpHCaVpV/seekr-example/extdata
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {
@@ -504,9 +498,13 @@ are the capture groups.
 repl_fn <- function(M) paste0(toupper(M[, 3L]), "_", tolower(M[, 2L]))
 repl_fn <- with_capture_groups_matrix(repl_fn)
 
-match_files(filtered, "([a-z]+)_([a-z]+)(?= <- function)", repl_fn)
+match_files(
+  filtered, 
+  pattern = "([a-z]+)_([a-z]+)(?= <- function)", 
+  replacement = repl_fn
+)
 #> <seekr::match[5]> 2 sources
-#> Common Path: /tmp/RtmpHCaVpV/seekr-example/extdata
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {
@@ -582,7 +580,7 @@ planned replacement, surrounding context, and encoding.
 
 str(x)
 #> <seekr::match[5]> vctrs::rcrd
-#> path        <chr> "/tmp/RtmpHCaVpV/seekr-example/extdata/script1.R", "/tmp/RtmpHCaVpV/seekr-example/extdata/script1.R", "/tmp/RtmpHCaVpV/seekr-example…
+#> path        <chr> "/tmp/RtmpgmKfC2/seekr-example/extdata/script1.R", "/tmp/RtmpgmKfC2/seekr-example/extdata/script1.R", "/tmp/RtmpgmKfC2/seekr-example…
 #> start_line  <int> 1, 9, 2, 7, 12
 #> end_line    <int> 1, 9, 2, 7, 12
 #> start       <int> 1, 107, 32, 119, 202
@@ -626,7 +624,7 @@ overview of the matches and planned replacements.
 
 summary(x)
 #> ── <seekr::match[5]> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-#> Common Path: /tmp/RtmpHCaVpV/seekr-example/extdata
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
 #> 
 #> Top sources [2]
 #>  • script2.R : 3 (60.0%)
@@ -654,7 +652,7 @@ files.
 
 print(x, context = c(0L, 3L))
 #> <seekr::match[5]> 2 sources
-#> Common Path: /tmp/RtmpHCaVpV/seekr-example/extdata
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {
@@ -704,7 +702,7 @@ vector.
 
 x[!grepl("safe", field(x, "match"))]
 #> <seekr::match[3]> 2 sources
-#> Common Path: /tmp/RtmpHCaVpV/seekr-example/extdata
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {
@@ -727,7 +725,7 @@ fields of the `seekr_match` vector.
 xf <- x |> filter_match(!grepl("safe", match))
 xf
 #> <seekr::match[3]> 2 sources
-#> Common Path: /tmp/RtmpHCaVpV/seekr-example/extdata
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {
@@ -779,7 +777,7 @@ inspected or filtered.
 field(xf, "replacement") = toupper(field(xf, "replacement"))
 print(xf, context = c(0, 2))
 #> <seekr::match[3]> 2 sources
-#> Common Path: /tmp/RtmpHCaVpV/seekr-example/extdata
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {
@@ -850,19 +848,37 @@ We can now see that our matches have been replaced.
 
 ``` r
 
-seekr("([a-z]+)_([a-z]+)(?= <- function)") |> 
+seekr("(?i)([a-z]+)_([a-z]+)(?= <- function)") |> 
   print(context = c(0L, 3L))
-#> <seekr::match[2]> 1 source
-#> /tmp/RtmpHCaVpV/seekr-example/extdata/script2.R [2]
-#> [1] ->  2 | mean_safe <- function(x) {
+#> <seekr::match[5]> 2 sources
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
+#> 
+#> script1.R [2]
+#> [1] ->  1 | ONE_ADD <- function(x) {
+#>         2 |   return(x + 1)
+#>         3 | }
+#>         4 | 
+#> 
+#> [2] ->  9 | HELLO_SAY <- function(name) {
+#>        10 |   paste('Hello', name)
+#>        11 | }
+#>        12 | 
+#> 
+#> script2.R [3]
+#> [3] ->  2 | mean_safe <- function(x) {
 #>         3 |   if (length(x) == 0) return(NA)
 #>         4 |   mean(x, na.rm = TRUE)
 #>         5 | }
 #> 
-#> [2] ->  7 | sd_safe <- function(x) {
+#> [4] ->  7 | sd_safe <- function(x) {
 #>         8 |   if (length(x) <= 1) return(NA)
 #>         9 |   sd(x, na.rm = TRUE)
 #>        10 | }
+#> 
+#> [5] -> 12 | VECTOR_PRINT <- function(v) {
+#>        13 |   print(paste('Vector of length', length(v)))
+#>        14 | }
+#>        15 | 
 ```
 
 ## Restore files
@@ -879,8 +895,8 @@ bck
 #> # A tibble: 2 × 9
 #>      id created_at          operation description            original                                       backup original_exists backup_exists  size
 #>   <int> <dttm>              <chr>     <chr>                  <chr>                                          <chr>  <lgl>           <lgl>         <fs:>
-#> 1     1 2026-07-12 01:43:33 replace   Inverse function names /tmp/RtmpHCaVpV/seekr-example/extdata/script1… /tmp/… TRUE            TRUE            161
-#> 2     1 2026-07-12 01:43:33 replace   Inverse function names /tmp/RtmpHCaVpV/seekr-example/extdata/script2… /tmp/… TRUE            TRUE            279
+#> 1     1 2026-07-12 02:24:00 replace   Inverse function names /tmp/RtmpgmKfC2/seekr-example/extdata/script1… /tmp/… TRUE            TRUE            161
+#> 2     1 2026-07-12 02:24:00 replace   Inverse function names /tmp/RtmpgmKfC2/seekr-example/extdata/script2… /tmp/… TRUE            TRUE            279
 ```
 
 Use
@@ -909,10 +925,10 @@ list_backups()
 #> # A tibble: 4 × 9
 #>      id created_at          operation description                                       original            backup original_exists backup_exists  size
 #>   <int> <dttm>              <chr>     <chr>                                             <chr>               <chr>  <lgl>           <lgl>         <fs:>
-#> 1     2 2026-07-12 01:43:33 restore   restore after reversing function names by mistake /tmp/RtmpHCaVpV/se… /tmp/… TRUE            TRUE            161
-#> 2     2 2026-07-12 01:43:33 restore   restore after reversing function names by mistake /tmp/RtmpHCaVpV/se… /tmp/… TRUE            TRUE            279
-#> 3     1 2026-07-12 01:43:33 replace   Inverse function names                            /tmp/RtmpHCaVpV/se… /tmp/… TRUE            TRUE            161
-#> 4     1 2026-07-12 01:43:33 replace   Inverse function names                            /tmp/RtmpHCaVpV/se… /tmp/… TRUE            TRUE            279
+#> 1     2 2026-07-12 02:24:00 restore   restore after reversing function names by mistake /tmp/RtmpgmKfC2/se… /tmp/… TRUE            TRUE            161
+#> 2     2 2026-07-12 02:24:00 restore   restore after reversing function names by mistake /tmp/RtmpgmKfC2/se… /tmp/… TRUE            TRUE            279
+#> 3     1 2026-07-12 02:24:00 replace   Inverse function names                            /tmp/RtmpgmKfC2/se… /tmp/… TRUE            TRUE            161
+#> 4     1 2026-07-12 02:24:00 replace   Inverse function names                            /tmp/RtmpgmKfC2/se… /tmp/… TRUE            TRUE            279
 ```
 
 After restoring, the original matches are back.
@@ -922,7 +938,7 @@ After restoring, the original matches are back.
 after_restore <- seekr("([a-z]+)_([a-z]+)(?= <- function)")
 print(after_restore, context = c(0L, 3L))
 #> <seekr::match[5]> 2 sources
-#> Common Path: /tmp/RtmpHCaVpV/seekr-example/extdata
+#> Common Path: /tmp/RtmpgmKfC2/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] ->  1 | add_one <- function(x) {

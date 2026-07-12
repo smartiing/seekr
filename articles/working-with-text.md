@@ -201,30 +201,6 @@ summary(x)
 #>  • NA : 5 (100.0%)
 ```
 
-## Filtering before replacement
-
-One advantage of the in-memory workflow is that the match vectors remain
-linked to the text they came from.
-
-Suppose we decide that only some procedures should be updated. For
-example, we may want to update the 3 refresh procedures, but leave other
-procedures unchanged for now.
-
-``` r
-
-df <- 
-  df |>
-  filter(grepl("^refresh_", name))
-
-df
-#> # A tibble: 3 × 3
-#>   name                     x                  body                                                                                                    
-#>   <chr>                    <list>             <chr>                                                                                                   
-#> 1 refresh_customer_scores  <seekr::match [2]> "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_s…
-#> 2 refresh_offer_flags      <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n …
-#> 3 refresh_campaign_targets <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_…
-```
-
 ## Applying replacements in memory
 
 We can now apply the selected replacements with
@@ -249,12 +225,13 @@ df <-
   )
 
 df
-#> # A tibble: 3 × 4
+#> # A tibble: 4 × 4
 #>   name                     x                  replaced                                                                                           body 
 #>   <chr>                    <list>             <chr>                                                                                              <chr>
 #> 1 refresh_customer_scores  <seekr::match [2]> "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE cust… "\nC…
 #> 2 refresh_offer_flags      <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_fl… "\nC…
-#> 3 refresh_campaign_targets <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE cam… "\nC…
+#> 3 archive_old_events       <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION archive_new_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM even… "\nC…
+#> 4 refresh_campaign_targets <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE cam… "\nC…
 ```
 
 This is the point of the in-memory workflow: `seekr` helped us find,
@@ -302,6 +279,17 @@ cat(sql_script, sep = "\n\n")
 #>   UPDATE offer_flags
 #>   SET new_flag = TRUE
 #>   WHERE active = TRUE;
+#> END;
+#> $$ LANGUAGE plpgsql;
+#> 
+#> 
+#> -- Procedure: archive_old_events -------------------------------
+#> 
+#> CREATE OR REPLACE FUNCTION archive_new_events()
+#> RETURNS void AS $$
+#> BEGIN
+#>   DELETE FROM events
+#>   WHERE event_date < CURRENT_DATE - INTERVAL '365 days';
 #> END;
 #> $$ LANGUAGE plpgsql;
 #> 
