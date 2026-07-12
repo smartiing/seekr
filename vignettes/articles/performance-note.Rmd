@@ -9,6 +9,11 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r, include = FALSE, eval = TRUE}
+library(seekr)
+options(width = 300)
+```
+
 `seekr` is not a fast text search tool. It is a structured text search and replacement workflow for R. These are different goals, and it helps to be clear about the trade-off before working with large file sets.
 
 ## Why seekr is slower than CLI tools
@@ -16,26 +21,6 @@ knitr::opts_chunk$set(
 When `seekr` searches a file, it does more than check whether a pattern matches.
 
 For every match it finds, it stores the source path, the absolute character positions, the line and column positions, the matched text, the staged replacement if any, the line containing the match, surrounding context lines, the encoding, and a hash of the searched text that `replace_files()` uses later to verify the file has not changed.
-
-This is what makes the following workflow possible:
-
-```{r, include = FALSE, eval = TRUE}
-library(seekr)
-options(width = 300)
-```
-
-```{r, eval = FALSE}
-library(seekr)
-
-x <- seekr("foo|bar", toupper)
-
-summary(x)
-print(x, context = 2)
-
-x <- filter_match(x, !grepl("/generated/", path))
-
-replace_files(x)
-```
 
 The cost is real. `seekr` reads each file as a complete string, builds a structured R object for every match, and does all of this sequentially in a single R process. For most source code projects this is not a problem. For very large repositories, it can be.
 
@@ -50,16 +35,16 @@ The main cases where performance is likely to matter:
 
 ### Only list files tracked by git 
 
-Before using an external search tool, one simple option for Git repositories is
-to start with Git-aware file discovery:
+Before using an external search tool, one simple option for Git repositories is to start with Git-aware file discovery:
 
-```{r}
+```{r, eval = FALSE}
 files <- list_files(use_git = TRUE)
+x <- seek("pattern", use_git = TRUE)
 ```
 
 ### Pre-filter with ripgrep
 
-[`ripgrep`](https://github.com/burntsushi/ripgrep) is not managed by `seekr`: installing it, making it available on your system `PATH`, and dealing with platform-specific command-line details are left to the user. The goal here is only to show a possible pattern for advanced users with heavy workloads and willing to use [`ripgrep`](https://github.com/burntsushi/ripgrep) for performance.
+**Note**: [`ripgrep`](https://github.com/burntsushi/ripgrep) is not managed by `seekr`: installing it, making it available on your system `PATH`, and dealing with platform-specific command-line details are left to the user. The goal here is only to show a possible pattern for advanced users with heavy workloads and willing to use [`ripgrep`](https://github.com/burntsushi/ripgrep) for performance.
 
 If the main bottleneck is the number of files or volume of data, you can use [`ripgrep`](https://github.com/burntsushi/ripgrep) to identify which files contain the pattern, then pass only those files to `match_files()`.
 
@@ -68,14 +53,14 @@ If the main bottleneck is the number of files or volume of data, you can use [`r
 pattern <- "function"
 path <- system.file("extdata", package = "seekr")
 
-files_with_a_match <- system2(
+# List the files with at least a match
+files <- system2(
   command = "rg",
   args = c("-l", shQuote(pattern), shQuote(path)),
   stdout = TRUE
 )
 
-x <- match_files(files_with_a_match, pattern, toupper)
-x
+x <- match_files(files, pattern, toupper)
 ```
 
 This keeps `seekr`'s structured match objects while offloading the initial scan to a tool optimized for raw throughput.

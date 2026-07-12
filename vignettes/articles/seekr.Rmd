@@ -55,12 +55,9 @@ The first step is to list candidate files.
 
 `list_files()` lists the files that exist and that will be filtered before looking for matches. Its main arguments are `path`, which defines where to look, `all`, which controls whether hidden files and directories are included, and `recurse`, which controls whether and how deeply subdirectories are searched.
 
-By default, `list_files()` searches recursively from the current directory, and
-ignores hidden files and directories.
+By default, `list_files()` searches recursively from the current directory, and ignores hidden files and directories.
 
-When searching inside a Git repository, you can also set `use_git = TRUE` to
-restrict file discovery to files Git considers relevant: tracked files and
-untracked files that are not ignored by Git.
+When searching inside a Git repository, you can also set `use_git = TRUE` to restrict file discovery to files Git considers relevant: tracked files and untracked files that are not ignored by Git.
 
 ```{r list_files}
 files <- list_files()
@@ -133,7 +130,7 @@ In addition to the built-in filters, `filter_files()` uses a list of exclude fun
 names(exclude_functions)
 ```
 
-You can add your own **named** exclude function by modifying a copy of `exclude_functions`. Custom functions will also appear on their dedicated column in the `exclusions()` data frame.
+You can add your own **named** exclude function(s) by modifying a copy of `exclude_functions`. Custom functions will also appear on their dedicated column(s) in the `exclusions()` data frame.
 
 ```{r exclude_functions}
 my_exclude_functions <- c(
@@ -151,12 +148,6 @@ filtered_custom
 ```
 
 The order of exclude functions matters. They are evaluated in the order in which they appear in `exclude`, so changing that order can change which exclusion reason is recorded first. It can also matter for performance: computationally expensive functions are usually better placed near the end.
-
-If no exclude functions are used, the exclusions table simply contains the file paths and an `excluded` column set to `FALSE`.
-
-```{r exclusions3}
-files |> filter_files(exclude = NULL) |> exclusions()
-```
 
 ## Find matches
 
@@ -183,12 +174,12 @@ A plain character string is automatically treated as an ICU regular expression v
 These two calls are therefore equivalent.
 
 ```{r match2, eval = FALSE}
-match_files(filtered, pattern)
+match_files(filtered, "pattern")
 
 match_files(
   filtered,
-  stringr::regex(
-    "([a-z]+)_([a-z]+)(?= <- function)",
+  regex(
+    "pattern",
     ignore_case = FALSE,
     multiline = TRUE,
     comments = FALSE,
@@ -200,17 +191,18 @@ match_files(
 For more control, pass a `stringr` pattern object directly. For example, we can make the search case-insensitive.
 
 ```{r match3}
-match_files(filtered, stringr::regex("FUNCTION", ignore_case = TRUE))
+match_files(filtered, regex("FUNCTION", ignore_case = TRUE))
 ```
 
 For more details about regular expressions in `stringr`, see the [stringr regular expressions documentation](https://stringr.tidyverse.org/articles/regular-expressions.html).
 
 ### Literal text patterns
 
-If you want to search for literal text instead of a regular expression, use `stringr::fixed()`.
+If you want to search for literal text instead of a regular expression, use `stringr::fixed()` or `stringr::coll()` which are also re-exported by `seekr`.
 
 ```{r match4}
-match_files(filtered, stringr::fixed("<- function("))
+match_files(filtered, fixed("function(x)"))
+match_files(filtered, coll("function(x)"))
 ```
 
 This is useful when the text contains characters that would otherwise have a special meaning in a regular expression. Note that `stringr::fixed()` performs bytewise matching, so `stringr::coll()` may be more appropriate for locale-sensitive text.
@@ -238,7 +230,7 @@ The simplest replacement is a string.
 ```{r replacement1}
 match_files(
   filtered,
-  pattern = stringr::fixed("safe"),
+  pattern = "safe",
   replacement = "checked"
 )
 ```
@@ -252,7 +244,11 @@ Replacement strings can also refer to capture groups from a regular expression.
 Here, we reverse the two parts of each function name.
 
 ```{r replacement2}
-match_files(filtered, "(\\w+)_(\\w+)(?= <- function)", "\\2_\\1")
+match_files(
+  filtered, 
+  pattern = "([a-z]+)_([a-z]+)(?= <- function)", 
+  replacement = "\\2_\\1"
+)
 ```
 
 ### Function replacements
@@ -260,7 +256,11 @@ match_files(filtered, "(\\w+)_(\\w+)(?= <- function)", "\\2_\\1")
 A replacement can also be a function. The function receives a character vector of matched texts and must return one replacement value per match. It is vectorized over the matches found in a file; it is not called separately for each individual match.
 
 ```{r replacement3}
-match_files(filtered, "([a-z]+)_([a-z]+)(?= <- function)", toupper)
+match_files(
+  filtered, 
+  pattern = "([a-z]+)_([a-z]+)(?= <- function)", 
+  replacement = toupper
+)
 ```
 
 ### Capture group matrix replacements
@@ -270,21 +270,19 @@ For more complex replacements, wrap a function with `with_capture_groups_matrix(
 The function receives the capture group matrix returned by the matching engine. The first column is the full match, and the following columns are the capture groups.
 
 ```{r replacement4}
-repl_with_matrix <- function(M) {
-  # full_match <- M[, 1L]
-  group1 <- M[, 2L]
-  group2 <- M[, 3L]
-  
-  paste0(toupper(group2), "_", tolower(group1))
-}
+repl_fn <- function(M) paste0(toupper(M[, 3L]), "_", tolower(M[, 2L]))
+repl_fn <- with_capture_groups_matrix(repl_fn)
 
-repl_with_matrix <- with_capture_groups_matrix(repl_with_matrix)
-match_files(filtered, "([a-z]+)_([a-z]+)(?= <- function)", repl_with_matrix)
+match_files(
+  filtered, 
+  pattern = "([a-z]+)_([a-z]+)(?= <- function)", 
+  replacement = repl_fn
+)
 ```
 
 This is useful when the replacement logic depends on several captured parts of the match.
 
-For workflows where text has already been read, or where you want to control reading and writing yourself, see [Working with text](working-with-text.html).
+For workflows where text has already been read, or where you want to control reading and writing yourself, see the [working with text article](working-with-text.html).
 
 ## Use `seek()` and `seekr()`
 
@@ -326,7 +324,6 @@ Individual fields can be accessed with `field()`.
 ```{r inspect3}
 field(x, "match")
 field(x, "replacement")
-field(x, "path")
 ```
 
 Use `summary()` to get a compact overview of the matches and planned replacements.
@@ -338,12 +335,12 @@ summary(x)
 Use `print()` to inspect matches with surrounding context and preview replacements before modifying files.
 
 ```{r print}
-print(x, context = c(2L, 1L))
+print(x, context = c(0L, 3L))
 ```
 
 In terminals that support OSC8 hyperlinks, printed file locations can also be clickable.
 
-For more on why `seekr` represents search results this way, see [Design choices](design-choices.html).
+For more on why `seekr` represents search results this way, see the [design choices article](design-choices.html).
 
 ## Filter matches
 
@@ -360,23 +357,17 @@ xf <- x |> filter_match(!grepl("safe", match))
 xf
 ```
 
-The result is still a `seekr_match` vector, so it can be printed, summarized, modified, or passed to `replace_files()`.
-
-```{r print_filter_match}
-print(xf, context = c(2L, 1L))
-```
-
 ## Use tabular workflows
 
 For many workflows, `filter_match()` and `field()` are enough.
 
-For more complex operations, it can be useful to convert a `seekr_match` vector to a tibble, work with it using tabular tools, and then convert it back to a `seekr_match` vector before replacing files.
+For more complex operations, it can be useful to convert a `seekr_match` vector to a a data frame, work with it using tabular tools, and then convert it back to a `seekr_match` vector before replacing files.
 
-This is especially useful for grouped summaries, joins, group-aware filtering, or replacement logic that is easier to express with `dplyr`.
+This is especially useful for grouped summaries, joins, group-aware filtering, or replacement logic that might be easier to express in a tabular workflow.
 
-When converting back, `as_match()` validates that the tibble still contains the fields required to reconstruct a valid `seekr_match` vector. This makes it possible to use tabular workflows while still returning to the main `seekr` replacement workflow.
+When converting back, `as_match()` validates that the data frame still contains the fields required to reconstruct a valid `seekr_match` vector. This makes it possible to use tabular workflows while still returning to the main `seekr` replacement workflow.
 
-For examples, see the `as_match()` documentation and the article [Tabular workflows](tabular-workflows.html).
+For examples, see the `as_match()` documentation and the [tabular workflows article](tabular-workflows.html).
 
 ## Update replacements after inspection
 
@@ -385,23 +376,15 @@ You do not need to decide every replacement when searching.
 The `replacement` field can be set or updated after matches have been inspected or filtered.
 
 ```{r update_replacement}
-first_path <- field(xf, "path")[[1L]]
-repl <- field(xf, "replacement")
-
-field(xf, "replacement") <- ifelse(
-  field(xf, "path") == first_path,
-  toupper(repl),
-  tolower(repl)
-)
-
-print(xf, context = c(2L, 1L))
+field(xf, "replacement") = toupper(field(xf, "replacement"))
+print(xf, context = c(0, 2))
 ```
 
 This makes it possible to search broadly, inspect the result, keep only the matches that matter, and then decide what each selected match should become.
 
 ## Replace selected matches
 
-**Important:** `replace_files()` writes modified files in UTF-8. If you need to control how files are written, use the workflow described in [Working with text](working-with-text.html).
+**Important:** `replace_files()` writes modified files in UTF-8. If you need to control how files are written, use the workflow described in the [working with text article](working-with-text.html).
 
 When the selected matches and replacements look right, we can call `replace_files()` which starts from the current `seekr_match` vector.
 
@@ -414,14 +397,17 @@ If you created several `seekr_match` vectors from the same file state, combine t
 By default, `backup = TRUE`, so each file that will be modified is backed up before it is written. A `description` can be provided to make the backup easier to identify later. The backup directory can also be changed with `backup_dir` or the `seekr.backup_dir` option.
 
 ```{r replace_files}
-replaced <- replace_files(xf, description = "Inverse function names")
-replaced
+replace_files(
+  xf, 
+  description = "Inverse function names"
+)
 ```
 
-After replacement, we can search again.
+We can now see that our matches have been replaced.
 
 ```{r}
-seekr("([a-z]+)_([a-z]+)(?= <- function)") |> print(context = c(0L, 3L))
+seekr("(?i)([a-z]+)_([a-z]+)(?= <- function)") |> 
+  print(context = c(0L, 3L))
 ```
 
 ## Restore files
@@ -453,7 +439,7 @@ After restoring, the original matches are back.
 
 ```{r}
 after_restore <- seekr("([a-z]+)_([a-z]+)(?= <- function)")
-print(after_restore, context = c(2L, 1L))
+print(after_restore, context = c(0L, 3L))
 ```
 
 ```{r cleaning, include = FALSE, eval = FALSE}

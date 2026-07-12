@@ -50,9 +50,9 @@ In real projects, search-and-replace often raises questions beyond finding a pat
 - **Replace selected matches** with `replace_files()`. Starting from a `seekr_match` vector, `replace_files()` checks that each affected file still has the same text that was searched, then replaces only the matches still present in the vector with their corresponding replacements.
 - **Inspect and restore backups** with `list_backups()`, `last_backup()`, `restore_files()`, and `restore_files_interactive()`. Review automatic backups and recover previous file contents if something did not go as expected.
 
-For more advanced workflows, a `seekr_match` vector can also be converted to a tibble with `as_tibble()` and converted back with `as_match()`. This can make it easier to create custom summaries, filter matches, or prepare replacements with grouped operations. See the [tabular workflows article](https://smartiing.github.io/seekr/articles/tabular-workflows.html) for a detailed example.
+For more advanced workflows, a `seekr_match` vector can also be converted to a data frame and converted back with `as_match()`. This can make it easier to create custom summaries, filter matches, or prepare replacements with grouped operations. For a detailed example, see the [tabular workflows article](https://smartiing.github.io/seekr/articles/tabular-workflows.html).
 
-If your text does not come directly from files, or if you want to control reading and writing yourself, see [working with text article](https://smartiing.github.io/seekr/articles/working-with-text.html).
+If your text does not come directly from files, or if you want to control reading and writing yourself, see the [working with text article](https://smartiing.github.io/seekr/articles/working-with-text.html).
 
 For larger repositories or performance-sensitive searches, see the [performance notes article](https://smartiing.github.io/seekr/articles/performance-note.html).
 
@@ -155,18 +155,18 @@ Matches can be filtered without reading the files again. Here, we remove matches
 
 ```{r}
 x <- filter_match(x, !grepl("safe", match))
-print(x, context = c(0L, 3L))
+print(x, context = c(0L, 2L))
 ```
 
 Replacements can also be set/updated after inspection. Here, we convert the replacement to upper case and preview the result.
 
 ```{r}
 field(x, "replacement") = toupper(field(x, "replacement"))
-print(x, context = c(0, 3))
+print(x, context = c(0, 2))
 ```
 
 ### Replace selected matches
-Now that they are ready, we can apply our selected replacements. `replace_files()` starts from the current `seekr_match` vector and replaces only the matches still present in that vector, each with its corresponding replacement.
+Now that our vector is ready, we can use it to replaces only the match still present, each with its corresponding replacement.
 
 Before writing, `replace_files()` checks that every selected match has a replacement and that the hash of each affected file still matches the hash recorded when the `seekr_match` vector was created. If a file has changed since the search, replacement stops and the search should be run again on the current file contents.
 
@@ -174,7 +174,7 @@ Before writing, `replace_files()` checks that every selected match has a replace
 replace_files(x)
 ```
 
-In this example, the replacement strings still match `mypattern` if we ignore the case. This lets us search again and verify that the three selected matches were replaced, while the two excluded matches were left unchanged.
+In this example, the replacement strings still match `my_pattern` if we ignore the case. This lets us search again and verify that the three selected matches were replaced, while the two excluded matches were left unchanged.
 
 ```{r}
 seekr(regex(my_pattern, ignore_case = TRUE))
@@ -205,7 +205,7 @@ Once the files have been restored, the original files are back.
 ```{r}
 x_restored <- seekr(my_pattern, my_replacement)
 identical(y, x_restored)
-print(x_restored, context = c(0, 2))
+print(x_restored)
 ```
 
 ### Pipe workflow

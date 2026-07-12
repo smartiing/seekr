@@ -33,10 +33,7 @@ to let users:
 - filter to keep a subset of the matches;
 - replace only the remaining matches, safely.
 
-More generally, the result needed to expose the information captured for each
-match, so users could use it for their own workflows. This includes understanding
-what was matched and where, filtering matches more precisely, summarizing search
-results, or preparing and updating replacements using the context and other captured fields.
+More generally, the result needed to expose the information captured for each match, so users could use it for their own workflows. This includes understanding what was matched and where, filtering matches more precisely, summarizing search results, or preparing and updating replacements using the context and other captured fields.
 
 The `seekr_match` vector is the object that came out of these requirements. It
 allows workflows like this:
@@ -54,133 +51,72 @@ replace_files(x)
 
 ## Why a match vector?
 
-Search-and-replace is often treated as a single operation: find all occurrences
-of a pattern and replace them immediately.
+Search-and-replace is often treated as a single operation: find all occurrences of a pattern and replace them immediately.
 
-`seekr` splits this into separate steps. A user can search first, inspect the
-matches, filter out false positives, update replacements, and only then write
-changes to disk.
+`seekr` splits this into separate steps. A user can search first, inspect the matches, filter out false positives, update replacements, and only then write changes to disk.
 
-That workflow requires the search result to remain usable as an object after the
-search. It must be possible to subset it, combine it, print it, summarize it,
-convert it to a tibble, update planned replacements, and eventually pass it to
-`replace_files()`.
+That workflow requires the search result to remain usable as an object after the search. It must be possible to subset it, combine it, print it, summarize it, update planned replacements, and eventually pass it to `replace_files()`.
 
 This is why `seekr` represents search results as a vector of matches.
 
-Each element of the vector represents one match. The vector abstraction makes the
-common operations simple: subsetting keeps matches, concatenating combines
-matches, and filtering removes matches. The object can behave like a vector while
-still storing the metadata needed for inspection and replacement.
+Each element of the vector represents one match. The vector abstraction makes the common operations simple: subsetting keeps matches, concatenating combines matches, and filtering removes matches. The object can behave like a vector while still storing the metadata needed for inspection and replacement.
 
 ## Designs considered
 
-Before settling on the `seekr_match` vector, a few alternative designs were
-considered. The two most important were returning a data frame and returning a
-file-centric object.
+Before settling on the `seekr_match` vector, a few alternative designs were considered. The two most important were returning a data frame and returning a file-centric object.
 
 ### Why not a data frame?
 
-A data frame was the most obvious alternative. It is familiar to R users, easy to
-inspect, and useful for tabular workflows.
+A data frame was the most obvious alternative. It is familiar to R users, easy to inspect, and useful for tabular workflows.
 
-`seekr` supports this workflow through `as_tibble()` and `as_match()`, so users
-can move to and from a tibble when that representation is convenient. See
-[Tabular workflows](tabular-workflows.html) for examples.
+`seekr` supports this workflow through `as.data.frame` / `as_tibble()` and `as_match()`, so users can move to and from a data frame when that representation is convenient. See the [Tabular workflows article](tabular-workflows.html) for examples.
 
 But a data frame is not the right core representation for `seekr`.
 
-Most fields in a match should not be edited directly by the user. Fields such as
-`path`, `start`, `end`, `match`, `line`, `encoding`, and `hash` describe what was
-found. They are part of the recorded search result. In normal use, the only field
-users are expected to modify is `replacement`.
+Most fields in a match should not be edited directly by the user. Fields such as `path`, `start`, `end`, `match`, `line`, `encoding`, and `hash` describe what was found. They are part of the recorded search result. In normal use, the only field users are expected to modify is `replacement`.
 
-In a data frame, all columns feel equally editable. A `seekr_match` vector makes
-the intended abstraction clearer: the object is a collection of matches, not a
-regular table of analysis variables.
+In a data frame, all columns feel equally editable. A `seekr_match` vector makes the intended abstraction clearer: the object is a collection of matches, not a regular table of analysis variables.
 
-Printing is also not naturally tabular. The useful output for a search result
-groups matches by file, shows context, highlights the matched text, and previews
-planned replacements.
+Printing is also not naturally tabular. The useful output for a search result groups matches by file, shows context, highlights the matched text, and previews planned replacements.
 
-Finally, a `seekr_match` vector can preserve invariants that would be easier to
-break in a plain data frame. It can behave like a vector while still keeping the
-fields required for safe replacement together.
+Finally, a `seekr_match` vector can preserve invariants that would be easier to break in a plain data frame. It can behave like a vector while still keeping the fields required for safe replacement together.
 
 ### Why not a file-centric object?
 
-Another possible design was a file-centric object: one object per file, with the
-matches nested inside each file.
+Another possible design was a file-centric object: one object per file, with the matches nested inside each file.
 
-This would mirror the structure of the input files, and it has some attractive
-properties. Search happens in files, so grouping by file is natural. Information
-shared by all matches in a file, such as the path, encoding, or full text, could
-also live once at the file level.
+This would mirror the structure of the input files, and it has some attractive properties. Search happens in files, so grouping by file is natural. Information shared by all matches in a file, such as the path, encoding, or full text, could also live once at the file level.
 
-But having a list of file objects as the result of a search would make the 
-user-facing workflow harder to understand and to manipulate. Filtering individual 
-matches would require working inside a nested structure. Updating replacements 
-would mean modifying matches inside file objects. Combining results from several 
-searches would raise questions about how file-level objects should be merged.
+But having a list of file objects as the result of a search would make the user-facing workflow harder to understand and to manipulate. Filtering individual matches would require working inside a nested structure. Updating replacements would mean modifying matches inside file objects. Combining results from several searches would raise questions about how file-level objects should be merged.
 
-It would also make common match-level questions more complex. For example,
-keeping only matches whose surrounding context contains a specific word should be
-a simple filtering operation. In a file-centric object, context would either need
-to live inside nested matches, or be recomputed from file-level text. Both options
-make the object harder to reason about.
+It would also make common match-level questions more complex. For example, keeping only matches whose surrounding context contains a specific word should be a simple filtering operation. In a file-centric object, context would either need to live inside nested matches, or be recomputed from file-level text. Both options make the object harder to reason about.
 
-`seekr` treats each match as the unit of work. Files still matter, and matches
-still know which file they came from, but the object itself is match-centric. If a
-search returns 50 matches across 20 files, the result is a vector of 50 matches.
-This makes common operations simpler: subset matches, concatenate matches, filter
-by matched text or context, update replacements, and replace the selected
-matches.
+`seekr` treats each match as the unit of work. Files still matter, and matches still know which file they came from, but the object itself is match-centric. If a search returns 50 matches across 20 files, the result is a vector of 50 matches. This makes common operations simpler: subset matches, concatenate matches, filter by matched text or context, update replacements, and replace the selected matches.
 
 
 ## Replacing inspected matches safely
 
 The match vector also matters when files are modified.
 
-Many search-and-replace tools show matches first, then run a second search when
-replacement is applied. `seekr` does not work that way. `replace_files()` starts
-from the current `seekr_match` vector and only considers the matches still
-present in that object.
+Many search-and-replace tools show matches first, then run a second search when replacement is applied. `seekr` does not work that way. `replace_files()` starts from the current `seekr_match` vector and only considers the matches still present in that object.
 
-If the user filters out a match, that match is not replaced. If the user changes
-the `replacement` field for one match, that match gets its own replacement. The
-replacement step follows the object the user inspected and edited.
+If the user filters out a match, that match is not replaced. If the user changes the `replacement` field for one match, that match gets its own replacement. The replacement step follows the object the user inspected and edited.
 
-To make this safe, `seekr` records a hash of the searched text when a
-`seekr_match` vector is created. When replacements are applied, the hash of the
-current text is computed again: `replace_files()` re-reads the file before
-writing, and `replace_text()` checks the text supplied by the user.
+To make this safe, `seekr` records a hash of the searched text when a `seekr_match` vector is created. When replacements are applied, the hash of the current text is computed again: `replace_files()` re-reads the file before writing, and `replace_text()` checks the text supplied by the user.
 
-If the hash has changed, `seekr` refuses to apply the replacements. This is
-strict by design: the goal is not to guess whether recorded positions are still
-probably safe, but to ensure that replacements are applied only to the exact text
-that was searched and inspected.
+If the hash has changed, `seekr` refuses to apply the replacements. This is strict by design: the goal is not to guess whether recorded positions are still probably safe, but to ensure that replacements are applied only to the exact text that was searched and inspected.
 
-The consequence is simple: if the text changed, search again and create a new
-`seekr_match` vector. This also means that `seekr` is not designed for sources
-that are continuously changing, such as log files receiving new lines every few
-seconds. This is an acceptable trade-off for a workflow focused on inspection,
-control, and safe replacement.
+The consequence is simple: if the text changed, search again and create a new `seekr_match` vector. This also means that `seekr` is not designed for sources that are continuously changing, such as log files receiving new lines every few seconds. This is an acceptable trade-off for a workflow focused on inspection, control, and safe replacement.
 
 
 ## Encoding
 
 Encoding is another place where `seekr` chooses an explicit design.
 
-When files are searched, the encoding used to read each file is recorded in the
-`seekr_match` vector. When replacements are applied with `replace_files()`,
-modified files are written as UTF-8.
+When files are searched, the encoding used to read each file is recorded in the `seekr_match` vector. When replacements are applied with `replace_files()`, modified files are written as UTF-8.
 
-By default, `replace_files()` refuses to silently rewrite a non-UTF-8 file as
-UTF-8. The user has to make that choice explicitly.
+By default, `replace_files()` refuses to silently rewrite a non-UTF-8 file as UTF-8. The user has to make that choice explicitly.
 
-This is a trade-off. `seekr` does not try to be a universal
-encoding-preserving editor. Instead, it makes encoding changes visible and
-deliberate.
+This is a trade-off. `seekr` does not try to be a universal encoding-preserving editor. Instead, it makes encoding changes visible and deliberate.
 
-If the user needs full control over reading and writing text, they can use the
-text-level workflow described in [Working with text](working-with-text.html).
+If the user needs full control over reading and writing text, they can use the text-level workflow described in the [working with text article](working-with-text.html).
