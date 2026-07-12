@@ -17,22 +17,6 @@ that
 [`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md)
 uses later to verify the file has not changed.
 
-This is what makes the following workflow possible:
-
-``` r
-
-library(seekr)
-
-x <- seekr("foo|bar", toupper)
-
-summary(x)
-print(x, context = 2)
-
-x <- filter_match(x, !grepl("/generated/", path))
-
-replace_files(x)
-```
-
 The cost is real. `seekr` reads each file as a complete string, builds a
 structured R object for every match, and does all of this sequentially
 in a single R process. For most source code projects this is not a
@@ -63,15 +47,16 @@ repositories is to start with Git-aware file discovery:
 ``` r
 
 files <- list_files(use_git = TRUE)
+x <- seek("pattern", use_git = TRUE)
 ```
 
 ### Pre-filter with ripgrep
 
-[`ripgrep`](https://github.com/burntsushi/ripgrep) is not managed by
-`seekr`: installing it, making it available on your system `PATH`, and
-dealing with platform-specific command-line details are left to the
-user. The goal here is only to show a possible pattern for advanced
-users with heavy workloads and willing to use
+**Note**: [`ripgrep`](https://github.com/burntsushi/ripgrep) is not
+managed by `seekr`: installing it, making it available on your system
+`PATH`, and dealing with platform-specific command-line details are left
+to the user. The goal here is only to show a possible pattern for
+advanced users with heavy workloads and willing to use
 [`ripgrep`](https://github.com/burntsushi/ripgrep) for performance.
 
 If the main bottleneck is the number of files or volume of data, you can
@@ -85,14 +70,14 @@ files contain the pattern, then pass only those files to
 pattern <- "function"
 path <- system.file("extdata", package = "seekr")
 
-files_with_a_match <- system2(
+# List the files with at least a match
+files <- system2(
   command = "rg",
   args = c("-l", shQuote(pattern), shQuote(path)),
   stdout = TRUE
 )
 
-x <- match_files(files_with_a_match, pattern, toupper)
-x
+x <- match_files(files, pattern, toupper)
 ```
 
 This keeps `seekr`’s structured match objects while offloading the

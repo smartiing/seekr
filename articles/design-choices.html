@@ -134,9 +134,8 @@ first, inspect the matches, filter out false positives, update
 replacements, and only then write changes to disk.</p>
 <p>That workflow requires the search result to remain usable as an
 object after the search. It must be possible to subset it, combine it,
-print it, summarize it, convert it to a tibble, update planned
-replacements, and eventually pass it to
-<code><a href="../reference/replace_files.html">replace_files()</a></code>.</p>
+print it, summarize it, update planned replacements, and eventually pass
+it to <code><a href="../reference/replace_files.html">replace_files()</a></code>.</p>
 <p>This is why <code>seekr</code> represents search results as a vector
 of matches.</p>
 <p>Each element of the vector represents one match. The vector

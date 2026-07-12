@@ -109,13 +109,12 @@ data frame tools.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/smartiing/seekr" class="external-link">seekr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stringr.tidyverse.org" class="external-link">stringr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seek.html">seek</a></span><span class="op">(</span><span class="st">"([A-Z]+) : (.+$)"</span>, extension <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span></span>
 <span><span class="va">x</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[80]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpU1LiEm/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpJaWtHw/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">server1.log</span> <span style="color: #767676;">[10/40]</span></span></span>
 <span><span class="co">#&gt;  [1] -&gt;  1 <span style="color: #767676;">|</span> 2026-06-30 01:13:45 <span style="color: #00BBBB;">INFO : Starting process</span></span></span>
@@ -135,7 +134,7 @@ data frame tools.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ── &lt;seekr::match[80]&gt; ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpU1LiEm/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpJaWtHw/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Top sources <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt;  • <span style="color: #0000BB;">server1.log</span> : 40 <span style="color: #767676;">(50.0%)</span></span></span>
@@ -158,139 +157,50 @@ data frame tools.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Top encoding <span style="color: #767676;">[1]</span></span></span>
 <span><span class="co">#&gt;  • UTF-8 : 80 <span style="color: #767676;">(100.0%)</span></span></span></code></pre></div>
-<p>The summary gives a compact overview of the matches, affected files,
-extensions, and match/replacement combinations but only the first 10
-elements are printed. Here are all of them.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ── &lt;seekr::match[80]&gt; ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpU1LiEm/seekr-example/extdata</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Top sources <span style="color: #767676;">[2]</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #0000BB;">server1.log</span> : 40 <span style="color: #767676;">(50.0%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #0000BB;">server2.log</span> : 40 <span style="color: #767676;">(50.0%)</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Top matches <span style="color: #767676;">[31]</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">INFO : Timeout reached</span><span style="color: #767676;">&gt;</span>           : 8 <span style="color: #767676;">(10.0%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">DEBUG : Disk usage high</span><span style="color: #767676;">&gt;</span>          : 6 <span style="color: #767676;">( 7.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">ERROR : Retrying request</span><span style="color: #767676;">&gt;</span>         : 6 <span style="color: #767676;">( 7.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">ERROR : Starting process</span><span style="color: #767676;">&gt;</span>         : 5 <span style="color: #767676;">( 6.2%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">INFO : User login failed</span><span style="color: #767676;">&gt;</span>         : 5 <span style="color: #767676;">( 6.2%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">DEBUG : Failed to authenticate</span><span style="color: #767676;">&gt;</span>   : 3 <span style="color: #767676;">( 3.8%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">DEBUG : Loading config</span><span style="color: #767676;">&gt;</span>           : 3 <span style="color: #767676;">( 3.8%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">ERROR : Restart scheduled</span><span style="color: #767676;">&gt;</span>        : 3 <span style="color: #767676;">( 3.8%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">INFO : Connection successful</span><span style="color: #767676;">&gt;</span>     : 3 <span style="color: #767676;">( 3.8%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">WARNING : Disk usage high</span><span style="color: #767676;">&gt;</span>        : 3 <span style="color: #767676;">( 3.8%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">DEBUG : Connection successful</span><span style="color: #767676;">&gt;</span>    : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">DEBUG : Restart scheduled</span><span style="color: #767676;">&gt;</span>        : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">DEBUG : Retrying request</span><span style="color: #767676;">&gt;</span>         : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">ERROR : Disk usage high</span><span style="color: #767676;">&gt;</span>          : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">ERROR : Failed to authenticate</span><span style="color: #767676;">&gt;</span>   : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">ERROR : Loading config</span><span style="color: #767676;">&gt;</span>           : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">ERROR : Timeout reached</span><span style="color: #767676;">&gt;</span>          : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">INFO : Disk usage high</span><span style="color: #767676;">&gt;</span>           : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">INFO : Loading config</span><span style="color: #767676;">&gt;</span>            : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">INFO : Retrying request</span><span style="color: #767676;">&gt;</span>          : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">WARNING : Connection successful</span><span style="color: #767676;">&gt;</span>  : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">WARNING : Loading config</span><span style="color: #767676;">&gt;</span>         : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">WARNING : Restart scheduled</span><span style="color: #767676;">&gt;</span>      : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">WARNING : Timeout reached</span><span style="color: #767676;">&gt;</span>        : 2 <span style="color: #767676;">( 2.5%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">DEBUG : Starting process</span><span style="color: #767676;">&gt;</span>         : 1 <span style="color: #767676;">( 1.2%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">DEBUG : Timeout reached</span><span style="color: #767676;">&gt;</span>          : 1 <span style="color: #767676;">( 1.2%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">ERROR : Connection successful</span><span style="color: #767676;">&gt;</span>    : 1 <span style="color: #767676;">( 1.2%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">INFO : Restart scheduled</span><span style="color: #767676;">&gt;</span>         : 1 <span style="color: #767676;">( 1.2%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">INFO : Starting process</span><span style="color: #767676;">&gt;</span>          : 1 <span style="color: #767676;">( 1.2%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">WARNING : Failed to authenticate</span><span style="color: #767676;">&gt;</span> : 1 <span style="color: #767676;">( 1.2%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #00BBBB;">WARNING : Starting process</span><span style="color: #767676;">&gt;</span>       : 1 <span style="color: #767676;">( 1.2%)</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Top extension <span style="color: #767676;">[1]</span></span></span>
-<span><span class="co">#&gt;  • log : 80 <span style="color: #767676;">(100.0%)</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Top encoding <span style="color: #767676;">[1]</span></span></span>
-<span><span class="co">#&gt;  • UTF-8 : 80 <span style="color: #767676;">(100.0%)</span></span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="filter-matches-directly">Filter matches directly<a class="anchor" aria-label="anchor" href="#filter-matches-directly"></a>
-</h2>
-<p>For simple filtering, <code><a href="../reference/filter_match.html">filter_match()</a></code> is usually enough.
-It evaluates expressions directly on the fields of the
-<code>seekr_match</code> vector.</p>
-<p>For example, we can keep only <code>DEBUG</code> lines.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">xf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_match.html">filter_match</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">match</span>, <span class="st">"^DEBUG"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>At this point, <code>xf</code> is simply our <code>seekr_match</code>
-vector, filtered.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">xf</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;seekr::match[20]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpU1LiEm/seekr-example/extdata</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">server1.log</span> <span style="color: #767676;">[12]</span></span></span>
-<span><span class="co">#&gt;  [1] -&gt;  2 <span style="color: #767676;">|</span> 2026-06-30 15:35:57 <span style="color: #00BBBB;">DEBUG : Disk usage high</span></span></span>
-<span><span class="co">#&gt;  [2] -&gt;  6 <span style="color: #767676;">|</span> 2026-06-30 17:03:42 <span style="color: #00BBBB;">DEBUG : Connection successful</span></span></span>
-<span><span class="co">#&gt;  [3] -&gt;  7 <span style="color: #767676;">|</span> 2026-07-01 00:54:56 <span style="color: #00BBBB;">DEBUG : Restart scheduled</span></span></span>
-<span><span class="co">#&gt;  [4] -&gt; 12 <span style="color: #767676;">|</span> 2026-06-30 17:34:23 <span style="color: #00BBBB;">DEBUG : Timeout reached</span></span></span>
-<span><span class="co">#&gt;  [5] -&gt; 14 <span style="color: #767676;">|</span> 2026-06-30 18:02:47 <span style="color: #00BBBB;">DEBUG : Disk usage high</span></span></span>
-<span><span class="co">#&gt;  [6] -&gt; 19 <span style="color: #767676;">|</span> 2026-06-30 03:38:08 <span style="color: #00BBBB;">DEBUG : Loading config</span></span></span>
-<span><span class="co">#&gt;  [7] -&gt; 20 <span style="color: #767676;">|</span> 2026-06-29 23:18:24 <span style="color: #00BBBB;">DEBUG : Disk usage high</span></span></span>
-<span><span class="co">#&gt;  [8] -&gt; 24 <span style="color: #767676;">|</span> 2026-06-30 07:41:37 <span style="color: #00BBBB;">DEBUG : Restart scheduled</span></span></span>
-<span><span class="co">#&gt;  [9] -&gt; 25 <span style="color: #767676;">|</span> 2026-06-30 09:38:10 <span style="color: #00BBBB;">DEBUG : Disk usage high</span></span></span>
-<span><span class="co">#&gt; [10] -&gt; 28 <span style="color: #767676;">|</span> 2026-06-29 22:58:20 <span style="color: #00BBBB;">DEBUG : Disk usage high</span></span></span>
-<span><span class="co">#&gt; [11] -&gt; 31 <span style="color: #767676;">|</span> 2026-06-30 03:04:51 <span style="color: #00BBBB;">DEBUG : Loading config</span></span></span>
-<span><span class="co">#&gt; [12] -&gt; 38 <span style="color: #767676;">|</span> 2026-06-30 19:08:53 <span style="color: #00BBBB;">DEBUG : Starting process</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">server2.log</span> <span style="color: #767676;">[8]</span></span></span>
-<span><span class="co">#&gt; [13] -&gt;  5 <span style="color: #767676;">|</span> 2026-06-30 02:03:55 <span style="color: #00BBBB;">DEBUG : Retrying request</span></span></span>
-<span><span class="co">#&gt; [14] -&gt;  7 <span style="color: #767676;">|</span> 2026-07-01 00:05:54 <span style="color: #00BBBB;">DEBUG : Failed to authenticate</span></span></span>
-<span><span class="co">#&gt; [15] -&gt; 10 <span style="color: #767676;">|</span> 2026-06-30 02:19:35 <span style="color: #00BBBB;">DEBUG : Loading config</span></span></span>
-<span><span class="co">#&gt; [16] -&gt; 20 <span style="color: #767676;">|</span> 2026-06-30 12:13:34 <span style="color: #00BBBB;">DEBUG : Failed to authenticate</span></span></span>
-<span><span class="co">#&gt; [17] -&gt; 30 <span style="color: #767676;">|</span> 2026-06-30 00:15:00 <span style="color: #00BBBB;">DEBUG : Disk usage high</span></span></span>
-<span><span class="co">#&gt; [18] -&gt; 33 <span style="color: #767676;">|</span> 2026-06-30 11:03:55 <span style="color: #00BBBB;">DEBUG : Retrying request</span></span></span>
-<span><span class="co">#&gt; [19] -&gt; 35 <span style="color: #767676;">|</span> 2026-06-30 04:43:43 <span style="color: #00BBBB;">DEBUG : Failed to authenticate</span></span></span>
-<span><span class="co">#&gt; [20] -&gt; 36 <span style="color: #767676;">|</span> 2026-06-30 16:12:44 <span style="color: #00BBBB;">DEBUG : Connection successful</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="convert-to-a-tibble">Convert to a tibble<a class="anchor" aria-label="anchor" href="#convert-to-a-tibble"></a>
 </h2>
-<p>For more complex inspection, convert the match vector to a tibble and
-put the path at the end for display reasons.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">xdf</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="va">xf</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html" class="external-link">relocate</a></span><span class="op">(</span><span class="va">path</span>, .after <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">last_col</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<p>For simple filtering, <code><a href="../reference/filter_match.html">filter_match()</a></code> is usually enough.
+Let’s keep only the <code>DEBUG</code> lines and convert our vector to a
+data frame.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="va">x</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/filter_match.html">filter_match</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">match</span>, <span class="st">"^DEBUG"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">xdf</span></span>
+<span><span class="va">df</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 20 × 14</span></span></span>
-<span><span class="co">#&gt;    start_line end_line start   end start_col end_col match                          replacement before                line  after encoding hash  path </span></span>
-<span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>          2        2    65    87        21      43 DEBUG : Disk usage high        <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 01:13:45… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>          6        6   245   273        21      49 DEBUG : Connection successful  <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 01:13:45… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>          7        7   295   319        21      45 DEBUG : Restart scheduled      <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 15:35:57… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>         12       12   514   536        21      43 DEBUG : Timeout reached        <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-07-01 00:54:56… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>         14       14   602   624        21      43 DEBUG : Disk usage high        <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 21:24:23… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>         19       19   831   852        21      42 DEBUG : Loading config         <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 18:02:47… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>         20       20   874   896        21      43 DEBUG : Disk usage high        <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 15:51:48… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>         24       24  <span style="text-decoration: underline;">1</span>055  <span style="text-decoration: underline;">1</span>079        21      45 DEBUG : Restart scheduled      <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 03:38:08… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>         25       25  <span style="text-decoration: underline;">1</span>101  <span style="text-decoration: underline;">1</span>123        21      43 DEBUG : Disk usage high        <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-29 23:18:24… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>         28       28  <span style="text-decoration: underline;">1</span>234  <span style="text-decoration: underline;">1</span>256        21      43 DEBUG : Disk usage high        <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 12:00:01… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>         31       31  <span style="text-decoration: underline;">1</span>366  <span style="text-decoration: underline;">1</span>387        21      42 DEBUG : Loading config         <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 14:59:05… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>         38       38  <span style="text-decoration: underline;">1</span>686  <span style="text-decoration: underline;">1</span>709        21      44 DEBUG : Starting process       <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 11:14:29… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span>          5        5   211   234        21      44 DEBUG : Retrying request       <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 12:51:40… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span>          7        7   299   328        21      50 DEBUG : Failed to authenticate <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 10:39:57… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span>         10       10   442   463        21      42 DEBUG : Loading config         <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 02:03:55… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span>         20       20   903   932        21      50 DEBUG : Failed to authenticate <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 00:39:03… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span>         30       30  <span style="text-decoration: underline;">1</span>364  <span style="text-decoration: underline;">1</span>386        21      43 DEBUG : Disk usage high        <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 21:38:09… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span>         33       33  <span style="text-decoration: underline;">1</span>496  <span style="text-decoration: underline;">1</span>519        21      44 DEBUG : Retrying request       <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-29 23:53:42… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span>         35       35  <span style="text-decoration: underline;">1</span>585  <span style="text-decoration: underline;">1</span>614        21      50 DEBUG : Failed to authenticate <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 00:15:00… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span>         36       36  <span style="text-decoration: underline;">1</span>636  <span style="text-decoration: underline;">1</span>664        21      49 DEBUG : Connection successful  <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026-06-30 19:27:14… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…</span></span></code></pre></div>
+<span><span class="co">#&gt;    path                                          start_line end_line start   end start_col end_col match replacement before line  after encoding hash </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…          2        2    65    87        21      43 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…          6        6   245   273        21      49 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…          7        7   295   319        21      45 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         12       12   514   536        21      43 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         14       14   602   624        21      43 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         19       19   831   852        21      42 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         20       20   874   896        21      43 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         24       24  <span style="text-decoration: underline;">1</span>055  <span style="text-decoration: underline;">1</span>079        21      45 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         25       25  <span style="text-decoration: underline;">1</span>101  <span style="text-decoration: underline;">1</span>123        21      43 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         28       28  <span style="text-decoration: underline;">1</span>234  <span style="text-decoration: underline;">1</span>256        21      43 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         31       31  <span style="text-decoration: underline;">1</span>366  <span style="text-decoration: underline;">1</span>387        21      42 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         38       38  <span style="text-decoration: underline;">1</span>686  <span style="text-decoration: underline;">1</span>709        21      44 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…          5        5   211   234        21      44 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…          7        7   299   328        21      50 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         10       10   442   463        21      42 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         20       20   903   932        21      50 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         30       30  <span style="text-decoration: underline;">1</span>364  <span style="text-decoration: underline;">1</span>386        21      43 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         33       33  <span style="text-decoration: underline;">1</span>496  <span style="text-decoration: underline;">1</span>519        21      44 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         35       35  <span style="text-decoration: underline;">1</span>585  <span style="text-decoration: underline;">1</span>614        21      50 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server…         36       36  <span style="text-decoration: underline;">1</span>636  <span style="text-decoration: underline;">1</span>664        21      49 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05…</span></span></code></pre></div>
 <p>This gives one row per match and one column per field, which makes
 grouped summaries easy.</p>
-<p>For example, we could create a custom summary per file where we see
-the number of matches and distinct matches as well as the first and last
-lines where we find a match.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">xdf</span> <span class="op">|&gt;</span></span>
+<p>For example, we could create a custom summary per file for
+<code>DEBUG</code> lines where we see the number of matches and distinct
+matches as well as the first and last lines where we find a match.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span></span>
 <span>    n_matches <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    n_distinct_matches <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">match</span><span class="op">)</span>,</span>
@@ -301,8 +211,8 @@ lines where we find a match.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 5</span></span></span>
 <span><span class="co">#&gt;   path                                              n_matches n_distinct_matches first_line last_line</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> /tmp/RtmpU1LiEm/seekr-example/extdata/server1.log        12                  6          2        38</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> /tmp/RtmpU1LiEm/seekr-example/extdata/server2.log         8                  5          5        36</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server1.log        12                  6          2        38</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> /tmp/RtmpJaWtHw/seekr-example/extdata/server2.log         8                  5          5        36</span></span></code></pre></div>
 <p>This kind of question is often easier to answer with a tibble than
 with the match vector directly.</p>
 </div>
@@ -312,10 +222,10 @@ with the match vector directly.</p>
 <p>A tabular workflow is also useful when filtering depends on
 group-level information.</p>
 <p>For example, suppose we only want to keep the latest occurrence of
-each distinct log message in each file.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+each distinct <code>DEBUG</code> log message in each file.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">latest</span> <span class="op">&lt;-</span></span>
-<span>  <span class="va">xdf</span> <span class="op">|&gt;</span></span>
+<span>  <span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    match_rank_from_end <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">start_line</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">path</span>, <span class="va">match</span><span class="op">)</span></span>
@@ -324,39 +234,19 @@ each distinct log message in each file.</p>
 <span></span>
 <span><span class="va">latest</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 11 × 15</span></span></span>
-<span><span class="co">#&gt;    start_line end_line start   end start_col end_col match                     replacement before line  after encoding hash  path  match_rank_from_end</span></span>
-<span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>          6        6   245   273        21      49 DEBUG : Connection succe… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>         12       12   514   536        21      43 DEBUG : Timeout reached   <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>         24       24  <span style="text-decoration: underline;">1</span>055  <span style="text-decoration: underline;">1</span>079        21      45 DEBUG : Restart scheduled <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>         28       28  <span style="text-decoration: underline;">1</span>234  <span style="text-decoration: underline;">1</span>256        21      43 DEBUG : Disk usage high   <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>         31       31  <span style="text-decoration: underline;">1</span>366  <span style="text-decoration: underline;">1</span>387        21      42 DEBUG : Loading config    <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>         38       38  <span style="text-decoration: underline;">1</span>686  <span style="text-decoration: underline;">1</span>709        21      44 DEBUG : Starting process  <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>         10       10   442   463        21      42 DEBUG : Loading config    <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>         30       30  <span style="text-decoration: underline;">1</span>364  <span style="text-decoration: underline;">1</span>386        21      43 DEBUG : Disk usage high   <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>         33       33  <span style="text-decoration: underline;">1</span>496  <span style="text-decoration: underline;">1</span>519        21      44 DEBUG : Retrying request  <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>         35       35  <span style="text-decoration: underline;">1</span>585  <span style="text-decoration: underline;">1</span>614        21      50 DEBUG : Failed to authen… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>         36       36  <span style="text-decoration: underline;">1</span>636  <span style="text-decoration: underline;">1</span>664        21      49 DEBUG : Connection succe… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…                   1</span></span></code></pre></div>
-<p>We can also continue filtering with regular <code>dplyr</code>
-expressions. Here, we remove messages mentioning connections.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">latest</span> <span class="op">&lt;-</span></span>
-<span>  <span class="va">latest</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter_out</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">match</span>, <span class="st">"Connection"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">latest</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 15</span></span></span>
-<span><span class="co">#&gt;   start_line end_line start   end start_col end_col match                      replacement before line  after encoding hash  path  match_rank_from_end</span></span>
-<span><span class="co">#&gt;        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>         12       12   514   536        21      43 DEBUG : Timeout reached    <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>         24       24  <span style="text-decoration: underline;">1</span>055  <span style="text-decoration: underline;">1</span>079        21      45 DEBUG : Restart scheduled  <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>         28       28  <span style="text-decoration: underline;">1</span>234  <span style="text-decoration: underline;">1</span>256        21      43 DEBUG : Disk usage high    <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>         31       31  <span style="text-decoration: underline;">1</span>366  <span style="text-decoration: underline;">1</span>387        21      42 DEBUG : Loading config     <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>         38       38  <span style="text-decoration: underline;">1</span>686  <span style="text-decoration: underline;">1</span>709        21      44 DEBUG : Starting process   <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>         10       10   442   463        21      42 DEBUG : Loading config     <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span>         30       30  <span style="text-decoration: underline;">1</span>364  <span style="text-decoration: underline;">1</span>386        21      43 DEBUG : Disk usage high    <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span>         33       33  <span style="text-decoration: underline;">1</span>496  <span style="text-decoration: underline;">1</span>519        21      44 DEBUG : Retrying request   <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…                   1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span>         35       35  <span style="text-decoration: underline;">1</span>585  <span style="text-decoration: underline;">1</span>614        21      50 DEBUG : Failed to authent… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05… /tmp…                   1</span></span></code></pre></div>
+<span><span class="co">#&gt;    path                      start_line end_line start   end start_col end_col match replacement before line  after encoding hash  match_rank_from_end</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> /tmp/RtmpJaWtHw/seekr-ex…          6        6   245   273        21      49 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…                   1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> /tmp/RtmpJaWtHw/seekr-ex…         12       12   514   536        21      43 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…                   1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> /tmp/RtmpJaWtHw/seekr-ex…         24       24  <span style="text-decoration: underline;">1</span>055  <span style="text-decoration: underline;">1</span>079        21      45 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…                   1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> /tmp/RtmpJaWtHw/seekr-ex…         28       28  <span style="text-decoration: underline;">1</span>234  <span style="text-decoration: underline;">1</span>256        21      43 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…                   1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> /tmp/RtmpJaWtHw/seekr-ex…         31       31  <span style="text-decoration: underline;">1</span>366  <span style="text-decoration: underline;">1</span>387        21      42 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…                   1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> /tmp/RtmpJaWtHw/seekr-ex…         38       38  <span style="text-decoration: underline;">1</span>686  <span style="text-decoration: underline;">1</span>709        21      44 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    88aa…                   1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> /tmp/RtmpJaWtHw/seekr-ex…         10       10   442   463        21      42 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05…                   1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> /tmp/RtmpJaWtHw/seekr-ex…         30       30  <span style="text-decoration: underline;">1</span>364  <span style="text-decoration: underline;">1</span>386        21      43 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05…                   1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> /tmp/RtmpJaWtHw/seekr-ex…         33       33  <span style="text-decoration: underline;">1</span>496  <span style="text-decoration: underline;">1</span>519        21      44 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05…                   1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> /tmp/RtmpJaWtHw/seekr-ex…         35       35  <span style="text-decoration: underline;">1</span>585  <span style="text-decoration: underline;">1</span>614        21      50 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05…                   1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> /tmp/RtmpJaWtHw/seekr-ex…         36       36  <span style="text-decoration: underline;">1</span>636  <span style="text-decoration: underline;">1</span>664        21      49 DEBU… <span style="color: #BB0000;">NA</span>          <span style="color: #949494;">"</span>2026… 2026… <span style="color: #949494;">"</span>202… UTF-8    cb05…                   1</span></span></code></pre></div>
 <p>The extra column <code>match_rank_from_end</code> is useful while
 working as a tibble, but it is not part of a <code>seekr_match</code>
 vector. <code><a href="../reference/as_tibble.seekr_match.html">as_match()</a></code> will ignore extra columns and validate
@@ -369,7 +259,7 @@ the required match fields when converting back.</p>
 replacements.</p>
 <p>Here, we create different replacements depending on the content of
 each match.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">latest</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">latest</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -382,16 +272,17 @@ each match.</p>
 <span></span>
 <span><span class="va">latest</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">match</span>, <span class="va">replacement</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 3</span></span></span>
 <span><span class="co">#&gt;   match                          replacement                        n</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> DEBUG : Disk usage high        DEBUG : DISK USAGE HIGH            2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> DEBUG : Failed to authenticate Debug : Failed To Authenticate     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> DEBUG : Loading config         debug : loading config             2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> DEBUG : Restart scheduled      Debug : Restart Scheduled          1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> DEBUG : Retrying request       Debug : Retrying Request           1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> DEBUG : Starting process       Debug : Starting Process           1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> DEBUG : Timeout reached        Debug : Timeout Reached            1</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> DEBUG : Connection successful  Debug : Connection Successful      2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> DEBUG : Disk usage high        DEBUG : DISK USAGE HIGH            2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> DEBUG : Failed to authenticate Debug : Failed To Authenticate     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> DEBUG : Loading config         debug : loading config             2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> DEBUG : Restart scheduled      Debug : Restart Scheduled          1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> DEBUG : Retrying request       Debug : Retrying Request           1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> DEBUG : Starting process       Debug : Starting Process           1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> DEBUG : Timeout reached        Debug : Timeout Reached            1</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="convert-back-to-a-seekr_match-vector">Convert back to a seekr_match vector<a class="anchor" aria-label="anchor" href="#convert-back-to-a-seekr_match-vector"></a>
@@ -399,122 +290,42 @@ each match.</p>
 <p>Before replacing files, convert the tibble back to a
 <code>seekr_match</code> vector. The result can be printed again with
 replacement previews now that some replacements have been set.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">to_replace</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_tibble.seekr_match.html">as_match</a></span><span class="op">(</span><span class="va">latest</span><span class="op">)</span></span>
 <span><span class="va">to_replace</span></span>
-<span><span class="co">#&gt; &lt;seekr::match[9]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpU1LiEm/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; &lt;seekr::match[11]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpJaWtHw/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">server1.log</span> <span style="color: #767676;">[5]</span></span></span>
-<span><span class="co">#&gt; [1] -- 12 <span style="color: #767676;">|</span> 2026-06-30 17:34:23 <span style="color: #BB0000;">DEBUG : Timeout reached</span></span></span>
-<span><span class="co">#&gt;     ++ 12 <span style="color: #767676;">|</span> 2026-06-30 17:34:23 <span style="color: #00BB00;">Debug : Timeout Reached</span></span></span>
-<span><span class="co">#&gt; [2] -- 24 <span style="color: #767676;">|</span> 2026-06-30 07:41:37 <span style="color: #BB0000;">DEBUG : Restart scheduled</span></span></span>
-<span><span class="co">#&gt;     ++ 24 <span style="color: #767676;">|</span> 2026-06-30 07:41:37 <span style="color: #00BB00;">Debug : Restart Scheduled</span></span></span>
-<span><span class="co">#&gt; [3] -- 28 <span style="color: #767676;">|</span> 2026-06-29 22:58:20 <span style="color: #BB0000;">DEBUG : Disk usage high</span></span></span>
-<span><span class="co">#&gt;     ++ 28 <span style="color: #767676;">|</span> 2026-06-29 22:58:20 <span style="color: #00BB00;">DEBUG : DISK USAGE HIGH</span></span></span>
-<span><span class="co">#&gt; [4] -- 31 <span style="color: #767676;">|</span> 2026-06-30 03:04:51 <span style="color: #BB0000;">DEBUG : Loading config</span></span></span>
-<span><span class="co">#&gt;     ++ 31 <span style="color: #767676;">|</span> 2026-06-30 03:04:51 <span style="color: #00BB00;">debug : loading config</span></span></span>
-<span><span class="co">#&gt; [5] -- 38 <span style="color: #767676;">|</span> 2026-06-30 19:08:53 <span style="color: #BB0000;">DEBUG : Starting process</span></span></span>
-<span><span class="co">#&gt;     ++ 38 <span style="color: #767676;">|</span> 2026-06-30 19:08:53 <span style="color: #00BB00;">Debug : Starting Process</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">server1.log</span> <span style="color: #767676;">[6]</span></span></span>
+<span><span class="co">#&gt;  [1] --  6 <span style="color: #767676;">|</span> 2026-06-30 17:03:42 <span style="color: #BB0000;">DEBUG : Connection successful</span></span></span>
+<span><span class="co">#&gt;      ++  6 <span style="color: #767676;">|</span> 2026-06-30 17:03:42 <span style="color: #00BB00;">Debug : Connection Successful</span></span></span>
+<span><span class="co">#&gt;  [2] -- 12 <span style="color: #767676;">|</span> 2026-06-30 17:34:23 <span style="color: #BB0000;">DEBUG : Timeout reached</span></span></span>
+<span><span class="co">#&gt;      ++ 12 <span style="color: #767676;">|</span> 2026-06-30 17:34:23 <span style="color: #00BB00;">Debug : Timeout Reached</span></span></span>
+<span><span class="co">#&gt;  [3] -- 24 <span style="color: #767676;">|</span> 2026-06-30 07:41:37 <span style="color: #BB0000;">DEBUG : Restart scheduled</span></span></span>
+<span><span class="co">#&gt;      ++ 24 <span style="color: #767676;">|</span> 2026-06-30 07:41:37 <span style="color: #00BB00;">Debug : Restart Scheduled</span></span></span>
+<span><span class="co">#&gt;  [4] -- 28 <span style="color: #767676;">|</span> 2026-06-29 22:58:20 <span style="color: #BB0000;">DEBUG : Disk usage high</span></span></span>
+<span><span class="co">#&gt;      ++ 28 <span style="color: #767676;">|</span> 2026-06-29 22:58:20 <span style="color: #00BB00;">DEBUG : DISK USAGE HIGH</span></span></span>
+<span><span class="co">#&gt;  [5] -- 31 <span style="color: #767676;">|</span> 2026-06-30 03:04:51 <span style="color: #BB0000;">DEBUG : Loading config</span></span></span>
+<span><span class="co">#&gt;      ++ 31 <span style="color: #767676;">|</span> 2026-06-30 03:04:51 <span style="color: #00BB00;">debug : loading config</span></span></span>
+<span><span class="co">#&gt;  [6] -- 38 <span style="color: #767676;">|</span> 2026-06-30 19:08:53 <span style="color: #BB0000;">DEBUG : Starting process</span></span></span>
+<span><span class="co">#&gt;      ++ 38 <span style="color: #767676;">|</span> 2026-06-30 19:08:53 <span style="color: #00BB00;">Debug : Starting Process</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">server2.log</span> <span style="color: #767676;">[4]</span></span></span>
-<span><span class="co">#&gt; [6] -- 10 <span style="color: #767676;">|</span> 2026-06-30 02:19:35 <span style="color: #BB0000;">DEBUG : Loading config</span></span></span>
-<span><span class="co">#&gt;     ++ 10 <span style="color: #767676;">|</span> 2026-06-30 02:19:35 <span style="color: #00BB00;">debug : loading config</span></span></span>
-<span><span class="co">#&gt; [7] -- 30 <span style="color: #767676;">|</span> 2026-06-30 00:15:00 <span style="color: #BB0000;">DEBUG : Disk usage high</span></span></span>
-<span><span class="co">#&gt;     ++ 30 <span style="color: #767676;">|</span> 2026-06-30 00:15:00 <span style="color: #00BB00;">DEBUG : DISK USAGE HIGH</span></span></span>
-<span><span class="co">#&gt; [8] -- 33 <span style="color: #767676;">|</span> 2026-06-30 11:03:55 <span style="color: #BB0000;">DEBUG : Retrying request</span></span></span>
-<span><span class="co">#&gt;     ++ 33 <span style="color: #767676;">|</span> 2026-06-30 11:03:55 <span style="color: #00BB00;">Debug : Retrying Request</span></span></span>
-<span><span class="co">#&gt; [9] -- 35 <span style="color: #767676;">|</span> 2026-06-30 04:43:43 <span style="color: #BB0000;">DEBUG : Failed to authenticate</span></span></span>
-<span><span class="co">#&gt;     ++ 35 <span style="color: #767676;">|</span> 2026-06-30 04:43:43 <span style="color: #00BB00;">Debug : Failed To Authenticate</span></span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="replace-selected-matches">Replace selected matches<a class="anchor" aria-label="anchor" href="#replace-selected-matches"></a>
-</h2>
-<p><code><a href="../reference/replace_files.html">replace_files()</a></code> applies replacements from the current
-<code>seekr_match</code> vector.</p>
-<p>This is important: only the matches still present in
-<code>to_replace</code> are replaced. Matches that were filtered out of
-the tibble workflow are not modified.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">replaced</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/replace_files.html">replace_files</a></span><span class="op">(</span><span class="va">to_replace</span><span class="op">)</span></span>
-<span><span class="va">replaced</span></span>
-<span><span class="co">#&gt; &lt;seekr::match[9]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpU1LiEm/seekr-example/extdata</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">server1.log</span> <span style="color: #767676;">[5]</span></span></span>
-<span><span class="co">#&gt; [1] -- 12 <span style="color: #767676;">|</span> 2026-06-30 17:34:23 <span style="color: #BB0000;">DEBUG : Timeout reached</span></span></span>
-<span><span class="co">#&gt;     ++ 12 <span style="color: #767676;">|</span> 2026-06-30 17:34:23 <span style="color: #00BB00;">Debug : Timeout Reached</span></span></span>
-<span><span class="co">#&gt; [2] -- 24 <span style="color: #767676;">|</span> 2026-06-30 07:41:37 <span style="color: #BB0000;">DEBUG : Restart scheduled</span></span></span>
-<span><span class="co">#&gt;     ++ 24 <span style="color: #767676;">|</span> 2026-06-30 07:41:37 <span style="color: #00BB00;">Debug : Restart Scheduled</span></span></span>
-<span><span class="co">#&gt; [3] -- 28 <span style="color: #767676;">|</span> 2026-06-29 22:58:20 <span style="color: #BB0000;">DEBUG : Disk usage high</span></span></span>
-<span><span class="co">#&gt;     ++ 28 <span style="color: #767676;">|</span> 2026-06-29 22:58:20 <span style="color: #00BB00;">DEBUG : DISK USAGE HIGH</span></span></span>
-<span><span class="co">#&gt; [4] -- 31 <span style="color: #767676;">|</span> 2026-06-30 03:04:51 <span style="color: #BB0000;">DEBUG : Loading config</span></span></span>
-<span><span class="co">#&gt;     ++ 31 <span style="color: #767676;">|</span> 2026-06-30 03:04:51 <span style="color: #00BB00;">debug : loading config</span></span></span>
-<span><span class="co">#&gt; [5] -- 38 <span style="color: #767676;">|</span> 2026-06-30 19:08:53 <span style="color: #BB0000;">DEBUG : Starting process</span></span></span>
-<span><span class="co">#&gt;     ++ 38 <span style="color: #767676;">|</span> 2026-06-30 19:08:53 <span style="color: #00BB00;">Debug : Starting Process</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">server2.log</span> <span style="color: #767676;">[4]</span></span></span>
-<span><span class="co">#&gt; [6] -- 10 <span style="color: #767676;">|</span> 2026-06-30 02:19:35 <span style="color: #BB0000;">DEBUG : Loading config</span></span></span>
-<span><span class="co">#&gt;     ++ 10 <span style="color: #767676;">|</span> 2026-06-30 02:19:35 <span style="color: #00BB00;">debug : loading config</span></span></span>
-<span><span class="co">#&gt; [7] -- 30 <span style="color: #767676;">|</span> 2026-06-30 00:15:00 <span style="color: #BB0000;">DEBUG : Disk usage high</span></span></span>
-<span><span class="co">#&gt;     ++ 30 <span style="color: #767676;">|</span> 2026-06-30 00:15:00 <span style="color: #00BB00;">DEBUG : DISK USAGE HIGH</span></span></span>
-<span><span class="co">#&gt; [8] -- 33 <span style="color: #767676;">|</span> 2026-06-30 11:03:55 <span style="color: #BB0000;">DEBUG : Retrying request</span></span></span>
-<span><span class="co">#&gt;     ++ 33 <span style="color: #767676;">|</span> 2026-06-30 11:03:55 <span style="color: #00BB00;">Debug : Retrying Request</span></span></span>
-<span><span class="co">#&gt; [9] -- 35 <span style="color: #767676;">|</span> 2026-06-30 04:43:43 <span style="color: #BB0000;">DEBUG : Failed to authenticate</span></span></span>
-<span><span class="co">#&gt;     ++ 35 <span style="color: #767676;">|</span> 2026-06-30 04:43:43 <span style="color: #00BB00;">Debug : Failed To Authenticate</span></span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="restore-the-example-files">Restore the example files<a class="anchor" aria-label="anchor" href="#restore-the-example-files"></a>
-</h2>
-<p>The examples above modified files in a temporary directory.
-<code><a href="../reference/replace_files.html">replace_files()</a></code> created a backup before writing, so we can
-restore the previous contents if we need to.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bck</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/backups.html">last_backup</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">bck</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 9</span></span></span>
-<span><span class="co">#&gt;      id created_at          operation description original                                          backup         original_exists backup_exists  size</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;fs:&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1 2026-07-11 <span style="color: #949494;">20:15:27</span> replace   <span style="color: #BB0000;">NA</span>          /tmp/RtmpU1LiEm/seekr-example/extdata/server1.log /tmp/RtmpU1Li… TRUE            TRUE          1.76K</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     1 2026-07-11 <span style="color: #949494;">20:15:27</span> replace   <span style="color: #BB0000;">NA</span>          /tmp/RtmpU1LiEm/seekr-example/extdata/server2.log /tmp/RtmpU1Li… TRUE            TRUE           1.8K</span></span>
-<span><span class="fu"><a href="../reference/restore_files.html">restore_files</a></span><span class="op">(</span>from <span class="op">=</span> <span class="va">bck</span><span class="op">$</span><span class="va">backup</span>, to <span class="op">=</span> <span class="va">bck</span><span class="op">$</span><span class="va">original</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Creating a backup of the current version of each existing destination file before restoring it.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> This ensures you can revert to the state before restoration if needed.</span></span></code></pre></div>
-<p>After restoring, the original matches are back.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">after_restore</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seek.html">seek</a></span><span class="op">(</span><span class="st">"([A-Z]+) : (.+$)"</span>, extension <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">after_restore</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;seekr::match[80]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpU1LiEm/seekr-example/extdata</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">server1.log</span> <span style="color: #767676;">[10/40]</span></span></span>
-<span><span class="co">#&gt;  [1] -&gt;  1 <span style="color: #767676;">|</span> 2026-06-30 01:13:45 <span style="color: #00BBBB;">INFO : Starting process</span></span></span>
-<span><span class="co">#&gt;  [2] -&gt;  2 <span style="color: #767676;">|</span> 2026-06-30 15:35:57 <span style="color: #00BBBB;">DEBUG : Disk usage high</span></span></span>
-<span><span class="co">#&gt;  [3] -&gt;  3 <span style="color: #767676;">|</span> 2026-06-30 20:36:52 <span style="color: #00BBBB;">WARNING : Timeout reached</span></span></span>
-<span><span class="co">#&gt;  [4] -&gt;  4 <span style="color: #767676;">|</span> 2026-06-30 12:15:22 <span style="color: #00BBBB;">WARNING : Loading config</span></span></span>
-<span><span class="co">#&gt;  [5] -&gt;  5 <span style="color: #767676;">|</span> 2026-07-01 00:59:41 <span style="color: #00BBBB;">INFO : Restart scheduled</span></span></span>
-<span><span class="co">#&gt;  [6] -&gt;  6 <span style="color: #767676;">|</span> 2026-06-30 17:03:42 <span style="color: #00BBBB;">DEBUG : Connection successful</span></span></span>
-<span><span class="co">#&gt;  [7] -&gt;  7 <span style="color: #767676;">|</span> 2026-07-01 00:54:56 <span style="color: #00BBBB;">DEBUG : Restart scheduled</span></span></span>
-<span><span class="co">#&gt;  [8] -&gt;  8 <span style="color: #767676;">|</span> 2026-06-30 16:43:17 <span style="color: #00BBBB;">INFO : Timeout reached</span></span></span>
-<span><span class="co">#&gt;  [9] -&gt;  9 <span style="color: #767676;">|</span> 2026-06-30 21:24:23 <span style="color: #00BBBB;">INFO : Timeout reached</span></span></span>
-<span><span class="co">#&gt; [10] -&gt; 10 <span style="color: #767676;">|</span> 2026-06-30 22:49:27 <span style="color: #00BBBB;">INFO : Timeout reached</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #767676;"># ℹ 70 more matches</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;"># ℹ Use `print(n = ...)` to see more matches</span></span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">after_restore</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="when-to-use-this-pattern">When to use this pattern<a class="anchor" aria-label="anchor" href="#when-to-use-this-pattern"></a>
-</h2>
-<p>You do not need a tabular workflow for every search-and-replace
-task.</p>
-<p>Use <code><a href="../reference/filter_match.html">filter_match()</a></code> when you want to filter matches with
-simple expressions based on match fields.</p>
-<p>Use <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code> and <code><a href="../reference/as_tibble.seekr_match.html">as_match()</a></code> when you
-want to use data frame tools, especially for grouped summaries,
-group-aware filtering, joins, or more complex replacement
-preparation.</p>
+<span><span class="co">#&gt; <span style="color: #0000BB;">server2.log</span> <span style="color: #767676;">[5]</span></span></span>
+<span><span class="co">#&gt;  [7] -- 10 <span style="color: #767676;">|</span> 2026-06-30 02:19:35 <span style="color: #BB0000;">DEBUG : Loading config</span></span></span>
+<span><span class="co">#&gt;      ++ 10 <span style="color: #767676;">|</span> 2026-06-30 02:19:35 <span style="color: #00BB00;">debug : loading config</span></span></span>
+<span><span class="co">#&gt;  [8] -- 30 <span style="color: #767676;">|</span> 2026-06-30 00:15:00 <span style="color: #BB0000;">DEBUG : Disk usage high</span></span></span>
+<span><span class="co">#&gt;      ++ 30 <span style="color: #767676;">|</span> 2026-06-30 00:15:00 <span style="color: #00BB00;">DEBUG : DISK USAGE HIGH</span></span></span>
+<span><span class="co">#&gt;  [9] -- 33 <span style="color: #767676;">|</span> 2026-06-30 11:03:55 <span style="color: #BB0000;">DEBUG : Retrying request</span></span></span>
+<span><span class="co">#&gt;      ++ 33 <span style="color: #767676;">|</span> 2026-06-30 11:03:55 <span style="color: #00BB00;">Debug : Retrying Request</span></span></span>
+<span><span class="co">#&gt; [10] -- 35 <span style="color: #767676;">|</span> 2026-06-30 04:43:43 <span style="color: #BB0000;">DEBUG : Failed to authenticate</span></span></span>
+<span><span class="co">#&gt;      ++ 35 <span style="color: #767676;">|</span> 2026-06-30 04:43:43 <span style="color: #00BB00;">Debug : Failed To Authenticate</span></span></span>
+<span><span class="co">#&gt; [11] -- 36 <span style="color: #767676;">|</span> 2026-06-30 16:12:44 <span style="color: #BB0000;">DEBUG : Connection successful</span></span></span>
+<span><span class="co">#&gt;      ++ 36 <span style="color: #767676;">|</span> 2026-06-30 16:12:44 <span style="color: #00BB00;">Debug : Connection Successful</span></span></span></code></pre></div>
+<p>Finally, our <code>seekr_match</code> vector can be used to replace
+only the selected matches in the files by their corresponding
+<code>replacement</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/replace_files.html">replace_files</a></span><span class="op">(</span><span class="va">to_replace</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

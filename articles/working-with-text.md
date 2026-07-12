@@ -95,7 +95,7 @@ df <-
         replacement = "new_\\1"
       )
     ),
-    .before = name
+    .after = name
   )
 ```
 
@@ -105,21 +105,17 @@ The result is a list-column of `seekr_match` vectors.
 
 df
 #> # A tibble: 5 × 3
-#>   x                  name                     body                                                                                                    
-#>   <list>             <chr>                    <chr>                                                                                                   
-#> 1 <seekr::match [2]> refresh_customer_scores  "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_s…
-#> 2 <seekr::match [1]> refresh_offer_flags      "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n …
-#> 3 <seekr::match [1]> archive_old_events       "\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events\n  …
-#> 4 <seekr::match [1]> refresh_campaign_targets "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_…
-#> 5 <seekr::match [0]> cleanup_temp_tables      "\nCREATE OR REPLACE FUNCTION cleanup_temp_tables()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM temp_work…
+#>   name                     x                  body                                                                                                    
+#>   <chr>                    <list>             <chr>                                                                                                   
+#> 1 refresh_customer_scores  <seekr::match [2]> "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_s…
+#> 2 refresh_offer_flags      <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n …
+#> 3 archive_old_events       <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events\n  …
+#> 4 refresh_campaign_targets <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_…
+#> 5 cleanup_temp_tables      <seekr::match [0]> "\nCREATE OR REPLACE FUNCTION cleanup_temp_tables()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM temp_work…
 ```
 
 Each row still contains the original text and the matches found in that
-text. This is useful because we can now use ordinary data-frame
-operations to decide which procedures we want to keep.
-
-For example, we can keep only procedures where at least one match was
-found.
+text. Here, we keep only procedures where at least one match was found.
 
 ``` r
 
@@ -129,12 +125,12 @@ df <-
 
 df
 #> # A tibble: 4 × 3
-#>   x                  name                     body                                                                                                    
-#>   <list>             <chr>                    <chr>                                                                                                   
-#> 1 <seekr::match [2]> refresh_customer_scores  "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_s…
-#> 2 <seekr::match [1]> refresh_offer_flags      "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n …
-#> 3 <seekr::match [1]> archive_old_events       "\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events\n  …
-#> 4 <seekr::match [1]> refresh_campaign_targets "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_…
+#>   name                     x                  body                                                                                                    
+#>   <chr>                    <list>             <chr>                                                                                                   
+#> 1 refresh_customer_scores  <seekr::match [2]> "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_s…
+#> 2 refresh_offer_flags      <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n …
+#> 3 archive_old_events       <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events\n  …
+#> 4 refresh_campaign_targets <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_…
 ```
 
 We can also inspect all matches together by combining the list-column
@@ -222,11 +218,11 @@ df <-
 
 df
 #> # A tibble: 3 × 3
-#>   x                  name                     body                                                                                                    
-#>   <list>             <chr>                    <chr>                                                                                                   
-#> 1 <seekr::match [2]> refresh_customer_scores  "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_s…
-#> 2 <seekr::match [1]> refresh_offer_flags      "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n …
-#> 3 <seekr::match [1]> refresh_campaign_targets "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_…
+#>   name                     x                  body                                                                                                    
+#>   <chr>                    <list>             <chr>                                                                                                   
+#> 1 refresh_customer_scores  <seekr::match [2]> "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_s…
+#> 2 refresh_offer_flags      <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n …
+#> 3 refresh_campaign_targets <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_…
 ```
 
 ## Applying replacements in memory
@@ -244,7 +240,7 @@ string and the updated text is now just another column.
 df <- 
   df |>
   mutate(
-    body_replaced = map2_chr(
+    replaced = map2_chr(
       body, 
       x, 
       \(body, x) replace_text(text = body, x = x)
@@ -254,11 +250,11 @@ df <-
 
 df
 #> # A tibble: 3 × 4
-#>   x                  name                     body_replaced                                                                                      body 
-#>   <list>             <chr>                    <chr>                                                                                              <chr>
-#> 1 <seekr::match [2]> refresh_customer_scores  "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE cust… "\nC…
-#> 2 <seekr::match [1]> refresh_offer_flags      "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_fl… "\nC…
-#> 3 <seekr::match [1]> refresh_campaign_targets "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE cam… "\nC…
+#>   name                     x                  replaced                                                                                           body 
+#>   <chr>                    <list>             <chr>                                                                                              <chr>
+#> 1 refresh_customer_scores  <seekr::match [2]> "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE cust… "\nC…
+#> 2 refresh_offer_flags      <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_fl… "\nC…
+#> 3 refresh_campaign_targets <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE cam… "\nC…
 ```
 
 This is the point of the in-memory workflow: `seekr` helped us find,
@@ -281,7 +277,7 @@ sql_script <-
   mutate(
     script_block = paste0(
       "-- Procedure: ", name, " -------------------------------\n",
-      body_replaced
+      replaced
     )
   ) |>
   pull(script_block)
@@ -325,11 +321,6 @@ cat(sql_script, sep = "\n\n")
 The script could then be written to disk, copied into a SQL client, sent
 to a deployment tool, or reviewed manually.
 
-``` r
-
-writeLines(sql_script, "updated_procedures.sql")
-```
-
 ## Safety checks still apply
 
 [`replace_text()`](https://smartiing.github.io/seekr/reference/replace_text.md)
@@ -341,91 +332,28 @@ When you call
 [`replace_text()`](https://smartiing.github.io/seekr/reference/replace_text.md),
 `seekr` checks that the text supplied to
 [`replace_text()`](https://smartiing.github.io/seekr/reference/replace_text.md)
-is the same text that was used to create the matches.
-
-This prevents replacements from being applied to stale positions.
-
-For example, if the text is changed after matching but before
-replacement,
-[`replace_text()`](https://smartiing.github.io/seekr/reference/replace_text.md)
-will fail rather than applying replacements to a string that no longer
-corresponds to the recorded matches.
-
-``` r
-
-x <- match_text(
-  text = "Original text with old_name.",
-  path = "example",
-  pattern = "old_name",
-  replacement = "new_name",
-  encoding = "UTF-8"
-)
-
-replace_text(text = "Modified text with the match: old_name.", x)
-```
+is the same text that was used in
+[`match_text()`](https://smartiing.github.io/seekr/reference/match_text.md).
 
 The safe workflow is the same as with files: if the text changed, search
 again.
 
 ## Why not use stringr directly?
 
-For simple in-memory replacements, using `stringr` directly is often the
-right choice.
-
-If you already know exactly what should be replaced and you want to
-replace every occurrence in a string, a direct call to
+For straightforward replacements, `stringr` is often the right choice.
+If you know exactly what to replace and want to replace every
+occurrence,
 [`stringr::str_replace_all()`](https://stringr.tidyverse.org/reference/str_replace.html)
 is simpler than creating a `seekr_match` vector.
 
-The reason to use
-[`match_text()`](https://smartiing.github.io/seekr/reference/match_text.md)
-and
-[`replace_text()`](https://smartiing.github.io/seekr/reference/replace_text.md)
-is when replacement is not just a single immediate operation.
-
-With direct replacement, the search and replacement happen at the same
-time. This is efficient, but it leaves little room for inspection. You
-do not get a structured object containing all matches, their locations,
-surrounding context, and planned replacements. You also cannot easily
-print the matches with context, preview the replacements, filter out
-false positives, update replacements match by match, and then apply only
-the selected changes.
-
-To get that kind of workflow with `stringr` alone, you would need to
-first find all matches, store their positions, extract context, keep
-track of replacements, filter the result, and then carefully apply the
-selected replacements back to the original text. In other words, you
-would start rebuilding much of what a `seekr_match` vector already
-represents.
+`seekr` becomes useful when you want to inspect matches before acting on
+them: print them with context, preview replacements, filter out false
+positives, update replacements match by match, and then apply only the
+selected changes. With direct replacement, search and replacement happen
+at the same time, which leaves no room for that kind of review.
 
 [`match_text()`](https://smartiing.github.io/seekr/reference/match_text.md)
 and
 [`replace_text()`](https://smartiing.github.io/seekr/reference/replace_text.md)
-are useful when you want the flexibility of working with strings in
-memory, but still want the structured, inspectable, and safe replacement
-workflow that `seekr` provides.
-
-## Summary
-
-Use
-[`match_files()`](https://smartiing.github.io/seekr/reference/match_files.md)
-and
-[`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md)
-when files are the source of truth and you want `seekr` to handle file
-reading and writing.
-
-Use
-[`match_text()`](https://smartiing.github.io/seekr/reference/match_text.md)
-and
-[`replace_text()`](https://smartiing.github.io/seekr/reference/replace_text.md)
-when you want to bring your own text into the `seekr` workflow and
-decide yourself what to do with the modified result.
-
-This is useful when text comes from a database, an API, an object in
-memory, or a custom reading process. It is also useful when you need
-full control over output: writing a custom script, updating a database,
-preserving a specific encoding, or sending the result somewhere else.
-
-The core idea is the same in both workflows: search results become
-`seekr_match` vectors that can be inspected, filtered, updated, and then
-applied safely.
+give you that inspectable workflow for text already in memory, without
+reading from or writing to files.

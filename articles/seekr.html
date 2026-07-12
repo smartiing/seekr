@@ -110,10 +110,10 @@ ignored by Git.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/list_files.html">list_files</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">files</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpxG7QUT/seekr-example/extdata/config.yaml" "/tmp/RtmpxG7QUT/seekr-example/extdata/data.json"  </span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmpxG7QUT/seekr-example/extdata/iris.csv"    "/tmp/RtmpxG7QUT/seekr-example/extdata/mtcars.csv" </span></span>
-<span><span class="co">#&gt; [5] "/tmp/RtmpxG7QUT/seekr-example/extdata/script1.R"   "/tmp/RtmpxG7QUT/seekr-example/extdata/script2.R"  </span></span>
-<span><span class="co">#&gt; [7] "/tmp/RtmpxG7QUT/seekr-example/extdata/server1.log" "/tmp/RtmpxG7QUT/seekr-example/extdata/server2.log"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpHCaVpV/seekr-example/extdata/config.yaml" "/tmp/RtmpHCaVpV/seekr-example/extdata/data.json"  </span></span>
+<span><span class="co">#&gt; [3] "/tmp/RtmpHCaVpV/seekr-example/extdata/iris.csv"    "/tmp/RtmpHCaVpV/seekr-example/extdata/mtcars.csv" </span></span>
+<span><span class="co">#&gt; [5] "/tmp/RtmpHCaVpV/seekr-example/extdata/script1.R"   "/tmp/RtmpHCaVpV/seekr-example/extdata/script2.R"  </span></span>
+<span><span class="co">#&gt; [7] "/tmp/RtmpHCaVpV/seekr-example/extdata/server1.log" "/tmp/RtmpHCaVpV/seekr-example/extdata/server2.log"</span></span></code></pre></div>
 <p><code><a href="../reference/list_files.html">list_files()</a></code> is intentionally simple. Its role is to
 discover candidate files, not to decide which files are relevant for a
 particular search. That decision is handled later by
@@ -151,19 +151,19 @@ exclusion rules.</p>
 <p>For example, we can keep only R files.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/filter_files.html">filter_files</a></span><span class="op">(</span><span class="va">files</span>, extension <span class="op">=</span> <span class="st">"R"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpxG7QUT/seekr-example/extdata/script1.R" "/tmp/RtmpxG7QUT/seekr-example/extdata/script2.R"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/RtmpHCaVpV/seekr-example/extdata/script1.R" "/tmp/RtmpHCaVpV/seekr-example/extdata/script2.R"</span></span>
 <span><span class="co">#&gt; attr(,"exclusions")</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 7</span></span></span>
 <span><span class="co">#&gt;   path                                              excluded exclude_by_extension is_git_dir is_dependency_dir is_minified_file is_not_text_mime</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                             <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> /tmp/RtmpxG7QUT/seekr-example/extdata/config.yaml TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> /tmp/RtmpxG7QUT/seekr-example/extdata/data.json   TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> /tmp/RtmpxG7QUT/seekr-example/extdata/iris.csv    TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> /tmp/RtmpxG7QUT/seekr-example/extdata/mtcars.csv  TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> /tmp/RtmpxG7QUT/seekr-example/extdata/script1.R   FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> /tmp/RtmpxG7QUT/seekr-example/extdata/script2.R   FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> /tmp/RtmpxG7QUT/seekr-example/extdata/server1.log TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> /tmp/RtmpxG7QUT/seekr-example/extdata/server2.log TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> /tmp/RtmpHCaVpV/seekr-example/extdata/config.yaml TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> /tmp/RtmpHCaVpV/seekr-example/extdata/data.json   TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> /tmp/RtmpHCaVpV/seekr-example/extdata/iris.csv    TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> /tmp/RtmpHCaVpV/seekr-example/extdata/mtcars.csv  TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> /tmp/RtmpHCaVpV/seekr-example/extdata/script1.R   FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> /tmp/RtmpHCaVpV/seekr-example/extdata/script2.R   FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> /tmp/RtmpHCaVpV/seekr-example/extdata/server1.log TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> /tmp/RtmpHCaVpV/seekr-example/extdata/server2.log TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
 <p>Here we combine the different types of filters to exclude the files
 we are not interested in.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -178,20 +178,20 @@ we are not interested in.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">filtered</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpxG7QUT/seekr-example/extdata/script1.R" "/tmp/RtmpxG7QUT/seekr-example/extdata/script2.R"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/RtmpHCaVpV/seekr-example/extdata/script1.R" "/tmp/RtmpHCaVpV/seekr-example/extdata/script2.R"</span></span>
 <span><span class="co">#&gt; attr(,"exclusions")</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 9</span></span></span>
 <span><span class="co">#&gt;   path        excluded exclude_by_extension exclude_by_path_patt…¹ exclude_by_file_size is_git_dir is_dependency_dir is_minified_file is_not_text_mime</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> /tmp/Rtmpx… TRUE     FALSE                TRUE                   <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> /tmp/Rtmpx… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> /tmp/Rtmpx… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> /tmp/Rtmpx… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> /tmp/Rtmpx… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> /tmp/Rtmpx… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> /tmp/Rtmpx… TRUE     FALSE                FALSE                  TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> /tmp/Rtmpx… TRUE     FALSE                FALSE                  TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> /tmp/Rtmpx… TRUE     FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            TRUE            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> /tmp/RtmpH… TRUE     FALSE                TRUE                   <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> /tmp/RtmpH… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> /tmp/RtmpH… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> /tmp/RtmpH… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> /tmp/RtmpH… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> /tmp/RtmpH… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> /tmp/RtmpH… TRUE     FALSE                FALSE                  TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> /tmp/RtmpH… TRUE     FALSE                FALSE                  TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> /tmp/RtmpH… TRUE     FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            TRUE            </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated name: ¹​exclude_by_path_pattern</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -213,15 +213,15 @@ its extension is not associated with text files.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 9</span></span></span>
 <span><span class="co">#&gt;   path        excluded exclude_by_extension exclude_by_path_patt…¹ exclude_by_file_size is_git_dir is_dependency_dir is_minified_file is_not_text_mime</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> /tmp/Rtmpx… TRUE     FALSE                TRUE                   <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> /tmp/Rtmpx… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> /tmp/Rtmpx… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> /tmp/Rtmpx… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> /tmp/Rtmpx… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> /tmp/Rtmpx… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> /tmp/Rtmpx… TRUE     FALSE                FALSE                  TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> /tmp/Rtmpx… TRUE     FALSE                FALSE                  TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> /tmp/Rtmpx… TRUE     FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            TRUE            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> /tmp/RtmpH… TRUE     FALSE                TRUE                   <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> /tmp/RtmpH… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> /tmp/RtmpH… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> /tmp/RtmpH… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> /tmp/RtmpH… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> /tmp/RtmpH… FALSE    FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> /tmp/RtmpH… TRUE     FALSE                FALSE                  TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> /tmp/RtmpH… TRUE     FALSE                FALSE                  TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> /tmp/RtmpH… TRUE     FALSE                FALSE                  FALSE                FALSE      FALSE             FALSE            TRUE            </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated name: ¹​exclude_by_path_pattern</span></span></span></code></pre></div>
 <p>This is useful because file filtering can otherwise be hard to audit.
 Instead of silently excluding files, <code>seekr</code> lets you inspect
@@ -254,42 +254,25 @@ will also appear on their dedicated column in the
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">filtered_custom</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpxG7QUT/seekr-example/extdata/script1.R"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/RtmpHCaVpV/seekr-example/extdata/script1.R"</span></span>
 <span><span class="co">#&gt; attr(,"exclusions")</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 8</span></span></span>
 <span><span class="co">#&gt;   path                                    excluded exclude_by_extension is_git_dir is_dependency_dir is_minified_file is_not_text_mime exclude_script2</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> /tmp/RtmpxG7QUT/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>             </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> /tmp/RtmpxG7QUT/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>             </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> /tmp/RtmpxG7QUT/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>             </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> /tmp/RtmpxG7QUT/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>             </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> /tmp/RtmpxG7QUT/seekr-example/extdata/… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE            FALSE          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> /tmp/RtmpxG7QUT/seekr-example/extdata/… TRUE     FALSE                FALSE      FALSE             FALSE            FALSE            TRUE           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> /tmp/RtmpxG7QUT/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>             </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> /tmp/RtmpxG7QUT/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>             </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> /tmp/RtmpxG7QUT/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>             </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>             </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>             </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>             </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> /tmp/RtmpHCaVpV/seekr-example/extdata/… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE            FALSE          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     FALSE                FALSE      FALSE             FALSE            FALSE            TRUE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>             </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>             </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> /tmp/RtmpHCaVpV/seekr-example/extdata/… TRUE     TRUE                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
 <p>The order of exclude functions matters. They are evaluated in the
 order in which they appear in <code>exclude</code>, so changing that
 order can change which exclusion reason is recorded first. It can also
 matter for performance: computationally expensive functions are usually
 better placed near the end.</p>
-<p>If no exclude functions are used, the exclusions table simply
-contains the file paths and an <code>excluded</code> column set to
-<code>FALSE</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">files</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/filter_files.html">filter_files</a></span><span class="op">(</span>exclude <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/exclusions.html">exclusions</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 2</span></span></span>
-<span><span class="co">#&gt;   path                                              excluded</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                             <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> /tmp/RtmpxG7QUT/seekr-example/extdata/config.yaml FALSE   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> /tmp/RtmpxG7QUT/seekr-example/extdata/data.json   FALSE   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> /tmp/RtmpxG7QUT/seekr-example/extdata/iris.csv    FALSE   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> /tmp/RtmpxG7QUT/seekr-example/extdata/mtcars.csv  FALSE   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> /tmp/RtmpxG7QUT/seekr-example/extdata/script1.R   FALSE   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> /tmp/RtmpxG7QUT/seekr-example/extdata/script2.R   FALSE   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> /tmp/RtmpxG7QUT/seekr-example/extdata/server1.log FALSE   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> /tmp/RtmpxG7QUT/seekr-example/extdata/server2.log FALSE   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> /tmp/RtmpxG7QUT/seekr-example/extdata/server.png  FALSE</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -319,11 +302,11 @@ files are read as UTF-8. Set <code>encoding = NULL</code> if you want
 </h3>
 <p>Here we look for function names composed of two words separated by an
 underscore followed by <code>&lt;- function</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">matches</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">filtered</span>, <span class="st">"([a-z]+)_([a-z]+)(?= &lt;- function)"</span><span class="op">)</span></span>
 <span><span class="va">matches</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[5]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpHCaVpV/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] -&gt;  1 <span style="color: #767676;">|</span> <span style="color: #00BBBB;">add_one</span> &lt;- function(x) {</span></span>
@@ -340,13 +323,13 @@ expression via <code><a href="https://stringr.tidyverse.org/reference/modifiers.
 anchors such as <code>^</code> and <code>$</code> can match line
 boundaries inside a file.</p>
 <p>These two calls are therefore equivalent.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">filtered</span>, <span class="va">pattern</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">filtered</span>, <span class="st">"pattern"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span></span>
 <span>  <span class="va">filtered</span>,</span>
-<span>  <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">regex</a></span><span class="op">(</span></span>
-<span>    <span class="st">"([a-z]+)_([a-z]+)(?= &lt;- function)"</span>,</span>
+<span>  <span class="fu"><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">regex</a></span><span class="op">(</span></span>
+<span>    <span class="st">"pattern"</span>,</span>
 <span>    ignore_case <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    multiline <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    comments <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -355,10 +338,10 @@ boundaries inside a file.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>For more control, pass a <code>stringr</code> pattern object
 directly. For example, we can make the search case-insensitive.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">filtered</span>, <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">regex</a></span><span class="op">(</span><span class="st">"FUNCTION"</span>, ignore_case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">filtered</span>, <span class="fu"><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">regex</a></span><span class="op">(</span><span class="st">"FUNCTION"</span>, ignore_case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[7]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpHCaVpV/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[3]</span></span></span>
 <span><span class="co">#&gt; [1] -&gt;  1 <span style="color: #767676;">|</span> add_one &lt;- <span style="color: #00BBBB;">function</span>(x) {</span></span>
@@ -378,21 +361,36 @@ regular expressions documentation</a>.</p>
 <h3 id="literal-text-patterns">Literal text patterns<a class="anchor" aria-label="anchor" href="#literal-text-patterns"></a>
 </h3>
 <p>If you want to search for literal text instead of a regular
-expression, use <code><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">stringr::fixed()</a></code>.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">filtered</span>, <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">fixed</a></span><span class="op">(</span><span class="st">"&lt;- function("</span><span class="op">)</span><span class="op">)</span></span>
+expression, use <code><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">stringr::fixed()</a></code> or
+<code><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">stringr::coll()</a></code> whcih are also re-exported by
+<code>seekr</code>.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">filtered</span>, <span class="fu"><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">fixed</a></span><span class="op">(</span><span class="st">"&lt;- function"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[6]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpHCaVpV/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[3]</span></span></span>
-<span><span class="co">#&gt; [1] -&gt;  1 <span style="color: #767676;">|</span> add_one <span style="color: #00BBBB;">&lt;- function(</span>x) {</span></span>
-<span><span class="co">#&gt; [2] -&gt;  5 <span style="color: #767676;">|</span> capitalize <span style="color: #00BBBB;">&lt;- function(</span>txt) {</span></span>
-<span><span class="co">#&gt; [3] -&gt;  9 <span style="color: #767676;">|</span> say_hello <span style="color: #00BBBB;">&lt;- function(</span>name) {</span></span>
+<span><span class="co">#&gt; [1] -&gt;  1 <span style="color: #767676;">|</span> add_one <span style="color: #00BBBB;">&lt;- function</span>(x) {</span></span>
+<span><span class="co">#&gt; [2] -&gt;  5 <span style="color: #767676;">|</span> capitalize <span style="color: #00BBBB;">&lt;- function</span>(txt) {</span></span>
+<span><span class="co">#&gt; [3] -&gt;  9 <span style="color: #767676;">|</span> say_hello <span style="color: #00BBBB;">&lt;- function</span>(name) {</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script2.R</span> <span style="color: #767676;">[3]</span></span></span>
-<span><span class="co">#&gt; [4] -&gt;  2 <span style="color: #767676;">|</span> mean_safe <span style="color: #00BBBB;">&lt;- function(</span>x) {</span></span>
-<span><span class="co">#&gt; [5] -&gt;  7 <span style="color: #767676;">|</span> sd_safe <span style="color: #00BBBB;">&lt;- function(</span>x) {</span></span>
-<span><span class="co">#&gt; [6] -&gt; 12 <span style="color: #767676;">|</span> print_vector <span style="color: #00BBBB;">&lt;- function(</span>v) {</span></span></code></pre></div>
+<span><span class="co">#&gt; [4] -&gt;  2 <span style="color: #767676;">|</span> mean_safe <span style="color: #00BBBB;">&lt;- function</span>(x) {</span></span>
+<span><span class="co">#&gt; [5] -&gt;  7 <span style="color: #767676;">|</span> sd_safe <span style="color: #00BBBB;">&lt;- function</span>(x) {</span></span>
+<span><span class="co">#&gt; [6] -&gt; 12 <span style="color: #767676;">|</span> print_vector <span style="color: #00BBBB;">&lt;- function</span>(v) {</span></span>
+<span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">filtered</span>, <span class="fu"><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">coll</a></span><span class="op">(</span><span class="st">"&lt;- function"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;seekr::match[6]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpHCaVpV/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[3]</span></span></span>
+<span><span class="co">#&gt; [1] -&gt;  1 <span style="color: #767676;">|</span> add_one <span style="color: #00BBBB;">&lt;- function</span>(x) {</span></span>
+<span><span class="co">#&gt; [2] -&gt;  5 <span style="color: #767676;">|</span> capitalize <span style="color: #00BBBB;">&lt;- function</span>(txt) {</span></span>
+<span><span class="co">#&gt; [3] -&gt;  9 <span style="color: #767676;">|</span> say_hello <span style="color: #00BBBB;">&lt;- function</span>(name) {</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">script2.R</span> <span style="color: #767676;">[3]</span></span></span>
+<span><span class="co">#&gt; [4] -&gt;  2 <span style="color: #767676;">|</span> mean_safe <span style="color: #00BBBB;">&lt;- function</span>(x) {</span></span>
+<span><span class="co">#&gt; [5] -&gt;  7 <span style="color: #767676;">|</span> sd_safe <span style="color: #00BBBB;">&lt;- function</span>(x) {</span></span>
+<span><span class="co">#&gt; [6] -&gt; 12 <span style="color: #767676;">|</span> print_vector <span style="color: #00BBBB;">&lt;- function</span>(v) {</span></span></code></pre></div>
 <p>This is useful when the text contains characters that would otherwise
 have a special meaning in a regular expression. Note that
 <code><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">stringr::fixed()</a></code> performs bytewise matching, so
@@ -431,14 +429,14 @@ the full match and the remaining columns are the capture groups.</li>
 <h3 id="literal-replacements">Literal replacements<a class="anchor" aria-label="anchor" href="#literal-replacements"></a>
 </h3>
 <p>The simplest replacement is a string.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span></span>
 <span>  <span class="va">filtered</span>,</span>
-<span>  pattern <span class="op">=</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">fixed</a></span><span class="op">(</span><span class="st">"safe"</span><span class="op">)</span>,</span>
+<span>  pattern <span class="op">=</span> <span class="st">"safe"</span>,</span>
 <span>  replacement <span class="op">=</span> <span class="st">"checked"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[2]&gt;<span style="color: #767676;"> 1 source</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">/tmp/RtmpxG7QUT/seekr-example/extdata/script2.R</span> <span style="color: #767676;">[2]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">/tmp/RtmpHCaVpV/seekr-example/extdata/script2.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] -- 2 <span style="color: #767676;">|</span> mean_<span style="color: #BB0000;">safe</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt;     ++ 2 <span style="color: #767676;">|</span> mean_<span style="color: #00BB00;">checked</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt; [2] -- 7 <span style="color: #767676;">|</span> sd_<span style="color: #BB0000;">safe</span> &lt;- function(x) {</span></span>
@@ -452,10 +450,14 @@ replacement: <code>"checked"</code>.</p>
 <p>Replacement strings can also refer to capture groups from a regular
 expression.</p>
 <p>Here, we reverse the two parts of each function name.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">filtered</span>, <span class="st">"(\\w+)_(\\w+)(?= &lt;- function)"</span>, <span class="st">"\\2_\\1"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span></span>
+<span>  <span class="va">filtered</span>, </span>
+<span>  pattern <span class="op">=</span> <span class="st">"([a-z]+)_([a-z]+)(?= &lt;- function)"</span>, </span>
+<span>  replacement <span class="op">=</span> <span class="st">"\\2_\\1"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[5]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpHCaVpV/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
@@ -478,10 +480,14 @@ expression.</p>
 character vector of matched texts and must return one replacement value
 per match. It is vectorized over the matches found in a file; it is not
 called separately for each individual match.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">filtered</span>, <span class="st">"([a-z]+)_([a-z]+)(?= &lt;- function)"</span>, <span class="va">toupper</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span></span>
+<span>  <span class="va">filtered</span>, </span>
+<span>  pattern <span class="op">=</span> <span class="st">"([a-z]+)_([a-z]+)(?= &lt;- function)"</span>, </span>
+<span>  replacement <span class="op">=</span> <span class="va">toupper</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[5]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpHCaVpV/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
@@ -505,19 +511,13 @@ called separately for each individual match.</p>
 <p>The function receives the capture group matrix returned by the
 matching engine. The first column is the full match, and the following
 columns are the capture groups.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">repl_with_matrix</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">M</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="co"># full_match &lt;- M[, 1L]</span></span>
-<span>  <span class="va">group1</span> <span class="op">&lt;-</span> <span class="va">M</span><span class="op">[</span>, <span class="fl">2L</span><span class="op">]</span></span>
-<span>  <span class="va">group2</span> <span class="op">&lt;-</span> <span class="va">M</span><span class="op">[</span>, <span class="fl">3L</span><span class="op">]</span></span>
-<span>  </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">toupper</a></span><span class="op">(</span><span class="va">group2</span><span class="op">)</span>, <span class="st">"_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">group1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">repl_fn</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">M</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">toupper</a></span><span class="op">(</span><span class="va">M</span><span class="op">[</span>, <span class="fl">3L</span><span class="op">]</span><span class="op">)</span>, <span class="st">"_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">M</span><span class="op">[</span>, <span class="fl">2L</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">repl_fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/with_capture_groups_matrix.html">with_capture_groups_matrix</a></span><span class="op">(</span><span class="va">repl_fn</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">repl_with_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/with_capture_groups_matrix.html">with_capture_groups_matrix</a></span><span class="op">(</span><span class="va">repl_with_matrix</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">filtered</span>, <span class="st">"([a-z]+)_([a-z]+)(?= &lt;- function)"</span>, <span class="va">repl_with_matrix</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">filtered</span>, <span class="st">"([a-z]+)_([a-z]+)(?= &lt;- function)"</span>, <span class="va">repl_fn</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[5]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpHCaVpV/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
@@ -546,7 +546,7 @@ common workflows, <code><a href="../reference/seek.html">seek()</a></code> combi
 matching in one call. <code><a href="../reference/seek.html">seekr()</a></code> is a shortcut around
 <code><a href="../reference/seek.html">seek()</a></code> with R, R Markdown, and Quarto extensions selected
 by default.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/list_files.html">list_files</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_files.html">filter_files</a></span><span class="op">(</span><span class="va">files</span>, extension <span class="op">=</span> <span class="st">"R"</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">filtered</span>, <span class="st">"(\\w+)_(\\w+)(?= &lt;- function)"</span>, <span class="st">"\\2_\\1"</span><span class="op">)</span></span>
@@ -574,10 +574,10 @@ workflow became empty.</li>
 but each match also stores fields such as the file path, match location,
 matched text, planned replacement, surrounding context, and
 encoding.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[5]&gt;<span style="color: #767676; font-style: italic;"> vctrs::rcrd</span></span></span>
-<span><span class="co">#&gt; path        <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #767676;">"</span>/tmp/RtmpxG7QUT/seekr-example/extdata/script1.R<span style="color: #767676;">", "</span>/tmp/RtmpxG7QUT/seekr-example/extdata/script1.R<span style="color: #767676;">", "</span>/tmp/RtmpxG7QUT/seekr-example<span style="color: #767676;">…</span></span></span>
+<span><span class="co">#&gt; path        <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #767676;">"</span>/tmp/RtmpHCaVpV/seekr-example/extdata/script1.R<span style="color: #767676;">", "</span>/tmp/RtmpHCaVpV/seekr-example/extdata/script1.R<span style="color: #767676;">", "</span>/tmp/RtmpHCaVpV/seekr-example<span style="color: #767676;">…</span></span></span>
 <span><span class="co">#&gt; start_line  <span style="color: #767676; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #767676;">, </span>9<span style="color: #767676;">, </span>2<span style="color: #767676;">, </span>7<span style="color: #767676;">, </span>12</span></span>
 <span><span class="co">#&gt; end_line    <span style="color: #767676; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #767676;">, </span>9<span style="color: #767676;">, </span>2<span style="color: #767676;">, </span>7<span style="color: #767676;">, </span>12</span></span>
 <span><span class="co">#&gt; start       <span style="color: #767676; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #767676;">, </span>107<span style="color: #767676;">, </span>32<span style="color: #767676;">, </span>119<span style="color: #767676;">, </span>202</span></span>
@@ -592,26 +592,22 @@ encoding.</p>
 <span><span class="co">#&gt; encoding    <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #767676;">"</span>UTF-8<span style="color: #767676;">", "</span>UTF-8<span style="color: #767676;">", "</span>UTF-8<span style="color: #767676;">", "</span>UTF-8<span style="color: #767676;">", "</span>UTF-8<span style="color: #767676;">"</span></span></span>
 <span><span class="co">#&gt; hash        <span style="color: #767676; font-style: italic;">&lt;chr&gt;</span> <span style="color: #767676;">"</span>e4cc5c4031699a911e6d5029cce6d71c<span style="color: #767676;">", "</span>e4cc5c4031699a911e6d5029cce6d71c<span style="color: #767676;">", "</span>036951bf4066a0b69595b7a0d9d0eb96<span style="color: #767676;">", "</span>036951bf4066a0b69595b7a<span style="color: #767676;">…</span></span></span></code></pre></div>
 <p>You can inspect the available fields with <code><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">fields()</a></code>.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">fields</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "path"        "start_line"  "end_line"    "start"       "end"         "start_col"   "end_col"     "match"       "replacement" "before"     </span></span>
 <span><span class="co">#&gt; [11] "line"        "after"       "encoding"    "hash"</span></span></code></pre></div>
 <p>Individual fields can be accessed with <code><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field()</a></code>.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"match"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "add_one"      "say_hello"    "mean_safe"    "sd_safe"      "print_vector"</span></span>
 <span><span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"replacement"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "one_add"      "hello_say"    "safe_mean"    "safe_sd"      "vector_print"</span></span>
-<span><span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"path"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpxG7QUT/seekr-example/extdata/script1.R" "/tmp/RtmpxG7QUT/seekr-example/extdata/script1.R"</span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmpxG7QUT/seekr-example/extdata/script2.R" "/tmp/RtmpxG7QUT/seekr-example/extdata/script2.R"</span></span>
-<span><span class="co">#&gt; [5] "/tmp/RtmpxG7QUT/seekr-example/extdata/script2.R"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "one_add"      "hello_say"    "safe_mean"    "safe_sd"      "vector_print"</span></span></code></pre></div>
 <p>Use <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> to get a compact overview of the matches
 and planned replacements.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ── &lt;seekr::match[5]&gt; ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpHCaVpV/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Top sources <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt;  • <span style="color: #0000BB;">script2.R</span> : 3 <span style="color: #767676;">(60.0%)</span></span></span>
@@ -631,39 +627,42 @@ and planned replacements.</p>
 <span><span class="co">#&gt;  • UTF-8 : 5 <span style="color: #767676;">(100.0%)</span></span></span></code></pre></div>
 <p>Use <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> to inspect matches with surrounding context
 and preview replacements before modifying files.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2L</span>, <span class="fl">1L</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0L</span>, <span class="fl">3L</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[5]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpHCaVpV/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt;     ++  1 <span style="color: #767676;">|</span> <span style="color: #00BB00;">one_add</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">        2 |   return(x + 1)</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">        3 | }</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">        4 | </span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        7 | }</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        8 | </span></span></span>
 <span><span class="co">#&gt; [2] --  9 <span style="color: #767676;">|</span> <span style="color: #BB0000;">say_hello</span> &lt;- function(name) {</span></span>
 <span><span class="co">#&gt;     ++  9 <span style="color: #767676;">|</span> <span style="color: #00BB00;">hello_say</span> &lt;- function(name) {</span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       10 |   paste('Hello', name)</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">       11 | }</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">       12 | </span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script2.R</span> <span style="color: #767676;">[3]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        1 | # TODO: optimize this function</span></span></span>
 <span><span class="co">#&gt; [3] --  2 <span style="color: #767676;">|</span> <span style="color: #BB0000;">mean_safe</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt;     ++  2 <span style="color: #767676;">|</span> <span style="color: #00BB00;">safe_mean</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">        3 |   if (length(x) == 0) return(NA)</span></span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">        4 |   mean(x, na.rm = TRUE)</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">        5 | }</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        6 | </span></span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [4] --  7 <span style="color: #767676;">|</span> <span style="color: #BB0000;">sd_safe</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt;     ++  7 <span style="color: #767676;">|</span> <span style="color: #00BB00;">safe_sd</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">        8 |   if (length(x) &lt;= 1) return(NA)</span></span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">        9 |   sd(x, na.rm = TRUE)</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       10 | }</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       11 | </span></span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [5] -- 12 <span style="color: #767676;">|</span> <span style="color: #BB0000;">print_vector</span> &lt;- function(v) {</span></span>
 <span><span class="co">#&gt;     ++ 12 <span style="color: #767676;">|</span> <span style="color: #00BB00;">vector_print</span> &lt;- function(v) {</span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       13 |   print(paste('Vector of length', length(v)))</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #767676;">       13 |   print(paste('Vector of length', length(v)))</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">       14 | }</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">       15 | </span></span></span></code></pre></div>
 <p>In terminals that support OSC8 hyperlinks, printed file locations can
 also be clickable.</p>
 <p>For more on why <code>seekr</code> represents search results this
@@ -674,10 +673,10 @@ way, see <a href="design-choices.html">Design choices</a>.</p>
 </h2>
 <p>Because a <code>seekr_match</code> is a vector, it can be subset like
 any other R vector.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"safe"</span>, <span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"match"</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[3]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpHCaVpV/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
@@ -691,11 +690,11 @@ any other R vector.</p>
 <p>However, <code><a href="../reference/filter_match.html">filter_match()</a></code> is usually more convenient. It
 evaluates expressions directly on the fields of the
 <code>seekr_match</code> vector.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xf</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/filter_match.html">filter_match</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"safe"</span>, <span class="va">match</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">xf</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[3]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpHCaVpV/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
@@ -706,31 +705,6 @@ evaluates expressions directly on the fields of the
 <span><span class="co">#&gt; <span style="color: #0000BB;">script2.R</span> <span style="color: #767676;">[1]</span></span></span>
 <span><span class="co">#&gt; [3] -- 12 <span style="color: #767676;">|</span> <span style="color: #BB0000;">print_vector</span> &lt;- function(v) {</span></span>
 <span><span class="co">#&gt;     ++ 12 <span style="color: #767676;">|</span> <span style="color: #00BB00;">vector_print</span> &lt;- function(v) {</span></span></code></pre></div>
-<p>The result is still a <code>seekr_match</code> vector, so it can be
-printed, summarized, modified, or passed to
-<code><a href="../reference/replace_files.html">replace_files()</a></code>.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">xf</span>, context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2L</span>, <span class="fl">1L</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;seekr::match[3]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
-<span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
-<span><span class="co">#&gt;     ++  1 <span style="color: #767676;">|</span> <span style="color: #00BB00;">one_add</span> &lt;- function(x) {</span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        2 |   return(x + 1)</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        7 | }</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        8 | </span></span></span>
-<span><span class="co">#&gt; [2] --  9 <span style="color: #767676;">|</span> <span style="color: #BB0000;">say_hello</span> &lt;- function(name) {</span></span>
-<span><span class="co">#&gt;     ++  9 <span style="color: #767676;">|</span> <span style="color: #00BB00;">hello_say</span> &lt;- function(name) {</span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       10 |   paste('Hello', name)</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">script2.R</span> <span style="color: #767676;">[1]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       10 | }</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       11 | </span></span></span>
-<span><span class="co">#&gt; [3] -- 12 <span style="color: #767676;">|</span> <span style="color: #BB0000;">print_vector</span> &lt;- function(v) {</span></span>
-<span><span class="co">#&gt;     ++ 12 <span style="color: #767676;">|</span> <span style="color: #00BB00;">vector_print</span> &lt;- function(v) {</span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       13 |   print(paste('Vector of length', length(v)))</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="use-tabular-workflows">Use tabular workflows<a class="anchor" aria-label="anchor" href="#use-tabular-workflows"></a>
@@ -738,19 +712,19 @@ printed, summarized, modified, or passed to
 <p>For many workflows, <code><a href="../reference/filter_match.html">filter_match()</a></code> and
 <code><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field()</a></code> are enough.</p>
 <p>For more complex operations, it can be useful to convert a
-<code>seekr_match</code> vector to a tibble, work with it using tabular
-tools, and then convert it back to a <code>seekr_match</code> vector
-before replacing files.</p>
+<code>seekr_match</code> vector to a a data frame, work with it using
+tabular tools, and then convert it back to a <code>seekr_match</code>
+vector before replacing files.</p>
 <p>This is especially useful for grouped summaries, joins, group-aware
-filtering, or replacement logic that is easier to express with
-<code>dplyr</code>.</p>
-<p>When converting back, <code><a href="../reference/as_tibble.seekr_match.html">as_match()</a></code> validates that the
-tibble still contains the fields required to reconstruct a valid
+filtering, or replacement logic that might be easier to express in a
+tabular workflow.</p>
+<p>When converting back, <code><a href="../reference/as_tibble.seekr_match.html">as_match()</a></code> validates that the data
+frame still contains the fields required to reconstruct a valid
 <code>seekr_match</code> vector. This makes it possible to use tabular
 workflows while still returning to the main <code>seekr</code>
 replacement workflow.</p>
 <p>For examples, see the <code><a href="../reference/as_tibble.seekr_match.html">as_match()</a></code> documentation and the
-article <a href="tabular-workflows.html">Tabular workflows</a>.</p>
+<a href="tabular-workflows.html">Tabular workflows article</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="update-replacements-after-inspection">Update replacements after inspection<a class="anchor" aria-label="anchor" href="#update-replacements-after-inspection"></a>
@@ -758,37 +732,28 @@ article <a href="tabular-workflows.html">Tabular workflows</a>.</p>
 <p>You do not need to decide every replacement when searching.</p>
 <p>The <code>replacement</code> field can be set or updated after
 matches have been inspected or filtered.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">first_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">xf</span>, <span class="st">"path"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="va">repl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">xf</span>, <span class="st">"replacement"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">xf</span>, <span class="st">"replacement"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">xf</span>, <span class="st">"path"</span><span class="op">)</span> <span class="op">==</span> <span class="va">first_path</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">toupper</a></span><span class="op">(</span><span class="va">repl</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">repl</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">xf</span>, context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2L</span>, <span class="fl">1L</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">xf</span>, <span class="st">"replacement"</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">toupper</a></span><span class="op">(</span><span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">xf</span>, <span class="st">"replacement"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">xf</span>, context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[3]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpHCaVpV/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt;     ++  1 <span style="color: #767676;">|</span> <span style="color: #00BB00;">ONE_ADD</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">        2 |   return(x + 1)</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">        3 | }</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        7 | }</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        8 | </span></span></span>
 <span><span class="co">#&gt; [2] --  9 <span style="color: #767676;">|</span> <span style="color: #BB0000;">say_hello</span> &lt;- function(name) {</span></span>
 <span><span class="co">#&gt;     ++  9 <span style="color: #767676;">|</span> <span style="color: #00BB00;">HELLO_SAY</span> &lt;- function(name) {</span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       10 |   paste('Hello', name)</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">       11 | }</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script2.R</span> <span style="color: #767676;">[1]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       10 | }</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       11 | </span></span></span>
 <span><span class="co">#&gt; [3] -- 12 <span style="color: #767676;">|</span> <span style="color: #BB0000;">print_vector</span> &lt;- function(v) {</span></span>
-<span><span class="co">#&gt;     ++ 12 <span style="color: #767676;">|</span> <span style="color: #00BB00;">vector_print</span> &lt;- function(v) {</span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       13 |   print(paste('Vector of length', length(v)))</span></span></span></code></pre></div>
+<span><span class="co">#&gt;     ++ 12 <span style="color: #767676;">|</span> <span style="color: #00BB00;">VECTOR_PRINT</span> &lt;- function(v) {</span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">       13 |   print(paste('Vector of length', length(v)))</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">       14 | }</span></span></span></code></pre></div>
 <p>This makes it possible to search broadly, inspect the result, keep
 only the matches that matter, and then decide what each selected match
 should become.</p>
@@ -823,26 +788,17 @@ modified is backed up before it is written. A <code>description</code>
 can be provided to make the backup easier to identify later. The backup
 directory can also be changed with <code>backup_dir</code> or the
 <code>seekr.backup_dir</code> option.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">replaced</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/replace_files.html">replace_files</a></span><span class="op">(</span><span class="va">xf</span>, description <span class="op">=</span> <span class="st">"Inverse function names"</span><span class="op">)</span></span>
-<span><span class="va">replaced</span></span>
-<span><span class="co">#&gt; &lt;seekr::match[3]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
-<span><span class="co">#&gt; [1] --  1 <span style="color: #767676;">|</span> <span style="color: #BB0000;">add_one</span> &lt;- function(x) {</span></span>
-<span><span class="co">#&gt;     ++  1 <span style="color: #767676;">|</span> <span style="color: #00BB00;">ONE_ADD</span> &lt;- function(x) {</span></span>
-<span><span class="co">#&gt; [2] --  9 <span style="color: #767676;">|</span> <span style="color: #BB0000;">say_hello</span> &lt;- function(name) {</span></span>
-<span><span class="co">#&gt;     ++  9 <span style="color: #767676;">|</span> <span style="color: #00BB00;">HELLO_SAY</span> &lt;- function(name) {</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">script2.R</span> <span style="color: #767676;">[1]</span></span></span>
-<span><span class="co">#&gt; [3] -- 12 <span style="color: #767676;">|</span> <span style="color: #BB0000;">print_vector</span> &lt;- function(v) {</span></span>
-<span><span class="co">#&gt;     ++ 12 <span style="color: #767676;">|</span> <span style="color: #00BB00;">vector_print</span> &lt;- function(v) {</span></span></code></pre></div>
-<p>After replacement, we can search again.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/seek.html">seekr</a></span><span class="op">(</span><span class="st">"([a-z]+)_([a-z]+)(?= &lt;- function)"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0L</span>, <span class="fl">3L</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;seekr::match[3]&gt;<span style="color: #767676;"> 1 source</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">/tmp/RtmpxG7QUT/seekr-example/extdata/script2.R</span> <span style="color: #767676;">[3]</span></span></span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/replace_files.html">replace_files</a></span><span class="op">(</span></span>
+<span>  <span class="va">xf</span>, </span>
+<span>  description <span class="op">=</span> <span class="st">"Inverse function names"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>We can now see that our matches have been replaced.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/seek.html">seekr</a></span><span class="op">(</span><span class="st">"([a-z]+)_([a-z]+)(?= &lt;- function)"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0L</span>, <span class="fl">3L</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;seekr::match[2]&gt;<span style="color: #767676;"> 1 source</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">/tmp/RtmpHCaVpV/seekr-example/extdata/script2.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] -&gt;  2 <span style="color: #767676;">|</span> <span style="color: #00BBBB;">mean_safe</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">        3 |   if (length(x) == 0) return(NA)</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">        4 |   mean(x, na.rm = TRUE)</span></span></span>
@@ -851,12 +807,7 @@ directory can also be changed with <code>backup_dir</code> or the
 <span><span class="co">#&gt; [2] -&gt;  7 <span style="color: #767676;">|</span> <span style="color: #00BBBB;">sd_safe</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">        8 |   if (length(x) &lt;= 1) return(NA)</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">        9 |   sd(x, na.rm = TRUE)</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       10 | }</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [3] -&gt; 12 <span style="color: #767676;">|</span> <span style="color: #00BBBB;">vector_print</span> &lt;- function(v) {</span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       13 |   print(paste('Vector of length', length(v)))</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       14 | }</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       15 | </span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #767676;">       10 | }</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="restore-files">Restore files<a class="anchor" aria-label="anchor" href="#restore-files"></a>
@@ -864,17 +815,17 @@ directory can also be changed with <code>backup_dir</code> or the
 <p>After modifying files, backups can be inspected with
 <code><a href="../reference/backups.html">list_backups()</a></code>, and the most recent backup can be retrieved
 with <code><a href="../reference/backups.html">last_backup()</a></code>.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bck</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/backups.html">last_backup</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">bck</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 9</span></span></span>
 <span><span class="co">#&gt;      id created_at          operation description            original                                       backup original_exists backup_exists  size</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;fs:&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1 2026-07-11 <span style="color: #949494;">20:15:22</span> replace   Inverse function names /tmp/RtmpxG7QUT/seekr-example/extdata/script1… /tmp/… TRUE            TRUE            161</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     1 2026-07-11 <span style="color: #949494;">20:15:22</span> replace   Inverse function names /tmp/RtmpxG7QUT/seekr-example/extdata/script2… /tmp/… TRUE            TRUE            279</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1 2026-07-12 <span style="color: #949494;">01:43:33</span> replace   Inverse function names /tmp/RtmpHCaVpV/seekr-example/extdata/script1… /tmp/… TRUE            TRUE            161</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     1 2026-07-12 <span style="color: #949494;">01:43:33</span> replace   Inverse function names /tmp/RtmpHCaVpV/seekr-example/extdata/script2… /tmp/… TRUE            TRUE            279</span></span></code></pre></div>
 <p>Use <code><a href="../reference/restore_files.html">restore_files()</a></code> to restore the previous file
 contents.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/restore_files.html">restore_files</a></span><span class="op">(</span></span>
 <span>  from <span class="op">=</span> <span class="va">bck</span><span class="op">$</span><span class="va">backup</span>, </span>
 <span>  to <span class="op">=</span> <span class="va">bck</span><span class="op">$</span><span class="va">original</span>,</span>
@@ -886,45 +837,48 @@ contents.</p>
 both operations remain available in the backup history. This makes it
 possible to undo a replacement, while still keeping a record of the
 files that were present just before the restore operation.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/backups.html">list_backups</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 9</span></span></span>
 <span><span class="co">#&gt;      id created_at          operation description                                       original            backup original_exists backup_exists  size</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;fs:&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     2 2026-07-11 <span style="color: #949494;">20:15:23</span> restore   restore after reversing function names by mistake /tmp/RtmpxG7QUT/se… /tmp/… TRUE            TRUE            161</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2 2026-07-11 <span style="color: #949494;">20:15:23</span> restore   restore after reversing function names by mistake /tmp/RtmpxG7QUT/se… /tmp/… TRUE            TRUE            279</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     1 2026-07-11 <span style="color: #949494;">20:15:22</span> replace   Inverse function names                            /tmp/RtmpxG7QUT/se… /tmp/… TRUE            TRUE            161</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     1 2026-07-11 <span style="color: #949494;">20:15:22</span> replace   Inverse function names                            /tmp/RtmpxG7QUT/se… /tmp/… TRUE            TRUE            279</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     2 2026-07-12 <span style="color: #949494;">01:43:33</span> restore   restore after reversing function names by mistake /tmp/RtmpHCaVpV/se… /tmp/… TRUE            TRUE            161</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2 2026-07-12 <span style="color: #949494;">01:43:33</span> restore   restore after reversing function names by mistake /tmp/RtmpHCaVpV/se… /tmp/… TRUE            TRUE            279</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     1 2026-07-12 <span style="color: #949494;">01:43:33</span> replace   Inverse function names                            /tmp/RtmpHCaVpV/se… /tmp/… TRUE            TRUE            161</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     1 2026-07-12 <span style="color: #949494;">01:43:33</span> replace   Inverse function names                            /tmp/RtmpHCaVpV/se… /tmp/… TRUE            TRUE            279</span></span></code></pre></div>
 <p>After restoring, the original matches are back.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">after_restore</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seek.html">seekr</a></span><span class="op">(</span><span class="st">"([a-z]+)_([a-z]+)(?= &lt;- function)"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">after_restore</span>, context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2L</span>, <span class="fl">1L</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">after_restore</span>, context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0L</span>, <span class="fl">3L</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[5]&gt;<span style="color: #767676;"> 2 sources</span></span></span>
-<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpxG7QUT/seekr-example/extdata</span></span></span>
+<span><span class="co">#&gt; Common Path: <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpHCaVpV/seekr-example/extdata</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script1.R</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; [1] -&gt;  1 <span style="color: #767676;">|</span> <span style="color: #00BBBB;">add_one</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">        2 |   return(x + 1)</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">        3 | }</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">        4 | </span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        7 | }</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        8 | </span></span></span>
 <span><span class="co">#&gt; [2] -&gt;  9 <span style="color: #767676;">|</span> <span style="color: #00BBBB;">say_hello</span> &lt;- function(name) {</span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       10 |   paste('Hello', name)</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">       11 | }</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">       12 | </span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">script2.R</span> <span style="color: #767676;">[3]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        1 | # TODO: optimize this function</span></span></span>
 <span><span class="co">#&gt; [3] -&gt;  2 <span style="color: #767676;">|</span> <span style="color: #00BBBB;">mean_safe</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">        3 |   if (length(x) == 0) return(NA)</span></span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">        4 |   mean(x, na.rm = TRUE)</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">        5 | }</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">        6 | </span></span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [4] -&gt;  7 <span style="color: #767676;">|</span> <span style="color: #00BBBB;">sd_safe</span> &lt;- function(x) {</span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">        8 |   if (length(x) &lt;= 1) return(NA)</span></span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">        9 |   sd(x, na.rm = TRUE)</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       10 | }</span></span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       11 | </span></span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [5] -&gt; 12 <span style="color: #767676;">|</span> <span style="color: #00BBBB;">print_vector</span> &lt;- function(v) {</span></span>
-<span><span class="co">#&gt; <span style="color: #767676;">       13 |   print(paste('Vector of length', length(v)))</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #767676;">       13 |   print(paste('Vector of length', length(v)))</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">       14 | }</span></span></span>
+<span><span class="co">#&gt; <span style="color: #767676;">       15 | </span></span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

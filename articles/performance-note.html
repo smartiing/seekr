@@ -89,18 +89,6 @@ the staged replacement if any, the line containing the match,
 surrounding context lines, the encoding, and a hash of the searched text
 that <code><a href="../reference/replace_files.html">replace_files()</a></code> uses later to verify the file has not
 changed.</p>
-<p>This is what makes the following workflow possible:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/smartiing/seekr" class="external-link">seekr</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seek.html">seekr</a></span><span class="op">(</span><span class="st">"foo|bar"</span>, <span class="va">toupper</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, context <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_match.html">filter_match</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"/generated/"</span>, <span class="va">path</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/replace_files.html">replace_files</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
 <p>The cost is real. <code>seekr</code> reads each file as a complete
 string, builds a structured R object for every match, and does all of
 this sequentially in a single R process. For most source code projects
@@ -133,13 +121,14 @@ that will stop as soon as it finds a match is a better fit.</li>
 </h3>
 <p>Before using an external search tool, one simple option for Git
 repositories is to start with Git-aware file discovery:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/list_files.html">list_files</a></span><span class="op">(</span>use_git <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/list_files.html">list_files</a></span><span class="op">(</span>use_git <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seek.html">seek</a></span><span class="op">(</span><span class="st">"pattern"</span>, use_git <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="pre-filter-with-ripgrep">Pre-filter with ripgrep<a class="anchor" aria-label="anchor" href="#pre-filter-with-ripgrep"></a>
 </h3>
-<p><a href="https://github.com/burntsushi/ripgrep" class="external-link"><code>ripgrep</code></a> is
+<p><strong>Note</strong>: <a href="https://github.com/burntsushi/ripgrep" class="external-link"><code>ripgrep</code></a> is
 not managed by <code>seekr</code>: installing it, making it available on
 your system <code>PATH</code>, and dealing with platform-specific
 command-line details are left to the user. The goal here is only to show
@@ -150,19 +139,19 @@ for performance.</p>
 can use <a href="https://github.com/burntsushi/ripgrep" class="external-link"><code>ripgrep</code></a> to
 identify which files contain the pattern, then pass only those files to
 <code><a href="../reference/match_files.html">match_files()</a></code>.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># requires ripgrep to be installed and accessible to PATH</span></span>
 <span><span class="va">pattern</span> <span class="op">&lt;-</span> <span class="st">"function"</span></span>
 <span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"seekr"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">files_with_a_match</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system2.html" class="external-link">system2</a></span><span class="op">(</span></span>
+<span><span class="co"># List the files with at least a match</span></span>
+<span><span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system2.html" class="external-link">system2</a></span><span class="op">(</span></span>
 <span>  command <span class="op">=</span> <span class="st">"rg"</span>,</span>
 <span>  args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-l"</span>, <span class="fu"><a href="https://rdrr.io/r/base/shQuote.html" class="external-link">shQuote</a></span><span class="op">(</span><span class="va">pattern</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/shQuote.html" class="external-link">shQuote</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  stdout <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">files_with_a_match</span>, <span class="va">pattern</span>, <span class="va">toupper</span><span class="op">)</span></span>
-<span><span class="va">x</span></span></code></pre></div>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">files</span>, <span class="va">pattern</span>, <span class="va">toupper</span><span class="op">)</span></span></code></pre></div>
 <p>This keeps <code>seekr</code>’s structured match objects while
 offloading the initial scan to a tool optimized for raw throughput.</p>
 </div>
@@ -181,7 +170,7 @@ daemons.</li>
 <li>Call <code><a href="../reference/match_files.html">match_files()</a></code> on each chunk in parallel.</li>
 <li>Combine the resulting <code>seekr_match</code> vectors.</li>
 </ol>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/smartiing/seekr" class="external-link">seekr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mirai.r-lib.org" class="external-link">mirai</a></span><span class="op">)</span></span>
 <span></span>

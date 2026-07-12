@@ -60,8 +60,7 @@ and only then write changes to disk.
 
 That workflow requires the search result to remain usable as an object
 after the search. It must be possible to subset it, combine it, print
-it, summarize it, convert it to a tibble, update planned replacements,
-and eventually pass it to
+it, summarize it, update planned replacements, and eventually pass it to
 [`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md).
 
 This is why `seekr` represents search results as a vector of matches.
