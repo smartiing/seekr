@@ -80,20 +80,20 @@ composable, and safe:
   something did not go as expected.
 
 For more advanced workflows, a `seekr_match` vector can also be
-converted to a tibble with `as_tibble()` and converted back with
+converted to a data frame and converted back with
 [`as_match()`](https://smartiing.github.io/seekr/reference/as_tibble.seekr_match.md).
 This can make it easier to create custom summaries, filter matches, or
 prepare replacements with grouped operations. For a detailed example,
-see [tabular
-workflows](https://smartiing.github.io/seekr/articles/tabular-workflows.html).
+see the [tabular workflows
+article](https://smartiing.github.io/seekr/articles/tabular-workflows.html).
 
 If your text does not come directly from files, or if you want to
-control reading and writing yourself, see [working with
-text](https://smartiing.github.io/seekr/articles/working-with-text.html).
+control reading and writing yourself, see the [working with text
+article](https://smartiing.github.io/seekr/articles/working-with-text.html).
 
-For larger repositories or performance-sensitive searches, see
-[performance
-notes](https://smartiing.github.io/seekr/articles/performance-note.html).
+For larger repositories or performance-sensitive searches, see the
+[performance notes
+article](https://smartiing.github.io/seekr/articles/performance-note.html).
 
 Patterns are powered by [`stringr`](https://stringr.tidyverse.org/) and
 ICU regular expressions, so you can use familiar tools such as
@@ -121,14 +121,14 @@ First, list all files that could be searched.
 
 files <- list_files()
 files
-#> [1] "C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata/config.yaml"
-#> [2] "C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata/data.json"  
-#> [3] "C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata/iris.csv"   
-#> [4] "C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata/mtcars.csv" 
-#> [5] "C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata/script1.R"  
-#> [6] "C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata/script2.R"  
-#> [7] "C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata/server1.log"
-#> [8] "C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata/server2.log"
+#> [1] "C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata/config.yaml"
+#> [2] "C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata/data.json"  
+#> [3] "C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata/iris.csv"   
+#> [4] "C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata/mtcars.csv" 
+#> [5] "C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata/script1.R"  
+#> [6] "C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata/script2.R"  
+#> [7] "C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata/server1.log"
+#> [8] "C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata/server2.log"
 ```
 
 Then filter to keep only R files.
@@ -141,20 +141,20 @@ can be retrieved using
 
 filtered <- filter_files(files, extension = "R")
 filtered
-#> [1] "C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata/script1.R"
-#> [2] "C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata/script2.R"
+#> [1] "C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata/script1.R"
+#> [2] "C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata/script2.R"
 #> attr(,"exclusions")
 #> # A tibble: 8 × 7
 #>   path                                                    excluded exclude_by_extension is_git_dir is_dependency_dir is_minified_file is_not_text_mime
 #>   <chr>                                                   <lgl>    <lgl>                <lgl>      <lgl>             <lgl>            <lgl>           
-#> 1 C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
-#> 2 C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
-#> 3 C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
-#> 4 C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
-#> 5 C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           
-#> 6 C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           
-#> 7 C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
-#> 8 C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-… TRUE     TRUE                 NA         NA                NA               NA
+#> 1 C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
+#> 2 C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
+#> 3 C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
+#> 4 C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
+#> 5 C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           
+#> 6 C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-… FALSE    FALSE                FALSE      FALSE             FALSE            FALSE           
+#> 7 C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-… TRUE     TRUE                 NA         NA                NA               NA              
+#> 8 C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-… TRUE     TRUE                 NA         NA                NA               NA
 ```
 
 Now that we have a list of files, we can search for function names
@@ -196,7 +196,7 @@ with [`field()`](https://vctrs.r-lib.org/reference/fields.html).
 
 str(x)
 #> <seekr::match[5]> vctrs::rcrd
-#> path        <chr> "C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata/script1.R", "C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/…
+#> path        <chr> "C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata/script1.R", "C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/…
 #> start_line  <int> 1, 9, 2, 7, 12
 #> end_line    <int> 1, 9, 2, 7, 12
 #> start       <int> 1, 115, 33, 125, 213
@@ -226,7 +226,7 @@ overview of the matches and planned replacements.
 
 summary(x)
 #> ── <seekr::match[5]> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata
+#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata
 #> 
 #> Top sources [2]
 #>  • script2.R : 3 (60.0%)
@@ -253,7 +253,7 @@ with surrounding context and preview the replacement.
 
 print(x, context = c(0, 3))
 #> <seekr::match[5]> 2 sources
-#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata
+#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {
@@ -298,7 +298,7 @@ matches whose matched text contains `"safe"`.
 x <- filter_match(x, !grepl("safe", match))
 print(x, context = c(0L, 2L))
 #> <seekr::match[3]> 2 sources
-#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata
+#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {
@@ -326,7 +326,7 @@ the replacement to upper case and preview the result.
 field(x, "replacement") = toupper(field(x, "replacement"))
 print(x, context = c(0, 2))
 #> <seekr::match[3]> 2 sources
-#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata
+#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {
@@ -373,7 +373,7 @@ unchanged.
 
 seekr(regex(my_pattern, ignore_case = TRUE))
 #> <seekr::match[5]> 2 sources
-#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata
+#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] ->  1 | ONE_ADD <- function(x) {
@@ -400,8 +400,8 @@ bck
 #> # A tibble: 2 × 9
 #>      id created_at          operation description original                                                  backup original_exists backup_exists  size
 #>   <int> <dttm>              <chr>     <chr>       <chr>                                                     <chr>  <lgl>           <lgl>         <fs:>
-#> 1     1 2026-07-12 03:36:29 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-ex… C:/Us… TRUE            TRUE            172
-#> 2     1 2026-07-12 03:36:29 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-ex… C:/Us… TRUE            TRUE            293
+#> 1     1 2026-07-12 22:14:20 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-ex… C:/Us… TRUE            TRUE            172
+#> 2     1 2026-07-12 22:14:20 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-ex… C:/Us… TRUE            TRUE            293
 ```
 
 Use
@@ -424,10 +424,10 @@ list_backups()
 #> # A tibble: 4 × 9
 #>      id created_at          operation description original                                                  backup original_exists backup_exists  size
 #>   <int> <dttm>              <chr>     <chr>       <chr>                                                     <chr>  <lgl>           <lgl>         <fs:>
-#> 1     2 2026-07-12 03:36:29 restore   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-ex… C:/Us… TRUE            TRUE            172
-#> 2     2 2026-07-12 03:36:29 restore   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-ex… C:/Us… TRUE            TRUE            293
-#> 3     1 2026-07-12 03:36:29 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-ex… C:/Us… TRUE            TRUE            172
-#> 4     1 2026-07-12 03:36:29 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-ex… C:/Us… TRUE            TRUE            293
+#> 1     2 2026-07-12 22:14:20 restore   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-ex… C:/Us… TRUE            TRUE            172
+#> 2     2 2026-07-12 22:14:20 restore   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-ex… C:/Us… TRUE            TRUE            293
+#> 3     1 2026-07-12 22:14:20 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-ex… C:/Us… TRUE            TRUE            172
+#> 4     1 2026-07-12 22:14:20 replace   <NA>        C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-ex… C:/Us… TRUE            TRUE            293
 ```
 
 Once the files have been restored, the original files are back.
@@ -439,7 +439,7 @@ identical(y, x_restored)
 #> [1] TRUE
 print(x_restored)
 #> <seekr::match[5]> 2 sources
-#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpWWVw02/seekr-example/extdata
+#> Common Path: C:/Users/smarting/AppData/Local/Temp/RtmpMJFzMp/seekr-example/extdata
 #> 
 #> script1.R [2]
 #> [1] --  1 | add_one <- function(x) {

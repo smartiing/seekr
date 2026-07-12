@@ -82,13 +82,13 @@ returning a file-centric object.
 A data frame was the most obvious alternative. It is familiar to R
 users, easy to inspect, and useful for tabular workflows.
 
-`seekr` supports this workflow through
+`seekr` supports this workflow through `as.data.frame` /
 [`as_tibble()`](https://tibble.tidyverse.org/reference/as_tibble.html)
 and
 [`as_match()`](https://smartiing.github.io/seekr/reference/as_tibble.seekr_match.md),
-so users can move to and from a tibble when that representation is
-convenient. See [Tabular
-workflows](https://smartiing.github.io/seekr/articles/tabular-workflows.md)
+so users can move to and from a data frame when that representation is
+convenient. See the [Tabular workflows
+article](https://smartiing.github.io/seekr/articles/tabular-workflows.md)
 for examples.
 
 But a data frame is not the right core representation for `seekr`.
@@ -195,5 +195,5 @@ encoding-preserving editor. Instead, it makes encoding changes visible
 and deliberate.
 
 If the user needs full control over reading and writing text, they can
-use the text-level workflow described in [Working with
-text](https://smartiing.github.io/seekr/articles/working-with-text.md).
+use the text-level workflow described in the [working with text
+article](https://smartiing.github.io/seekr/articles/working-with-text.md).

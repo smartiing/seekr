@@ -156,8 +156,10 @@ returning a data frame and returning a file-centric object.</p>
 <p>A data frame was the most obvious alternative. It is familiar to R
 users, easy to inspect, and useful for tabular workflows.</p>
 <p><code>seekr</code> supports this workflow through
-<code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code> and <code><a href="../reference/as_tibble.seekr_match.html">as_match()</a></code>, so users can move
-to and from a tibble when that representation is convenient. See <a href="tabular-workflows.html">Tabular workflows</a> for examples.</p>
+<code>as.data.frame</code> / <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code> and
+<code><a href="../reference/as_tibble.seekr_match.html">as_match()</a></code>, so users can move to and from a data frame when
+that representation is convenient. See the <a href="tabular-workflows.html">Tabular workflows article</a> for
+examples.</p>
 <p>But a data frame is not the right core representation for
 <code>seekr</code>.</p>
 <p>Most fields in a match should not be edited directly by the user.
@@ -254,7 +256,7 @@ explicitly.</p>
 universal encoding-preserving editor. Instead, it makes encoding changes
 visible and deliberate.</p>
 <p>If the user needs full control over reading and writing text, they
-can use the text-level workflow described in <a href="working-with-text.html">Working with text</a>.</p>
+can use the text-level workflow described in the <a href="working-with-text.html">working with text article</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

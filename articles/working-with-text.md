@@ -43,9 +43,9 @@ goes.
 
 Imagine that you have extracted a few SQL procedures from a database.
 
-In this example, the procedures are already available in a tibble. In a
-real workflow, this table could have been created from a database query,
-an API call, or any other source.
+In this example, the procedures are already available in a data frame.
+In a real workflow, this table could have been created from a database
+query, an API call, or any other source.
 
 ``` r
 
