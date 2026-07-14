@@ -29,8 +29,8 @@ to let users:
 - preview replacements before files are written;
 - prepare replacements either during the search step or after matches have been
   inspected;
-- update the replacements;
-- filter to keep a subset of the matches;
+- update the individual replacements after the search;
+- filter matches after the search;
 - replace only the remaining matches, safely.
 
 More generally, the result needed to expose the information captured for each match, so users could use it for their own workflows. This includes understanding what was matched and where, filtering matches more precisely, summarizing search results, or preparing and updating replacements using the context and other captured fields.
@@ -39,11 +39,11 @@ The `seekr_match` vector is the object that came out of these requirements. It
 allows workflows like this:
 
 ```{r, eval = FALSE}
-x <- seekr("old_name", "new_name")
+x <- seekr("(foo|bar)", "new_\\1")
 
 summary(x)
 print(x, context = 2)
-x <- filter_match(x, path != "legacy.R")
+x <- filter_match(x, match != "new_foo")
 field(x, "replacement") <- toupper(field(x, "replacement"))
 
 replace_files(x)
@@ -119,4 +119,4 @@ By default, `replace_files()` refuses to silently rewrite a non-UTF-8 file as UT
 
 This is a trade-off. `seekr` does not try to be a universal encoding-preserving editor. Instead, it makes encoding changes visible and deliberate.
 
-If the user needs full control over reading and writing text, they can use the text-level workflow described in the [working with text article](working-with-text.html).
+If the user needs full control over reading and writing text, they can use the text-level workflow described in the [Working with text article](working-with-text.html).

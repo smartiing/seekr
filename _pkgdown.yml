@@ -49,7 +49,7 @@ reference:
 
 - title: File replacement and backups
   desc: >
-    Apply staged replacements to files, inspect automatic backups, and restore
+    Apply planned replacements to files, inspect automatic backups, and restore
     previous file contents when needed.
   contents:
   - replace_files

@@ -34,7 +34,7 @@ knitr::opts_knit$set(root.dir = path)
 
 ## Overview
 
-`seek()`/`seekr()` returns matches as a `seekr_match` vector. For many workflows, you can inspect and refine this vector directly with `print()`, `summary()`, and `filter_match()`.
+`seek()` and `seekr()` returns matches as a `seekr_match` vector. For many workflows, you can inspect and refine this vector directly with `print()`, `summary()`, and `filter_match()`.
 
 Sometimes, however, it is useful to switch to a tabular workflow. This is especially true when you want to summarize matches by file, filter based on group-level information, or prepare replacements with data frame tools.
 
@@ -71,7 +71,7 @@ x <- seek("([A-Z]+) : (.+$)", extension = "log")
 x
 ```
 
-We summarize directly to have an idea of what was found.
+We can start with a summary of what was found.
 
 ```{r}
 summary(x)
@@ -92,7 +92,7 @@ df
 
 This gives one row per match and one column per field, which makes grouped summaries easy.
 
-For example, we could create a custom summary per file for `DEBUG` lines where we see the number of matches and distinct matches as well as the first and last lines where we find a match.
+For example, we can summarize the `DEBUG` matches in each file by counting the total and distinct messages and recording the first and last matching lines.
 
 ```{r}
 df |>
@@ -155,7 +155,7 @@ to_replace <- as_match(latest)
 to_replace
 ```
 
-Finally, our `seekr_match` vector can be used to replace only the selected matches in the files by their corresponding `replacement`.
+Finally, our `seekr_match` vector can be used to replace only the selected matches in the files with their corresponding replacements.
 
 ```{r, eval = FALSE}
 replace_files(to_replace)

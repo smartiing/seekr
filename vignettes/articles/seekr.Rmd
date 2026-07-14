@@ -282,7 +282,7 @@ match_files(
 
 This is useful when the replacement logic depends on several captured parts of the match.
 
-For workflows where text has already been read, or where you want to control reading and writing yourself, see the [working with text article](working-with-text.html).
+For workflows where text has already been read, or where you want to control reading and writing yourself, see the [Working with text article](working-with-text.html).
 
 ## Use `seek()` and `seekr()`
 
@@ -340,7 +340,7 @@ print(x, context = c(0L, 3L))
 
 In terminals that support OSC8 hyperlinks, printed file locations can also be clickable.
 
-For more on why `seekr` represents search results this way, see the [design choices article](design-choices.html).
+For more on why `seekr` represents search results this way, see the [Design choices article](design-choices.html).
 
 ## Filter matches
 
@@ -367,7 +367,7 @@ This is especially useful for grouped summaries, joins, group-aware filtering, o
 
 When converting back, `as_match()` validates that the data frame still contains the fields required to reconstruct a valid `seekr_match` vector. This makes it possible to use tabular workflows while still returning to the main `seekr` replacement workflow.
 
-For examples, see the `as_match()` documentation and the [tabular workflows article](tabular-workflows.html).
+For examples, see the `as_match()` documentation and the [Tabular workflows article](tabular-workflows.html).
 
 ## Update replacements after inspection
 
@@ -384,7 +384,7 @@ This makes it possible to search broadly, inspect the result, keep only the matc
 
 ## Replace selected matches
 
-**Important:** `replace_files()` writes modified files in UTF-8. If you need to control how files are written, use the workflow described in the [working with text article](working-with-text.html).
+**Important:** `replace_files()` writes modified files in UTF-8. If you need to control how files are written, use the workflow described in the [Working with text article](working-with-text.html).
 
 When the selected matches and replacements look right, we can call `replace_files()` which starts from the current `seekr_match` vector.
 

@@ -3,7 +3,7 @@
 #' @description
 #' `print()` displays a [`seekr_match`] vector in a readable console format,
 #' grouped by source. Each printed match is shown with its source, match index,
-#' line number, matched text, and, when available, its staged replacement.
+#' line number, matched text, and, when available, its planned replacement.
 #'
 #' The amount of output can be controlled with `n`, which limits the number of
 #' matches printed. `context` controls how many surrounding lines are

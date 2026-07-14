@@ -14,9 +14,9 @@
 #'
 #' ## Steps
 #'
-#' - **[list_files()]** starts from `path`, optionally `use_git` to restrict file
-#'   discovery, and `recurse`s into subdirectories to list files.  By default, not
-#'   `all` files are listed, with hidden files and directories excluded.
+#' - **[list_files()]** starts from `path` and can `recurse` into subdirectories
+#'   to list files. By default, not `all` files are listed, with hidden files and
+#'   directories excluded. It can also `use_git` to restrict file discovery.
 #'
 #' - **[filter_files()]** keeps files matching `extension` and `path_pattern` and
 #'   not exceeding `max_file_size`. Finally, the `exclude` functions are applied to
@@ -36,8 +36,7 @@
 #'
 #' @param replacement Replacement to associate with each match. Replacements are
 #'   computed immediately during the search and stored in the result. Either:
-#'   - `NULL` (default): no replacement. [replace_files()] cannot be called
-#'     without setting replacements first.
+#'   - `NULL` (default): no replacement.
 #'   - A plain string, used literally as replacement text.
 #'   - A string with backreferences of the form `\1`, `\2`, etc., replaced
 #'     with the corresponding capture group from `pattern`.
@@ -71,8 +70,7 @@
 #' @param extension Optional character vector of file extensions to keep.
 #'   Either:
 #'   - `NULL` (default): no filtering by extension; all extensions are kept.
-#'   - A character vector of extensions to keep, with or without a leading dot
-#'     (e.g. `c("R", ".Rmd", "qmd")`).
+#'   - A character vector of extensions to keep (e.g. `c("R", ".Rmd", "qmd")`).
 #'
 #'   Extensions are normalized before matching: leading dots are stripped,
 #'   matching is case-insensitive, and duplicates are ignored. Only the last

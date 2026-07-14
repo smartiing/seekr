@@ -3,10 +3,12 @@
 #' List files to search
 #'
 #' @description
-#' [list_files()] starts from `path` and lists candidate files. It can recurse
-#' into subdirectories with `recurse`, include hidden files and directories with
-#' `all`, and optionally restrict discovery inside Git repositories with
-#' `use_git`. It is the first step of the [`seek()`] pipeline.
+#' [list_files()] starts from `path` and can `recurse` into subdirectories to
+#' list files. By default, not `all` files are listed, with hidden files and
+#' directories excluded. It can also `use_git` to restrict file discovery. It is
+#' the first step of the [`seek()`] pipeline.
+#'
+#' - **[list_files()]**
 #'
 #' Listing is intentionally simple: it does not know about patterns, extensions,
 #' file sizes, or MIME types. Its only job is to turn directories into a

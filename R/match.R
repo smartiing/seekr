@@ -23,11 +23,11 @@
 #' @seealso
 #' - [match_text()] to search for a pattern in in-memory text.
 #' - [filter_files()] to filter files before matching.
-#' - [replace_files()] to apply staged replacements.
+#' - [replace_files()] to apply planned replacements.
 #'
 #' @note
-#' For advanced use cases where you want to search for a pattern in-memory text,
-#' see [match_text()].
+#' For advanced use cases where you want to search for a pattern in text already
+#' held in memory, see [match_text()].
 #'
 #' @examples
 #' ext_path <- system.file("extdata", package = "seekr")
@@ -39,8 +39,8 @@
 #' # Capture more context lines
 #' match_files(files, "TODO", context = 10L)
 #'
-#' # Stage a replacement
-#' match_files(files, "old_fn", replacement = "new_fn")
+#' # Prepare some replacements
+#' match_files(files, "TODO", "DONE")
 #'
 #' @name match_files
 #' @export
@@ -233,7 +233,7 @@ match_file_impl = function(
 #' @param path Source identifier associated with `text`. This is stored in the
 #'   resulting [`seekr_match`] object and used later for inspection and
 #'   diagnostics. It may be a real file path, but it does not need to point to an
-#'   existing file unless the result is later passed to [replace_files()].
+#'   existing file.
 #'
 #' @return A [`seekr_match`] vector.
 #'

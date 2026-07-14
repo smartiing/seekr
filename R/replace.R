@@ -11,8 +11,8 @@
 #' @inheritParams seek
 #' @inheritParams backups
 #'
-#' @param x A [`seekr_match`] object with replacement values. Typically created
-#'   by [seek()], [seekr()], [match_files()], or [match_text()]. Replacement field
+#' @param x A [`seekr_match`] object with replacement values created
+#'   by [seek()]/[seekr()] or [match_files()]. Replacement field
 #'   must be set for all matches, either computed when searching for matches or
 #'   modified manually before calling `replace_files()`.
 #' @param description Optional character string stored in the backup metadata
@@ -67,7 +67,7 @@
 #' not included in the returned object.
 #'
 #' @seealso
-#' - [seek()] and [seekr()] to create matches with staged replacements.
+#' - [seek()] and [seekr()] to create matches with planned replacements.
 #' - [filter_match()] to keep only some matches before replacing.
 #' - [list_backups()] and [last_backup()] to inspect backups.
 #' - [restore_files()] and [restore_files_interactive()] to restore files.
@@ -236,11 +236,11 @@ replace_files = function(
 #' that was searched when the matches were created. If the text has changed,
 #' replacement is considered unsafe and the function aborts.
 #'
-#' Matches are replaced from the end of the file to the beginning, so earlier
+#' Matches are replaced from the end of the text to the beginning, so earlier
 #' replacements do not shift the recorded positions of later replacements.
 #'
-#' `replace_text()` requires `x` to contain matches from a single source, the one
-#' corresponding to text.
+#' `replace_text()` requires `x` to contain matches from a single source, the
+#' one corresponding to `text`
 #'
 #' @seealso
 #' - [match_text()] to create matches from already-read text.

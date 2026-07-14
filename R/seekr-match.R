@@ -18,8 +18,8 @@
 #' @param start_col,end_col Integer vectors. 1-based column positions of the
 #'   match start and end within their respective lines.
 #' @param match A character vector. The exact text matched.
-#' @param replacement A character vector. The staged replacement for each
-#'   match. `NA` indicates no replacement is staged.
+#' @param replacement A character vector. The planned replacement for each
+#'   match. `NA` indicates no replacement is planned.
 #' @param before A character vector. Context lines preceding each match.
 #' @param line A character vector. The complete line(s) containing each match.
 #' @param after A character vector. Context lines following each match.
@@ -77,7 +77,7 @@
 #'   vectors.
 #' - [print.seekr_match()] and [summary.seekr_match()] to inspect results.
 #' - [filter_match()] to subset matches before replacing.
-#' - [replace_files()] to apply staged replacements.
+#' - [replace_files()] to apply planned replacements.
 #' - [empty_stage()] and [exclusions()] to diagnose empty results.
 #'
 #' @examples
@@ -297,7 +297,7 @@ pillar_shaft.seekr_match = function(
 #' - [seekr_match] for the list of available fields.
 #' - [filter_match()] for simpler subsetting that does not require conversion.
 #' - [vctrs::field()] to access or modify a single field in place.
-#' - [replace_files()] to apply staged replacements after converting back.
+#' - [replace_files()] to apply planned replacements after converting back.
 #'
 #' @examples
 #' \dontrun{
@@ -430,30 +430,23 @@ as_match = function(x) {
 #' - [vctrs::field()] to access a field directly for use in base R subsetting.
 #' - [as_tibble.seekr_match()] and [as_match()] for more complex workflows that
 #'   require tabular manipulation.
-#' - [replace_files()] to apply staged replacements after filtering.
+#' - [replace_files()] to apply planned replacements after filtering.
 #'
 #' @examples
 #' ext_path <- system.file("extdata", package = "seekr")
 #' x <- seekr("TODO|FIXME", path = ext_path)
 #'
 #' # Filter by line number
-#' filter_match(x, start_line > 10)
+#' filter_match(x, start_line == 1L)
 #'
 #' # Filter by file path
-#' filter_match(x, grepl("/R/", path))
+#' filter_match(x, grepl("script", path))
 #'
-#' # Filter by matched text
-#' filter_match(x, match == "TODO")
+#' # Combine conditions
+#' filter_match(x, match == "TODO", grepl("script", path))
 #'
 #' # Combine multiple conditions
-#' filter_match(x, match == "TODO", start_line > 10, grepl("/R/", path))
-#'
-#' # Equivalent base R subsetting (more verbose)
-#' x[
-#'   field(x, "match") == "TODO" &
-#'   field(x, "start_line") > 10 &
-#'   grepl("/R/", field(x, "path"))
-#' ]
+#' filter_match(x, match == "TODO", start_line > 10, grepl("script", path))
 #'
 #' @export
 filter_match = function(x, ...) {
@@ -590,7 +583,7 @@ smash = function(x) {
 #' @examples
 #' ext_path <- system.file("extdata", package = "seekr")
 #' x <- seekr("TODO", path = ext_path)
-#' y <- seekr("FIXME", path = ext_path)
+#' y <- seekr("function", path = ext_path)
 #'
 #' # Combine and reorder within files without changing file order
 #' z <- vctrs::vec_c(x, y)

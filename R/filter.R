@@ -44,8 +44,8 @@
 #' # Keep only R files
 #' filter_files(files, extension = "R")
 #'
-#' # Keep only files in the R/ subfolder
-#' filter_files(files, path_pattern = "/R/")
+#' Keep only script files
+#' filter_files(files, path_pattern = "script")
 #'
 #' # Exclude files larger than 1 MB
 #' filter_files(files, max_file_size = fs::fs_bytes("1MB"))

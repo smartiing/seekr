@@ -49,11 +49,11 @@ options(width = 150)
 ```{r, echo = FALSE}
 df <- tibble(
   name = c(
-    "refresh_customer_scores",
-    "refresh_offer_flags",
-    "archive_old_events",
-    "refresh_campaign_targets",
-    "cleanup_temp_tables"
+    "refresh_customer_scores.SQL",
+    "refresh_offer_flags.SQL",
+    "archive_old_events.SQL",
+    "refresh_campaign_targets.SQL",
+    "cleanup_temp_tables.SQL"
   ),
   body = c(
     "
@@ -168,7 +168,7 @@ summary(x)
 
 We can now apply the selected replacements with `replace_text()`.
 
-Unlike `replace_files()`, this does not write anything to disk. It simply returns a modified string and the updated text is now just another column.
+Unlike `replace_files()`, this does not write anything to disk. It simply returns a modified string, which we store here as another column.
 
 ```{r}
 df <- 

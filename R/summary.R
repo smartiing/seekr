@@ -4,7 +4,7 @@
 #' `summary()` produces a compact overview of a [`seekr_match`] vector:
 #' the most frequent files, matched texts, file extensions, and encodings.
 #'
-#' When replacements are staged, matched texts are displayed together with their
+#' When replacements are planned, matched texts are displayed together with their
 #' replacement preview, giving a high-level picture of what [replace_files()]
 #' would change.
 #'
