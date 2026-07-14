@@ -11,7 +11,7 @@ matches.
 
 For every match it finds, it stores the source path, the absolute
 character positions, the line and column positions, the matched text,
-the staged replacement if any, the line containing the match,
+the planned replacement if any, the line containing the match,
 surrounding context lines, the encoding, and a hash of the searched text
 that
 [`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md)
@@ -27,11 +27,10 @@ The main cases where performance is likely to matter:
 - **Large repositories** with tens of thousands of files.
 - **Large individual files**, because each file must fit in memory as
   text.
-- **Files with very large lines**, because the match line is stored and
-  by default some context lines too, minified files such as JavaScript,
-  generated JSON, and one-line data dumps are common examples for which
-  `seekr` might not be the best fit. The default exclude functions
-  remove some of these by default, but not all.
+- **Files with very large lines**, because the complete matching line
+  and, by default, surrounding context are stored for every match.
+  Minified JavaScript, generated JSON, and one-line data dumps are
+  common examples for which `seekr` may not be the best fit.
 - **Workloads where you only need file names**, not structured match
   objects. For this, a CLI tool such as
   [`ripgrep`](https://github.com/burntsushi/ripgrep) that will stop as
@@ -39,7 +38,7 @@ The main cases where performance is likely to matter:
 
 ## Practical strategies for larger workloads
 
-### Only list files tracked by git
+### Use Git-aware file discovery
 
 Before using an external search tool, one simple option for Git
 repositories is to start with Git-aware file discovery:
@@ -56,7 +55,7 @@ x <- seek("pattern", use_git = TRUE)
 managed by `seekr`: installing it, making it available on your system
 `PATH`, and dealing with platform-specific command-line details are left
 to the user. The goal here is only to show a possible pattern for
-advanced users with heavy workloads and willing to use
+advanced users with heavy workloads who are willing to use
 [`ripgrep`](https://github.com/burntsushi/ripgrep) for performance.
 
 If the main bottleneck is the number of files or volume of data, you can
@@ -66,17 +65,18 @@ files contain the pattern, then pass only those files to
 
 ``` r
 
-# requires ripgrep to be installed and accessible to PATH
+# requires ripgrep to be installed and available on PATH
 pattern <- "function"
 path <- system.file("extdata", package = "seekr")
 
-# List the files with at least a match
+# list the files with at least a match
 files <- system2(
   command = "rg",
   args = c("-l", shQuote(pattern), shQuote(path)),
   stdout = TRUE
 )
 
+# find the matches
 x <- match_files(files, pattern, toupper)
 ```
 

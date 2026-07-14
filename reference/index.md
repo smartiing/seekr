@@ -72,7 +72,7 @@ ordering `seekr_match` vectors.
 
 ## File replacement and backups
 
-Apply staged replacements to files, inspect automatic backups, and
+Apply planned replacements to files, inspect automatic backups, and
 restore previous file contents when needed.
 
 - [`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md)

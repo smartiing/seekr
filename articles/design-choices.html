@@ -103,8 +103,8 @@ context;</li>
 <li>preview replacements before files are written;</li>
 <li>prepare replacements either during the search step or after matches
 have been inspected;</li>
-<li>update the replacements;</li>
-<li>filter to keep a subset of the matches;</li>
+<li>update the individual replacements after the search;</li>
+<li>filter matches after the search;</li>
 <li>replace only the remaining matches, safely.</li>
 </ul>
 <p>More generally, the result needed to expose the information captured
@@ -115,11 +115,11 @@ replacements using the context and other captured fields.</p>
 <p>The <code>seekr_match</code> vector is the object that came out of
 these requirements. It allows workflows like this:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seek.html">seekr</a></span><span class="op">(</span><span class="st">"old_name"</span>, <span class="st">"new_name"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seek.html">seekr</a></span><span class="op">(</span><span class="st">"(foo|bar)"</span>, <span class="st">"new_\\1"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, context <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_match.html">filter_match</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">path</span> <span class="op">!=</span> <span class="st">"legacy.R"</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_match.html">filter_match</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">match</span> <span class="op">!=</span> <span class="st">"new_foo"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"replacement"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">toupper</a></span><span class="op">(</span><span class="fu"><a href="https://vctrs.r-lib.org/reference/fields.html" class="external-link">field</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"replacement"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/replace_files.html">replace_files</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
@@ -256,7 +256,7 @@ explicitly.</p>
 universal encoding-preserving editor. Instead, it makes encoding changes
 visible and deliberate.</p>
 <p>If the user needs full control over reading and writing text, they
-can use the text-level workflow described in the <a href="working-with-text.html">working with text article</a>.</p>
+can use the text-level workflow described in the <a href="working-with-text.html">Working with text article</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

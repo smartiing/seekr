@@ -24,8 +24,8 @@ goal was to let users:
 - preview replacements before files are written;
 - prepare replacements either during the search step or after matches
   have been inspected;
-- update the replacements;
-- filter to keep a subset of the matches;
+- update the individual replacements after the search;
+- filter matches after the search;
 - replace only the remaining matches, safely.
 
 More generally, the result needed to expose the information captured for
@@ -39,11 +39,11 @@ requirements. It allows workflows like this:
 
 ``` r
 
-x <- seekr("old_name", "new_name")
+x <- seekr("(foo|bar)", "new_\\1")
 
 summary(x)
 print(x, context = 2)
-x <- filter_match(x, path != "legacy.R")
+x <- filter_match(x, match != "new_foo")
 field(x, "replacement") <- toupper(field(x, "replacement"))
 
 replace_files(x)
@@ -195,5 +195,5 @@ encoding-preserving editor. Instead, it makes encoding changes visible
 and deliberate.
 
 If the user needs full control over reading and writing text, they can
-use the text-level workflow described in the [working with text
+use the text-level workflow described in the [Working with text
 article](https://smartiing.github.io/seekr/articles/working-with-text.md).

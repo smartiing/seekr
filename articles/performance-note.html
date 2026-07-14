@@ -85,7 +85,7 @@ file sets.</p>
 whether a pattern matches.</p>
 <p>For every match it finds, it stores the source path, the absolute
 character positions, the line and column positions, the matched text,
-the staged replacement if any, the line containing the match,
+the planned replacement if any, the line containing the match,
 surrounding context lines, the encoding, and a hash of the searched text
 that <code><a href="../reference/replace_files.html">replace_files()</a></code> uses later to verify the file has not
 changed.</p>
@@ -102,11 +102,11 @@ files.</li>
 <strong>Large individual files</strong>, because each file must fit
 in memory as text.</li>
 <li>
-<strong>Files with very large lines</strong>, because the match line
-is stored and by default some context lines too, minified files such as
-JavaScript, generated JSON, and one-line data dumps are common examples
-for which <code>seekr</code> might not be the best fit. The default
-exclude functions remove some of these by default, but not all.</li>
+<strong>Files with very large lines</strong>, because the complete
+matching line and, by default, surrounding context are stored for every
+match. Minified JavaScript, generated JSON, and one-line data dumps are
+common examples for which <code>seekr</code> may not be the best
+fit.</li>
 <li>
 <strong>Workloads where you only need file names</strong>, not
 structured match objects. For this, a CLI tool such as <a href="https://github.com/burntsushi/ripgrep" class="external-link"><code>ripgrep</code></a>
@@ -117,7 +117,7 @@ that will stop as soon as it finds a match is a better fit.</li>
 <h2 id="practical-strategies-for-larger-workloads">Practical strategies for larger workloads<a class="anchor" aria-label="anchor" href="#practical-strategies-for-larger-workloads"></a>
 </h2>
 <div class="section level3">
-<h3 id="only-list-files-tracked-by-git">Only list files tracked by git<a class="anchor" aria-label="anchor" href="#only-list-files-tracked-by-git"></a>
+<h3 id="use-git-aware-file-discovery">Use Git-aware file discovery<a class="anchor" aria-label="anchor" href="#use-git-aware-file-discovery"></a>
 </h3>
 <p>Before using an external search tool, one simple option for Git
 repositories is to start with Git-aware file discovery:</p>
@@ -132,25 +132,26 @@ repositories is to start with Git-aware file discovery:</p>
 not managed by <code>seekr</code>: installing it, making it available on
 your system <code>PATH</code>, and dealing with platform-specific
 command-line details are left to the user. The goal here is only to show
-a possible pattern for advanced users with heavy workloads and willing
-to use <a href="https://github.com/burntsushi/ripgrep" class="external-link"><code>ripgrep</code></a>
+a possible pattern for advanced users with heavy workloads who are
+willing to use <a href="https://github.com/burntsushi/ripgrep" class="external-link"><code>ripgrep</code></a>
 for performance.</p>
 <p>If the main bottleneck is the number of files or volume of data, you
 can use <a href="https://github.com/burntsushi/ripgrep" class="external-link"><code>ripgrep</code></a> to
 identify which files contain the pattern, then pass only those files to
 <code><a href="../reference/match_files.html">match_files()</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># requires ripgrep to be installed and accessible to PATH</span></span>
+<code class="sourceCode R"><span><span class="co"># requires ripgrep to be installed and available on PATH</span></span>
 <span><span class="va">pattern</span> <span class="op">&lt;-</span> <span class="st">"function"</span></span>
 <span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"seekr"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># List the files with at least a match</span></span>
+<span><span class="co"># list the files with at least a match</span></span>
 <span><span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system2.html" class="external-link">system2</a></span><span class="op">(</span></span>
 <span>  command <span class="op">=</span> <span class="st">"rg"</span>,</span>
 <span>  args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-l"</span>, <span class="fu"><a href="https://rdrr.io/r/base/shQuote.html" class="external-link">shQuote</a></span><span class="op">(</span><span class="va">pattern</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/shQuote.html" class="external-link">shQuote</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  stdout <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># find the matches</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/match_files.html">match_files</a></span><span class="op">(</span><span class="va">files</span>, <span class="va">pattern</span>, <span class="va">toupper</span><span class="op">)</span></span></code></pre></div>
 <p>This keeps <code>seekr</code>’s structured match objects while
 offloading the initial scan to a tool optimized for raw throughput.</p>

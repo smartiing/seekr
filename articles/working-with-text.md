@@ -58,13 +58,13 @@ library(purrr)
 
 df
 #> # A tibble: 5 × 2
-#>   name                     body                                                                                                                       
-#>   <chr>                    <chr>                                                                                                                      
-#> 1 refresh_customer_scores  "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_scores\n  SET old_sc…
-#> 2 refresh_offer_flags      "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n  SET old_flag = TRU…
-#> 3 archive_old_events       "\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events\n  WHERE event_date < …
-#> 4 refresh_campaign_targets "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_targets\n  SET old_…
-#> 5 cleanup_temp_tables      "\nCREATE OR REPLACE FUNCTION cleanup_temp_tables()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM temp_work_table;\nEND;\n$$ L…
+#>   name                         body                                                                                                                   
+#>   <chr>                        <chr>                                                                                                                  
+#> 1 refresh_customer_scores.SQL  "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_scores\n  SET ol…
+#> 2 refresh_offer_flags.SQL      "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n  SET old_flag =…
+#> 3 archive_old_events.SQL       "\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events\n  WHERE event_dat…
+#> 4 refresh_campaign_targets.SQL "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_targets\n  SET …
+#> 5 cleanup_temp_tables.SQL      "\nCREATE OR REPLACE FUNCTION cleanup_temp_tables()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM temp_work_table;\nEND;\n…
 ```
 
 Suppose we want to rename some old SQL identifiers before reviewing and
@@ -105,13 +105,13 @@ The result is a list-column of `seekr_match` vectors.
 
 df
 #> # A tibble: 5 × 3
-#>   name                     x                  body                                                                                                    
-#>   <chr>                    <list>             <chr>                                                                                                   
-#> 1 refresh_customer_scores  <seekr::match [2]> "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_s…
-#> 2 refresh_offer_flags      <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n …
-#> 3 archive_old_events       <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events\n  …
-#> 4 refresh_campaign_targets <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_…
-#> 5 cleanup_temp_tables      <seekr::match [0]> "\nCREATE OR REPLACE FUNCTION cleanup_temp_tables()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM temp_work…
+#>   name                         x                  body                                                                                                
+#>   <chr>                        <list>             <chr>                                                                                               
+#> 1 refresh_customer_scores.SQL  <seekr::match [2]> "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE custom…
+#> 2 refresh_offer_flags.SQL      <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flag…
+#> 3 archive_old_events.SQL       <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events…
+#> 4 refresh_campaign_targets.SQL <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campa…
+#> 5 cleanup_temp_tables.SQL      <seekr::match [0]> "\nCREATE OR REPLACE FUNCTION cleanup_temp_tables()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM temp_…
 ```
 
 Each row still contains the original text and the matches found in that
@@ -125,12 +125,12 @@ df <-
 
 df
 #> # A tibble: 4 × 3
-#>   name                     x                  body                                                                                                    
-#>   <chr>                    <list>             <chr>                                                                                                   
-#> 1 refresh_customer_scores  <seekr::match [2]> "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_s…
-#> 2 refresh_offer_flags      <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n …
-#> 3 archive_old_events       <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events\n  …
-#> 4 refresh_campaign_targets <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_…
+#>   name                         x                  body                                                                                                
+#>   <chr>                        <list>             <chr>                                                                                               
+#> 1 refresh_customer_scores.SQL  <seekr::match [2]> "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE custom…
+#> 2 refresh_offer_flags.SQL      <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flag…
+#> 3 archive_old_events.SQL       <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events…
+#> 4 refresh_campaign_targets.SQL <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campa…
 ```
 
 We can also inspect all matches together by combining the list-column
@@ -141,7 +141,7 @@ into one `seekr_match` vector.
 x <- reduce(df$x, c, .init = new_seekr_match())
 print(x, context = 2L)
 #> <seekr::match[5]> 4 sources
-#> refresh_customer_scores [2]
+#> refresh_customer_scores.SQL [2]
 #>        4 | BEGIN
 #>        5 |   UPDATE customer_scores
 #> [1] -- 6 |   SET old_score = old_score + 1;
@@ -151,7 +151,7 @@ print(x, context = 2L)
 #>        7 | END;
 #>        8 | $$ LANGUAGE plpgsql;
 #> 
-#> refresh_offer_flags [1]
+#> refresh_offer_flags.SQL [1]
 #>        4 | BEGIN
 #>        5 |   UPDATE offer_flags
 #> [3] -- 6 |   SET old_flag = TRUE
@@ -159,14 +159,14 @@ print(x, context = 2L)
 #>        7 |   WHERE active = TRUE;
 #>        8 | END;
 #> 
-#> archive_old_events [1]
+#> archive_old_events.SQL [1]
 #>        1 | 
 #> [4] -- 2 | CREATE OR REPLACE FUNCTION archive_old_events()
 #>     ++ 2 | CREATE OR REPLACE FUNCTION archive_new_events()
 #>        3 | RETURNS void AS $$
 #>        4 | BEGIN
 #> 
-#> refresh_campaign_targets [1]
+#> refresh_campaign_targets.SQL [1]
 #>        4 | BEGIN
 #>        5 |   UPDATE campaign_targets
 #> [5] -- 6 |   SET old_segment = 'active'
@@ -183,10 +183,10 @@ inspected like any other search result.
 summary(x)
 #> ── <seekr::match[5]> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #> Top sources [4]
-#>  • refresh_customer_scores  : 2 (40.0%)
-#>  • archive_old_events       : 1 (20.0%)
-#>  • refresh_campaign_targets : 1 (20.0%)
-#>  • refresh_offer_flags      : 1 (20.0%)
+#>  • refresh_customer_scores.SQL  : 2 (40.0%)
+#>  • archive_old_events.SQL       : 1 (20.0%)
+#>  • refresh_campaign_targets.SQL : 1 (20.0%)
+#>  • refresh_offer_flags.SQL      : 1 (20.0%)
 #> 
 #> Top matches/replacements [4]
 #>  • <old_score/new_score>     : 2 (40.0%)
@@ -195,7 +195,7 @@ summary(x)
 #>  • <old_segment/new_segment> : 1 (20.0%)
 #> 
 #> Top extension [1]
-#>  •  : 5 (100.0%)
+#>  • sql : 5 (100.0%)
 #> 
 #> Top encoding [1]
 #>  • NA : 5 (100.0%)
@@ -209,7 +209,7 @@ We can now apply the selected replacements with
 Unlike
 [`replace_files()`](https://smartiing.github.io/seekr/reference/replace_files.md),
 this does not write anything to disk. It simply returns a modified
-string and the updated text is now just another column.
+string, which we store here as another column.
 
 ``` r
 
@@ -226,12 +226,12 @@ df <-
 
 df
 #> # A tibble: 4 × 4
-#>   name                     x                  replaced                                                                                           body 
-#>   <chr>                    <list>             <chr>                                                                                              <chr>
-#> 1 refresh_customer_scores  <seekr::match [2]> "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE cust… "\nC…
-#> 2 refresh_offer_flags      <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_fl… "\nC…
-#> 3 archive_old_events       <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION archive_new_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM even… "\nC…
-#> 4 refresh_campaign_targets <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE cam… "\nC…
+#>   name                         x                  replaced                                                                                       body 
+#>   <chr>                        <list>             <chr>                                                                                          <chr>
+#> 1 refresh_customer_scores.SQL  <seekr::match [2]> "\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE … "\nC…
+#> 2 refresh_offer_flags.SQL      <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offe… "\nC…
+#> 3 archive_old_events.SQL       <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION archive_new_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM … "\nC…
+#> 4 refresh_campaign_targets.SQL <seekr::match [1]> "\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE… "\nC…
 ```
 
 This is the point of the in-memory workflow: `seekr` helped us find,
@@ -260,7 +260,7 @@ sql_script <-
   pull(script_block)
 
 cat(sql_script, sep = "\n\n")
-#> -- Procedure: refresh_customer_scores -------------------------------
+#> -- Procedure: refresh_customer_scores.SQL -------------------------------
 #> 
 #> CREATE OR REPLACE FUNCTION refresh_customer_scores()
 #> RETURNS void AS $$
@@ -271,7 +271,7 @@ cat(sql_script, sep = "\n\n")
 #> $$ LANGUAGE plpgsql;
 #> 
 #> 
-#> -- Procedure: refresh_offer_flags -------------------------------
+#> -- Procedure: refresh_offer_flags.SQL -------------------------------
 #> 
 #> CREATE OR REPLACE FUNCTION refresh_offer_flags()
 #> RETURNS void AS $$
@@ -283,7 +283,7 @@ cat(sql_script, sep = "\n\n")
 #> $$ LANGUAGE plpgsql;
 #> 
 #> 
-#> -- Procedure: archive_old_events -------------------------------
+#> -- Procedure: archive_old_events.SQL -------------------------------
 #> 
 #> CREATE OR REPLACE FUNCTION archive_new_events()
 #> RETURNS void AS $$
@@ -294,7 +294,7 @@ cat(sql_script, sep = "\n\n")
 #> $$ LANGUAGE plpgsql;
 #> 
 #> 
-#> -- Procedure: refresh_campaign_targets -------------------------------
+#> -- Procedure: refresh_campaign_targets.SQL -------------------------------
 #> 
 #> CREATE OR REPLACE FUNCTION refresh_campaign_targets()
 #> RETURNS void AS $$

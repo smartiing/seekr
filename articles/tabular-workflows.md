@@ -2,9 +2,10 @@
 
 ## Overview
 
-[`seek()`](https://smartiing.github.io/seekr/reference/seek.md)/[`seekr()`](https://smartiing.github.io/seekr/reference/seek.md)
-returns matches as a `seekr_match` vector. For many workflows, you can
-inspect and refine this vector directly with
+[`seek()`](https://smartiing.github.io/seekr/reference/seek.md) and
+[`seekr()`](https://smartiing.github.io/seekr/reference/seek.md) returns
+matches as a `seekr_match` vector. For many workflows, you can inspect
+and refine this vector directly with
 [`print()`](https://rdrr.io/r/base/print.html),
 [`summary()`](https://rdrr.io/r/base/summary.html), and
 [`filter_match()`](https://smartiing.github.io/seekr/reference/filter_match.md).
@@ -44,7 +45,7 @@ library(stringr)
 x <- seek("([A-Z]+) : (.+$)", extension = "log")
 x
 #> <seekr::match[80]> 2 sources
-#> Common Path: /tmp/RtmpbfUhm7/seekr-example/extdata
+#> Common Path: /tmp/RtmpQ746bk/seekr-example/extdata
 #> 
 #> server1.log [10/40]
 #>  [1] ->  1 | 2026-06-30 01:13:45 INFO : Starting process
@@ -62,13 +63,13 @@ x
 #> # ℹ Use `print(n = ...)` to see more matches
 ```
 
-We summarize directly to have an idea of what was found.
+We can start with a summary of what was found.
 
 ``` r
 
 summary(x)
 #> ── <seekr::match[80]> ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-#> Common Path: /tmp/RtmpbfUhm7/seekr-example/extdata
+#> Common Path: /tmp/RtmpQ746bk/seekr-example/extdata
 #> 
 #> Top sources [2]
 #>  • server1.log : 40 (50.0%)
@@ -111,34 +112,34 @@ df
 #> # A tibble: 20 × 14
 #>    path                                          start_line end_line start   end start_col end_col match replacement before line  after encoding hash 
 #>    <chr>                                              <int>    <int> <int> <int>     <int>   <int> <chr> <chr>       <chr>  <chr> <chr> <chr>    <chr>
-#>  1 /tmp/RtmpbfUhm7/seekr-example/extdata/server…          2        2    65    87        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
-#>  2 /tmp/RtmpbfUhm7/seekr-example/extdata/server…          6        6   245   273        21      49 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
-#>  3 /tmp/RtmpbfUhm7/seekr-example/extdata/server…          7        7   295   319        21      45 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
-#>  4 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         12       12   514   536        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
-#>  5 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         14       14   602   624        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
-#>  6 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         19       19   831   852        21      42 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
-#>  7 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         20       20   874   896        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
-#>  8 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         24       24  1055  1079        21      45 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
-#>  9 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         25       25  1101  1123        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
-#> 10 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         28       28  1234  1256        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
-#> 11 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         31       31  1366  1387        21      42 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
-#> 12 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         38       38  1686  1709        21      44 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
-#> 13 /tmp/RtmpbfUhm7/seekr-example/extdata/server…          5        5   211   234        21      44 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
-#> 14 /tmp/RtmpbfUhm7/seekr-example/extdata/server…          7        7   299   328        21      50 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
-#> 15 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         10       10   442   463        21      42 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
-#> 16 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         20       20   903   932        21      50 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
-#> 17 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         30       30  1364  1386        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
-#> 18 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         33       33  1496  1519        21      44 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
-#> 19 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         35       35  1585  1614        21      50 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
-#> 20 /tmp/RtmpbfUhm7/seekr-example/extdata/server…         36       36  1636  1664        21      49 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
+#>  1 /tmp/RtmpQ746bk/seekr-example/extdata/server…          2        2    65    87        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
+#>  2 /tmp/RtmpQ746bk/seekr-example/extdata/server…          6        6   245   273        21      49 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
+#>  3 /tmp/RtmpQ746bk/seekr-example/extdata/server…          7        7   295   319        21      45 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
+#>  4 /tmp/RtmpQ746bk/seekr-example/extdata/server…         12       12   514   536        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
+#>  5 /tmp/RtmpQ746bk/seekr-example/extdata/server…         14       14   602   624        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
+#>  6 /tmp/RtmpQ746bk/seekr-example/extdata/server…         19       19   831   852        21      42 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
+#>  7 /tmp/RtmpQ746bk/seekr-example/extdata/server…         20       20   874   896        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
+#>  8 /tmp/RtmpQ746bk/seekr-example/extdata/server…         24       24  1055  1079        21      45 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
+#>  9 /tmp/RtmpQ746bk/seekr-example/extdata/server…         25       25  1101  1123        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
+#> 10 /tmp/RtmpQ746bk/seekr-example/extdata/server…         28       28  1234  1256        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
+#> 11 /tmp/RtmpQ746bk/seekr-example/extdata/server…         31       31  1366  1387        21      42 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
+#> 12 /tmp/RtmpQ746bk/seekr-example/extdata/server…         38       38  1686  1709        21      44 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…
+#> 13 /tmp/RtmpQ746bk/seekr-example/extdata/server…          5        5   211   234        21      44 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
+#> 14 /tmp/RtmpQ746bk/seekr-example/extdata/server…          7        7   299   328        21      50 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
+#> 15 /tmp/RtmpQ746bk/seekr-example/extdata/server…         10       10   442   463        21      42 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
+#> 16 /tmp/RtmpQ746bk/seekr-example/extdata/server…         20       20   903   932        21      50 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
+#> 17 /tmp/RtmpQ746bk/seekr-example/extdata/server…         30       30  1364  1386        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
+#> 18 /tmp/RtmpQ746bk/seekr-example/extdata/server…         33       33  1496  1519        21      44 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
+#> 19 /tmp/RtmpQ746bk/seekr-example/extdata/server…         35       35  1585  1614        21      50 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
+#> 20 /tmp/RtmpQ746bk/seekr-example/extdata/server…         36       36  1636  1664        21      49 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…
 ```
 
 This gives one row per match and one column per field, which makes
 grouped summaries easy.
 
-For example, we could create a custom summary per file for `DEBUG` lines
-where we see the number of matches and distinct matches as well as the
-first and last lines where we find a match.
+For example, we can summarize the `DEBUG` matches in each file by
+counting the total and distinct messages and recording the first and
+last matching lines.
 
 ``` r
 
@@ -153,8 +154,8 @@ df |>
 #> # A tibble: 2 × 5
 #>   path                                              n_matches n_distinct_matches first_line last_line
 #>   <chr>                                                 <int>              <int>      <int>     <int>
-#> 1 /tmp/RtmpbfUhm7/seekr-example/extdata/server1.log        12                  6          2        38
-#> 2 /tmp/RtmpbfUhm7/seekr-example/extdata/server2.log         8                  5          5        36
+#> 1 /tmp/RtmpQ746bk/seekr-example/extdata/server1.log        12                  6          2        38
+#> 2 /tmp/RtmpQ746bk/seekr-example/extdata/server2.log         8                  5          5        36
 ```
 
 This kind of question is often easier to answer with a data frame than
@@ -182,17 +183,17 @@ latest
 #> # A tibble: 11 × 15
 #>    path                      start_line end_line start   end start_col end_col match replacement before line  after encoding hash  match_rank_from_end
 #>    <chr>                          <int>    <int> <int> <int>     <int>   <int> <chr> <chr>       <chr>  <chr> <chr> <chr>    <chr>               <int>
-#>  1 /tmp/RtmpbfUhm7/seekr-ex…          6        6   245   273        21      49 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…                   1
-#>  2 /tmp/RtmpbfUhm7/seekr-ex…         12       12   514   536        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…                   1
-#>  3 /tmp/RtmpbfUhm7/seekr-ex…         24       24  1055  1079        21      45 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…                   1
-#>  4 /tmp/RtmpbfUhm7/seekr-ex…         28       28  1234  1256        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…                   1
-#>  5 /tmp/RtmpbfUhm7/seekr-ex…         31       31  1366  1387        21      42 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…                   1
-#>  6 /tmp/RtmpbfUhm7/seekr-ex…         38       38  1686  1709        21      44 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…                   1
-#>  7 /tmp/RtmpbfUhm7/seekr-ex…         10       10   442   463        21      42 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…                   1
-#>  8 /tmp/RtmpbfUhm7/seekr-ex…         30       30  1364  1386        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…                   1
-#>  9 /tmp/RtmpbfUhm7/seekr-ex…         33       33  1496  1519        21      44 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…                   1
-#> 10 /tmp/RtmpbfUhm7/seekr-ex…         35       35  1585  1614        21      50 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…                   1
-#> 11 /tmp/RtmpbfUhm7/seekr-ex…         36       36  1636  1664        21      49 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…                   1
+#>  1 /tmp/RtmpQ746bk/seekr-ex…          6        6   245   273        21      49 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…                   1
+#>  2 /tmp/RtmpQ746bk/seekr-ex…         12       12   514   536        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…                   1
+#>  3 /tmp/RtmpQ746bk/seekr-ex…         24       24  1055  1079        21      45 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…                   1
+#>  4 /tmp/RtmpQ746bk/seekr-ex…         28       28  1234  1256        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…                   1
+#>  5 /tmp/RtmpQ746bk/seekr-ex…         31       31  1366  1387        21      42 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…                   1
+#>  6 /tmp/RtmpQ746bk/seekr-ex…         38       38  1686  1709        21      44 DEBU… NA          "2026… 2026… "202… UTF-8    88aa…                   1
+#>  7 /tmp/RtmpQ746bk/seekr-ex…         10       10   442   463        21      42 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…                   1
+#>  8 /tmp/RtmpQ746bk/seekr-ex…         30       30  1364  1386        21      43 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…                   1
+#>  9 /tmp/RtmpQ746bk/seekr-ex…         33       33  1496  1519        21      44 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…                   1
+#> 10 /tmp/RtmpQ746bk/seekr-ex…         35       35  1585  1614        21      50 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…                   1
+#> 11 /tmp/RtmpQ746bk/seekr-ex…         36       36  1636  1664        21      49 DEBU… NA          "2026… 2026… "202… UTF-8    cb05…                   1
 ```
 
 The extra column `match_rank_from_end` is useful for now, but it is not
@@ -244,7 +245,7 @@ that some replacements have been set.
 to_replace <- as_match(latest)
 to_replace
 #> <seekr::match[11]> 2 sources
-#> Common Path: /tmp/RtmpbfUhm7/seekr-example/extdata
+#> Common Path: /tmp/RtmpQ746bk/seekr-example/extdata
 #> 
 #> server1.log [6]
 #>  [1] --  6 | 2026-06-30 17:03:42 DEBUG : Connection successful
@@ -274,7 +275,7 @@ to_replace
 ```
 
 Finally, our `seekr_match` vector can be used to replace only the
-selected matches in the files by their corresponding `replacement`.
+selected matches in the files with their corresponding replacements.
 
 ``` r
 

@@ -124,13 +124,13 @@ database query, an API call, or any other source.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
-<span><span class="co">#&gt;   name                     body                                                                                                                       </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                                                                      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> refresh_customer_scores  <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_scores\n  SET old_sc…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> refresh_offer_flags      <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n  SET old_flag = TRU…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> archive_old_events       <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events\n  WHERE event_date &lt; …</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> refresh_campaign_targets <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_targets\n  SET old_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> cleanup_temp_tables      <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION cleanup_temp_tables()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM temp_work_table;\nEND;\n$$ L…</span></span></code></pre></div>
+<span><span class="co">#&gt;   name                         body                                                                                                                   </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                                                                  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> refresh_customer_scores.SQL  <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_scores\n  SET ol…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> refresh_offer_flags.SQL      <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n  SET old_flag =…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> archive_old_events.SQL       <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events\n  WHERE event_dat…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> refresh_campaign_targets.SQL <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_targets\n  SET …</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> cleanup_temp_tables.SQL      <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION cleanup_temp_tables()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM temp_work_table;\nEND;\n…</span></span></code></pre></div>
 <p>Suppose we want to rename some old SQL identifiers before reviewing
 and re-running the procedures.</p>
 <p>The text is not coming from files, so we use
@@ -159,13 +159,13 @@ name as that identifier.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
-<span><span class="co">#&gt;   name                     x                  body                                                                                                    </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                                                   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> refresh_customer_scores  <span style="color: #949494;">&lt;seekr::match [2]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_s…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> refresh_offer_flags      <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n …</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> archive_old_events       <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events\n  …</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> refresh_campaign_targets <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> cleanup_temp_tables      <span style="color: #949494;">&lt;seekr::match [0]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION cleanup_temp_tables()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM temp_work…</span></span></code></pre></div>
+<span><span class="co">#&gt;   name                         x                  body                                                                                                </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                                               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> refresh_customer_scores.SQL  <span style="color: #949494;">&lt;seekr::match [2]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE custom…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> refresh_offer_flags.SQL      <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flag…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> archive_old_events.SQL       <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> refresh_campaign_targets.SQL <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campa…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> cleanup_temp_tables.SQL      <span style="color: #949494;">&lt;seekr::match [0]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION cleanup_temp_tables()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM temp_…</span></span></code></pre></div>
 <p>Each row still contains the original text and the matches found in
 that text. Here, we keep only procedures where at least one match was
 found.</p>
@@ -176,19 +176,19 @@ found.</p>
 <span></span>
 <span><span class="va">df</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
-<span><span class="co">#&gt;   name                     x                  body                                                                                                    </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                                                   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> refresh_customer_scores  <span style="color: #949494;">&lt;seekr::match [2]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE customer_s…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> refresh_offer_flags      <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flags\n …</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> archive_old_events       <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events\n  …</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> refresh_campaign_targets <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campaign_…</span></span></code></pre></div>
+<span><span class="co">#&gt;   name                         x                  body                                                                                                </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                                               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> refresh_customer_scores.SQL  <span style="color: #949494;">&lt;seekr::match [2]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE custom…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> refresh_offer_flags.SQL      <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_flag…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> archive_old_events.SQL       <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION archive_old_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM events…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> refresh_campaign_targets.SQL <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE campa…</span></span></code></pre></div>
 <p>We can also inspect all matches together by combining the list-column
 into one <code>seekr_match</code> vector.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/reduce.html" class="external-link">reduce</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">x</span>, <span class="va">c</span>, .init <span class="op">=</span> <span class="fu"><a href="../reference/seekr_match.html">new_seekr_match</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, context <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;seekr::match[5]&gt;<span style="color: #767676;"> 4 sources</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">refresh_customer_scores</span> <span style="color: #767676;">[2]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">refresh_customer_scores.SQL</span> <span style="color: #767676;">[2]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       4 | BEGIN</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       5 |   UPDATE customer_scores</span></span></span>
 <span><span class="co">#&gt; [1] -- 6 <span style="color: #767676;">|</span>   SET <span style="color: #BB0000;">old_score</span> = old_score + 1;</span></span>
@@ -198,7 +198,7 @@ into one <code>seekr_match</code> vector.</p>
 <span><span class="co">#&gt; <span style="color: #767676;">       7 | END;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       8 | $$ LANGUAGE plpgsql;</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">refresh_offer_flags</span> <span style="color: #767676;">[1]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">refresh_offer_flags.SQL</span> <span style="color: #767676;">[1]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       4 | BEGIN</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       5 |   UPDATE offer_flags</span></span></span>
 <span><span class="co">#&gt; [3] -- 6 <span style="color: #767676;">|</span>   SET <span style="color: #BB0000;">old_flag</span> = TRUE</span></span>
@@ -206,14 +206,14 @@ into one <code>seekr_match</code> vector.</p>
 <span><span class="co">#&gt; <span style="color: #767676;">       7 |   WHERE active = TRUE;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       8 | END;</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">archive_old_events</span> <span style="color: #767676;">[1]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">archive_old_events.SQL</span> <span style="color: #767676;">[1]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       1 | </span></span></span>
 <span><span class="co">#&gt; [4] -- 2 <span style="color: #767676;">|</span> CREATE OR REPLACE FUNCTION archive_<span style="color: #BB0000;">old_events</span>()</span></span>
 <span><span class="co">#&gt;     ++ 2 <span style="color: #767676;">|</span> CREATE OR REPLACE FUNCTION archive_<span style="color: #00BB00;">new_events</span>()</span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       3 | RETURNS void AS $$</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       4 | BEGIN</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">refresh_campaign_targets</span> <span style="color: #767676;">[1]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">refresh_campaign_targets.SQL</span> <span style="color: #767676;">[1]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       4 | BEGIN</span></span></span>
 <span><span class="co">#&gt; <span style="color: #767676;">       5 |   UPDATE campaign_targets</span></span></span>
 <span><span class="co">#&gt; [5] -- 6 <span style="color: #767676;">|</span>   SET <span style="color: #BB0000;">old_segment</span> = 'active'</span></span>
@@ -226,10 +226,10 @@ vector and can be inspected like any other search result.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ── &lt;seekr::match[5]&gt; ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; Top sources <span style="color: #767676;">[4]</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #0000BB;">refresh_customer_scores</span>  : 2 <span style="color: #767676;">(40.0%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #0000BB;">archive_old_events</span>       : 1 <span style="color: #767676;">(20.0%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #0000BB;">refresh_campaign_targets</span> : 1 <span style="color: #767676;">(20.0%)</span></span></span>
-<span><span class="co">#&gt;  • <span style="color: #0000BB;">refresh_offer_flags</span>      : 1 <span style="color: #767676;">(20.0%)</span></span></span>
+<span><span class="co">#&gt;  • <span style="color: #0000BB;">refresh_customer_scores.SQL</span>  : 2 <span style="color: #767676;">(40.0%)</span></span></span>
+<span><span class="co">#&gt;  • <span style="color: #0000BB;">archive_old_events.SQL</span>       : 1 <span style="color: #767676;">(20.0%)</span></span></span>
+<span><span class="co">#&gt;  • <span style="color: #0000BB;">refresh_campaign_targets.SQL</span> : 1 <span style="color: #767676;">(20.0%)</span></span></span>
+<span><span class="co">#&gt;  • <span style="color: #0000BB;">refresh_offer_flags.SQL</span>      : 1 <span style="color: #767676;">(20.0%)</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Top matches/replacements <span style="color: #767676;">[4]</span></span></span>
 <span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #BB0000;">old_score</span><span style="color: #767676;">/</span><span style="color: #00BB00;">new_score</span><span style="color: #767676;">&gt;</span>     : 2 <span style="color: #767676;">(40.0%)</span></span></span>
@@ -238,7 +238,7 @@ vector and can be inspected like any other search result.</p>
 <span><span class="co">#&gt;  • <span style="color: #767676;">&lt;</span><span style="color: #BB0000;">old_segment</span><span style="color: #767676;">/</span><span style="color: #00BB00;">new_segment</span><span style="color: #767676;">&gt;</span> : 1 <span style="color: #767676;">(20.0%)</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Top extension <span style="color: #767676;">[1]</span></span></span>
-<span><span class="co">#&gt;  •  : 5 <span style="color: #767676;">(100.0%)</span></span></span>
+<span><span class="co">#&gt;  • sql : 5 <span style="color: #767676;">(100.0%)</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Top encoding <span style="color: #767676;">[1]</span></span></span>
 <span><span class="co">#&gt;  • <span style="color: #BB0000;">NA</span> : 5 <span style="color: #767676;">(100.0%)</span></span></span></code></pre></div>
@@ -249,8 +249,8 @@ vector and can be inspected like any other search result.</p>
 <p>We can now apply the selected replacements with
 <code><a href="../reference/replace_text.html">replace_text()</a></code>.</p>
 <p>Unlike <code><a href="../reference/replace_files.html">replace_files()</a></code>, this does not write anything to
-disk. It simply returns a modified string and the updated text is now
-just another column.</p>
+disk. It simply returns a modified string, which we store here as
+another column.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="va">df</span> <span class="op">|&gt;</span></span>
@@ -265,12 +265,12 @@ just another column.</p>
 <span></span>
 <span><span class="va">df</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 4</span></span></span>
-<span><span class="co">#&gt;   name                     x                  replaced                                                                                           body </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                                              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> refresh_customer_scores  <span style="color: #949494;">&lt;seekr::match [2]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE cust… <span style="color: #949494;">"</span>\nC…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> refresh_offer_flags      <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offer_fl… <span style="color: #949494;">"</span>\nC…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> archive_old_events       <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION archive_new_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM even… <span style="color: #949494;">"</span>\nC…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> refresh_campaign_targets <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE cam… <span style="color: #949494;">"</span>\nC…</span></span></code></pre></div>
+<span><span class="co">#&gt;   name                         x                  replaced                                                                                       body </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> refresh_customer_scores.SQL  <span style="color: #949494;">&lt;seekr::match [2]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_customer_scores()\nRETURNS void AS $$\nBEGIN\n  UPDATE … <span style="color: #949494;">"</span>\nC…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> refresh_offer_flags.SQL      <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_offer_flags()\nRETURNS void AS $$\nBEGIN\n  UPDATE offe… <span style="color: #949494;">"</span>\nC…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> archive_old_events.SQL       <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION archive_new_events()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM … <span style="color: #949494;">"</span>\nC…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> refresh_campaign_targets.SQL <span style="color: #949494;">&lt;seekr::match [1]&gt;</span> <span style="color: #949494;">"</span>\nCREATE OR REPLACE FUNCTION refresh_campaign_targets()\nRETURNS void AS $$\nBEGIN\n  UPDATE… <span style="color: #949494;">"</span>\nC…</span></span></code></pre></div>
 <p>This is the point of the in-memory workflow: <code>seekr</code>
 helped us find, inspect, filter, and safely apply replacements, but it
 did not decide what to do with the result.</p>
@@ -295,7 +295,7 @@ makes sense for the target system.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">script_block</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">sql_script</span>, sep <span class="op">=</span> <span class="st">"\n\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; -- Procedure: refresh_customer_scores -------------------------------</span></span>
+<span><span class="co">#&gt; -- Procedure: refresh_customer_scores.SQL -------------------------------</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; CREATE OR REPLACE FUNCTION refresh_customer_scores()</span></span>
 <span><span class="co">#&gt; RETURNS void AS $$</span></span>
@@ -306,7 +306,7 @@ makes sense for the target system.</p>
 <span><span class="co">#&gt; $$ LANGUAGE plpgsql;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; -- Procedure: refresh_offer_flags -------------------------------</span></span>
+<span><span class="co">#&gt; -- Procedure: refresh_offer_flags.SQL -------------------------------</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; CREATE OR REPLACE FUNCTION refresh_offer_flags()</span></span>
 <span><span class="co">#&gt; RETURNS void AS $$</span></span>
@@ -318,7 +318,7 @@ makes sense for the target system.</p>
 <span><span class="co">#&gt; $$ LANGUAGE plpgsql;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; -- Procedure: archive_old_events -------------------------------</span></span>
+<span><span class="co">#&gt; -- Procedure: archive_old_events.SQL -------------------------------</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; CREATE OR REPLACE FUNCTION archive_new_events()</span></span>
 <span><span class="co">#&gt; RETURNS void AS $$</span></span>
@@ -329,7 +329,7 @@ makes sense for the target system.</p>
 <span><span class="co">#&gt; $$ LANGUAGE plpgsql;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; -- Procedure: refresh_campaign_targets -------------------------------</span></span>
+<span><span class="co">#&gt; -- Procedure: refresh_campaign_targets.SQL -------------------------------</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; CREATE OR REPLACE FUNCTION refresh_campaign_targets()</span></span>
 <span><span class="co">#&gt; RETURNS void AS $$</span></span>
